@@ -4,47 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
-    <script>
-        console.log("Script is working");
-
-        function login() {
-            // Get user input values
-            var email = document.getElementById('email').value;
-            var password = document.getElementById('password').value;
-
-            // Debugging: Log entered email and password
-            console.log("Entered email:", email);
-            console.log("Entered password:", password);
-
-            // Define valid users and redirect pages
-            var validUser1 = { email: "mauzzhassa88@gmail.com", password: "11223344", redirect: "overview.html" };
-            var validUser2 = { email: "angeltraderinfo@gmail.com", password: "222222", redirect: "overview2.html" };
-
-            // Check if the entered credentials match any of the valid users
-            if (email.toLowerCase() === validUser1.email.toLowerCase() && password === validUser1.password) {
-                alert("Logged in successfully! Redirecting to Overview...");
-                window.location.href = validUser1.redirect; // Redirect to overview.html
-            } else if (email.toLowerCase() === validUser2.email.toLowerCase() && password === validUser2.password) {
-                alert("Logged in successfully! Redirecting to Overview2...");
-                window.location.href = validUser2.redirect; // Redirect to overview2.html
-            } else {
-                alert("Invalid credentials. Please try again.");
-            }
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
         }
-    </script>
+        .login-container {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            width: 300px;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
-    <h2>Login Page</h2>
-    <form onsubmit="event.preventDefault(); login();">
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" placeholder="Enter Email" required><br><br>
-        
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" placeholder="Enter Password" required><br><br>
-        
-        <button type="submit">Login</button>
-    </form>
+    <div class="login-container">
+        <h2>Login</h2>
+        <form id="login-form" onsubmit="event.preventDefault(); login();">
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <input type="password" id="password" placeholder="Enter your password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div id="error-message" class="error"></div>
+    </div>
+
+    <script>
+        // Hardcoded credentials
+        const users = {
+            "mahmoud@example.com": {
+                password: "11223344",
+                redirectTo: "overview.html" // Redirect URL for this user
+            },
+            "angel@example.com": {
+                password: "222222",
+                redirectTo: "overview2.html" // Redirect URL for this user
+            }
+        };
+
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const errorMessage = document.getElementById("error-message");
+
+            // Check if email exists in the users object
+            if (users[email]) {
+                // Check if password matches
+                if (users[email].password === password) {
+                    // Redirect to the respective page
+                    window.location.href = users[email].redirectTo;
+                } else {
+                    errorMessage.textContent = "Invalid password!";
+                }
+            } else {
+                errorMessage.textContent = "Invalid credentials!";
+            }
+        }
+    </script>
 
 </body>
 </html>
