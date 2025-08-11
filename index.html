@@ -25,6 +25,7 @@
       box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
       width: 350px;
       text-align: center;
+      animation: glow 1.5s ease-in-out infinite alternate;
     }
 
     .login-container h2 {
@@ -73,11 +74,6 @@
       margin-top: 10px;
     }
 
-    /* Subtle shadow animation for the login container */
-    .login-container {
-      animation: glow 1.5s ease-in-out infinite alternate;
-    }
-
     @keyframes glow {
       0% {
         box-shadow: 0 0 15px rgba(0, 209, 178, 0.5);
@@ -101,26 +97,38 @@
   </div>
 
   <script>
-    // Users object with login credentials and redirection page
+    // Base64 decode
+    function decode(str) {
+      return atob(str);
+    }
+
+    // Obfuscated user data (base64)
     const users = {
-      "mauzhassan88@gmail.com": { password: "11223344", redirectTo: "overview.html" },
-      "angeltraderinfo@gmail.com": { password: "222222", redirectTo: "overview2.html" }
+      "bWF1emhhc3Nhbjg4QGdtYWlsLmNvbQ==": { // mauzhassan88@gmail.com
+        password: "MTEyMjMzNDQ=", // 11223344
+        redirectTo: "overview.html"
+      },
+      "YW5nZWx0cmFkZXJpbmZvQGdtYWlsLmNvbQ==": { // angeltraderinfo@gmail.com
+        password: "MjIyMjIy", // 222222
+        redirectTo: "overview2.html"
+      }
     };
 
-    // Handle login submission
-    document.getElementById('login-form').addEventListener('submit', function(event) {
-      event.preventDefault(); // Prevent form from submitting traditionally
+    document.getElementById('login-form').addEventListener('submit', function (event) {
+      event.preventDefault();
 
-      // Get email and password entered by the user
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
+      const encodedEmail = btoa(email);
 
-      // Validate user credentials
-      if (users[email] && users[email].password === password) {
-        // Redirect to the specified page
-        window.location.href = users[email].redirectTo;
+      if (users[encodedEmail]) {
+        const decodedPassword = decode(users[encodedEmail].password);
+        if (decodedPassword === password) {
+          window.location.href = users[encodedEmail].redirectTo;
+        } else {
+          document.getElementById('error-message').textContent = "Invalid credentials. Please try again.";
+        }
       } else {
-        // Display error message
         document.getElementById('error-message').textContent = "Invalid credentials. Please try again.";
       }
     });
