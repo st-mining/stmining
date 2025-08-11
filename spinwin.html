@@ -105,7 +105,7 @@
     <h1>Slot Machine - Spin and Win</h1>
 
     <div class="balance-info">
-      <p>Your Current Balance: $<span id="balance">50</span></p>
+      <p>Your Current Balance: $<span id="balance">00</span></p>
       <p>Spin Cost: $5</p>
     </div>
 
@@ -124,8 +124,8 @@
   </div>
 
   <script>
-    // Initialize balance from localStorage or default to $50
-    let balance = localStorage.getItem("balance") ? parseFloat(localStorage.getItem("balance")) : 50;
+    // Initialize balance from localStorage or default to $00
+    let balance = localStorage.getItem("balance") ? parseFloat(localStorage.getItem("balance")) : 00;
     const balanceElement = document.getElementById("balance");
     const resultMessage = document.getElementById("resultMessage");
     const spinBtn = document.getElementById("spinBtn");
