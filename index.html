@@ -64,7 +64,7 @@
     </div>
 
     <script>
-        // Users with emails and passwords (set these correctly)
+        // Users with emails and passwords (update these for your use case)
         const users = {
             "mahmoud@example.com": { password: "11223344", redirectTo: "overview.html" },
             "angel@example.com": { password: "222222", redirectTo: "overview2.html" }
@@ -79,19 +79,24 @@
             // Reset error message
             errorMessage.textContent = "";
 
-            console.log("Email entered: " + email); // Debugging line
-            console.log("Password entered: " + password); // Debugging line
+            // Debugging: Print the entered email and password
+            console.log("Entered Email:", email); 
+            console.log("Entered Password:", password); 
 
             // Check if email exists in the users object
             if (users[email]) {
+                console.log("Email found in users!");  // Debugging line
+
                 // Check if password matches
                 if (users[email].password === password) {
-                    // Redirect to the correct page
+                    console.log("Password matches! Redirecting...");
                     window.location.href = users[email].redirectTo;
                 } else {
+                    console.log("Password mismatch!");  // Debugging line
                     errorMessage.textContent = "Invalid password!";
                 }
             } else {
+                console.log("Email not found!");  // Debugging line
                 errorMessage.textContent = "Invalid email!";
             }
         }
