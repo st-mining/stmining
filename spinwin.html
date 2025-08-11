@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spin the Wheel - $5 Reward</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .spin-container {
+      background: #1b1b2a;
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 600px;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 28px;
+      background: linear-gradient(90deg, #00fff0, #00aaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 25px;
+    }
+
+    .spin-wheel {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      border-radius: 50%;
+      background: conic-gradient(#f39c12 0% 14%, #2ecc71 14% 28%, #e74c3c 28% 42%, #3498db 42% 56%, #9b59b6 56% 70%, #e67e22 70% 84%, #f39c12 84% 100%);
+      margin: 0 auto 20px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      transform: rotate(0deg);
+      transition: transform 4s ease-out;
+    }
+
+    .spin-btn {
+      padding: 12px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(to right, #ff9900, #ffaa33);
+      color: #000;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .spin-btn:hover {
+      transform: translateY(-2px);
+      background: linear-gradient(to right, #ffaa33, #ffcc66);
+    }
+
+    .result {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 600px) {
+      .spin-container {
+        padding: 20px;
+      }
+
+      .spin-wheel {
+        width: 250px;
+        height: 250px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="spin-container">
+    <h1>Spin the Wheel for $5</h1>
+
+    <!-- Spin the Wheel -->
+    <div class="spin-wheel" id="wheel"></div>
+
+    <!-- Spin Button -->
+    <button class="spin-btn" id="spinBtn">Spin</button>
+
+    <!-- Result -->
+    <div class="result" id="result">Try your luck and spin the wheel!</div>
+  </div>
+
+  <script>
+    const spinButton = document.getElementById('spinBtn');
+    const wheel = document.getElementById('wheel');
+    const result = document.getElementById('result');
+
+    // Possible outcomes of the wheel
+    const outcomes = [
+      "Better Luck Next Time",
+      "$1",
+      "$2",
+      "$3"
+    ];
+
+    spinButton.addEventListener('click', function() {
+      // Generate random degree between 1440 (4 full rotations) and 3600 (10 full rotations)
+      const randomDegree = Math.floor(Math.random() * 360) + 1440;
+
+      // Apply rotation animation
+      wheel.style.transform = `rotate(${randomDegree}deg)`;
+
+      // Set timeout to show the result after the spin ends
+      setTimeout(function() {
+        // Pick a random outcome from the outcomes array
+        const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+
+        // Update the result message
+        result.textContent = `You landed on: ${randomOutcome}`;
+      }, 4000); // 4 seconds timeout to match the spin duration
+    });
+  </script>
+
+</body>
+</html>
