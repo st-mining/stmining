@@ -64,34 +64,31 @@
     </div>
 
     <script>
-        // Hardcoded credentials
+        // User credentials (you can extend this as needed)
         const users = {
-            "mahmoud@example.com": {
-                password: "11223344",
-                redirectTo: "overview.html" // Redirect URL for this user
-            },
-            "angel@example.com": {
-                password: "222222",
-                redirectTo: "overview2.html" // Redirect URL for this user
-            }
+            "mahmoud@example.com": { password: "11223344", redirectTo: "overview.html" },
+            "angel@example.com": { password: "222222", redirectTo: "overview2.html" }
         };
 
         function login() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
+            const email = document.getElementById("email").value.trim();
+            const password = document.getElementById("password").value.trim();
             const errorMessage = document.getElementById("error-message");
+
+            // Reset error message before checking
+            errorMessage.textContent = "";
 
             // Check if email exists in the users object
             if (users[email]) {
                 // Check if password matches
                 if (users[email].password === password) {
-                    // Redirect to the respective page
+                    // Redirect to the correct page
                     window.location.href = users[email].redirectTo;
                 } else {
                     errorMessage.textContent = "Invalid password!";
                 }
             } else {
-                errorMessage.textContent = "Invalid credentials!";
+                errorMessage.textContent = "Invalid email!";
             }
         }
     </script>
