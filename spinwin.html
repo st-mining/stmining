@@ -13,31 +13,29 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
+      background: #1b1b2a;
       color: #ffffff;
-      min-height: 100vh;
       display: flex;
-      align-items: center;
       justify-content: center;
-      padding: 20px;
+      align-items: center;
+      height: 100vh;
+      padding: 10px;
     }
 
     .spin-container {
-      background: #1b1b2a;
+      background: #333;
       border-radius: 20px;
       padding: 25px;
-      max-width: 900px;
+      max-width: 500px;
       width: 100%;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
       text-align: center;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
     }
 
     .spin-container h1 {
       font-size: 28px;
-      background: linear-gradient(90deg, #00fff0, #00aaff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 20px;
+      color: #fff;
+      margin-bottom: 30px;
     }
 
     .spin-wheel {
@@ -62,20 +60,22 @@
       transform-origin: 100% 100%;
       text-align: center;
       color: #fff;
-      font-size: 18px;
+      font-size: 16px;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-weight: bold;
     }
 
     .btn-spin {
-      padding: 10px 20px;
+      padding: 12px 30px;
       font-size: 18px;
       background: #ffaa33;
       border: none;
       border-radius: 8px;
       cursor: pointer;
       transition: background-color 0.3s;
+      margin-top: 20px;
     }
 
     .btn-spin:hover {
@@ -92,16 +92,32 @@
       color: #ff9900;
       margin-top: 20px;
     }
-    
+
+    .sad-emoji {
+      font-size: 40px;
+      color: #ff4e50;
+    }
+
     /* Spinner segment colors */
-    .segment-1 { background: #ff4e50; }
-    .segment-2 { background: #f9d423; }
-    .segment-3 { background: #ff4e50; }
-    .segment-4 { background: #f9d423; }
-    .segment-5 { background: #00aaff; }
-    .segment-6 { background: #ff9900; }
-    .segment-7 { background: #ff6666; }
-    .segment-8 { background: #33cc33; }
+    .segment-1 { background: #ff4e50; }  /* Better Luck */
+    .segment-2 { background: #f9d423; }  /* $1 */
+    .segment-3 { background: #ff4e50; }  /* $2 */
+    .segment-4 { background: #f9d423; }  /* $3 */
+    .segment-5 { background: #00aaff; }  /* Empty Segment */
+    .segment-6 { background: #ff9900; }  /* Empty Segment */
+
+    /* Mobile Responsive */
+    @media (max-width: 600px) {
+      .spin-wheel {
+        width: 250px;
+        height: 250px;
+      }
+
+      .btn-spin {
+        padding: 10px 25px;
+        font-size: 16px;
+      }
+    }
 
   </style>
 </head>
@@ -112,20 +128,18 @@
     <h1>Spin and Win</h1>
 
     <div class="balance-info">
-      <p>Your Current Balance: $<span id="balance">501</span></p>
+      <p>Your Current Balance: $<span id="balance">50</span></p>
       <p>Spin Cost: $5</p>
     </div>
 
     <div class="spin-wheel" id="wheel">
       <!-- Spin wheel segments -->
-      <div class="wheel-segment segment-1" style="transform: rotate(0deg);">Better Luck Next Time</div>
-      <div class="wheel-segment segment-2" style="transform: rotate(45deg);">$1</div>
-      <div class="wheel-segment segment-3" style="transform: rotate(90deg);">$2</div>
-      <div class="wheel-segment segment-4" style="transform: rotate(135deg);">$3</div>
-      <div class="wheel-segment segment-5" style="transform: rotate(180deg);">$5</div>
-      <div class="wheel-segment segment-6" style="transform: rotate(225deg);">$10</div>
-      <div class="wheel-segment segment-7" style="transform: rotate(270deg);">$20</div>
-      <div class="wheel-segment segment-8" style="transform: rotate(315deg);">$50</div>
+      <div class="wheel-segment segment-1" style="transform: rotate(0deg);">😞</div>
+      <div class="wheel-segment segment-2" style="transform: rotate(60deg);">$1</div>
+      <div class="wheel-segment segment-3" style="transform: rotate(120deg);">$2</div>
+      <div class="wheel-segment segment-4" style="transform: rotate(180deg);">$3</div>
+      <div class="wheel-segment segment-5" style="transform: rotate(240deg);">😞</div>
+      <div class="wheel-segment segment-6" style="transform: rotate(300deg);">😞</div>
     </div>
 
     <button class="btn-spin" id="spinBtn">Spin</button>
@@ -135,20 +149,18 @@
   </div>
 
   <script>
-    let balance = 501;  // Initial balance
+    let balance = 50;  // Initial balance
     const balanceElement = document.getElementById("balance");
     const resultMessage = document.getElementById("resultMessage");
     const spinBtn = document.getElementById("spinBtn");
 
     const prizeSegments = [
-      { prize: "Better Luck Next Time", amount: 0 },
+      { prize: "Better Luck Next Time 😞", amount: 0 },
       { prize: "$1", amount: 1 },
       { prize: "$2", amount: 2 },
       { prize: "$3", amount: 3 },
-      { prize: "$5", amount: 5 },
-      { prize: "$10", amount: 10 },
-      { prize: "$20", amount: 20 },
-      { prize: "$50", amount: 50 }
+      { prize: "Better Luck Next Time 😞", amount: 0 },
+      { prize: "Better Luck Next Time 😞", amount: 0 },
     ];
 
     spinBtn.addEventListener("click", function () {
