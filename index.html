@@ -5,25 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
     <script>
+        console.log("Script is working");
+
         function login() {
+            // Get user input values
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
 
-            // Debugging: log entered email and password
+            // Debugging: Log entered email and password
             console.log("Entered email:", email);
             console.log("Entered password:", password);
 
-            // Define your valid credentials here
+            // Define valid users and redirect pages
             var validUser1 = { email: "mauzzhassa88@gmail.com", password: "11223344", redirect: "overview.html" };
             var validUser2 = { email: "angeltraderinfo@gmail.com", password: "222222", redirect: "overview2.html" };
 
-            // Check if credentials match
-            if (email === validUser1.email && password === validUser1.password) {
+            // Check if the entered credentials match any of the valid users
+            if (email.toLowerCase() === validUser1.email.toLowerCase() && password === validUser1.password) {
                 alert("Logged in successfully! Redirecting to Overview...");
-                window.location.href = validUser1.redirect; // Redirect to the overview.html
-            } else if (email === validUser2.email && password === validUser2.password) {
+                window.location.href = validUser1.redirect; // Redirect to overview.html
+            } else if (email.toLowerCase() === validUser2.email.toLowerCase() && password === validUser2.password) {
                 alert("Logged in successfully! Redirecting to Overview2...");
-                window.location.href = validUser2.redirect; // Redirect to the overview2.html
+                window.location.href = validUser2.redirect; // Redirect to overview2.html
             } else {
                 alert("Invalid credentials. Please try again.");
             }
@@ -34,8 +37,12 @@
 
     <h2>Login Page</h2>
     <form onsubmit="event.preventDefault(); login();">
+        <label for="email">Email:</label><br>
         <input type="email" id="email" placeholder="Enter Email" required><br><br>
+        
+        <label for="password">Password:</label><br>
         <input type="password" id="password" placeholder="Enter Password" required><br><br>
+        
         <button type="submit">Login</button>
     </form>
 
