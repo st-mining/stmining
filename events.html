@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lucky Draw</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+
+    .container {
+      background: #1e1e2e;
+      border-radius: 15px;
+      padding: 30px;
+      max-width: 500px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+    }
+
+    h1 {
+      background: linear-gradient(90deg, #00e0ff, #0088ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+
+    p {
+      color: #aaa;
+      font-size: 16px;
+      margin-bottom: 25px;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      background: linear-gradient(to right, #ffaa00, #ff5500);
+      color: black;
+      font-weight: bold;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(255, 165, 0, 0.3);
+      transition: all 0.2s ease-in-out;
+    }
+
+    .btn:hover {
+      transform: scale(1.05);
+      background: linear-gradient(to right, #ffcc00, #ff6600);
+    }
+
+    .notification {
+      margin-top: 30px;
+      background: #2a2a3d;
+      border-radius: 10px;
+      padding: 10px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: #ccc;
+      min-height: 40px;
+    }
+
+    .notification p {
+      margin: 0;
+      opacity: 0;
+      animation: fadeInOut 3s linear forwards;
+    }
+
+    @keyframes fadeInOut {
+      0% { opacity: 0; transform: translateY(10px); }
+      10% { opacity: 1; transform: translateY(0); }
+      90% { opacity: 1; }
+      100% { opacity: 0; transform: translateY(-10px); }
+    }
+
+    .qr-section {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #252535;
+      border-radius: 10px;
+    }
+
+    .qr-section img {
+      width: 150px;
+      margin: 10px auto;
+      display: block;
+    }
+
+    .address {
+      font-size: 14px;
+      word-break: break-all;
+      color: #00ffaa;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h1>🎉 Lucky Draw</h1>
+    <p>Enter for just <strong>$20</strong> to win <strong>$100,000</strong>!</p>
+    <button class="btn" onclick="enterDraw()">Enter Draw</button>
+
+    <div class="qr-section" id="paymentSection">
+      <h3>Pay $20 to Join</h3>
+      <p>Select a method and send exactly $20 to the address below:</p>
+      <p><strong>BSC (BEP20)</strong></p>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=0x1e6bd08aa12e01a0369b2e36a80b6d0237171c45" alt="BSC QR">
+      <div class="address">0x1e6bd08aa12e01a0369b2e36a80b6d0237171c45</div>
+      <br>
+      <p><strong>TRC20</strong></p>
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=TJojFCfEbumnF9fP72PQtuMkDTL2XGiNkf" alt="TRC QR">
+      <div class="address">TJojFCfEbumnF9fP72PQtuMkDTL2XGiNkf</div>
+      <br>
+      <p><strong>Binance Pay ID</strong></p>
+      <div class="address">521069007</div>
+    </div>
+
+    <div class="notification" id="notificationBox">
+      <!-- Notifications appear here -->
+    </div>
+  </div>
+
+  <script>
+    let names = ["Ayesha", "James", "Eman", "Ali", "Sophie", "John", "Noor", "Hassan", "Linda", "Leo", "Sara", "Emily", "Khan", "Amir"];
+    let index = 0;
+
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    let shuffledNames = shuffleArray([...names]);
+
+    function showNextUser() {
+      if (index >= shuffledNames.length) {
+        shuffledNames = shuffleArray([...names]);
+        index = 0;
+      }
+
+      const name = shuffledNames[index++];
+      const msg = `${name} just joined the Lucky Draw! 🎟️`;
+      const p = document.createElement("p");
+      p.textContent = msg;
+
+      const box = document.getElementById("notificationBox");
+      box.innerHTML = ""; // Clear previous
+      box.appendChild(p);
+    }
+
+    function enterDraw() {
+      document.getElementById("paymentSection").style.display = "block";
+      alert("Please pay $20 to enter the lucky draw!");
+    }
+
+    setInterval(showNextUser, 3000); // Every 3 seconds
+  </script>
+</body>
+</html>

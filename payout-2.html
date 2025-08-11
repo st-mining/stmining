@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Withdraw</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #1e1e2e;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      border-top: 5px solid;
+      border-image: linear-gradient(to right, lime, cyan) 1;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #00ff99, #00ccff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input, select {
+      background: #2e2e3e;
+      color: #fff;
+    }
+
+    button {
+      background: linear-gradient(to right, #00ffcc, #00ccff);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .payment-details {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .summary {
+      background: #2e2e3e;
+      padding: 10px;
+      border-radius: 6px;
+      word-break: break-word;
+      margin-bottom: 10px;
+    }
+
+    .loading-text {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #aaa;
+    }
+
+    .next-text {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="withdrawForm" class="container">
+    <h2>Payout</h2>
+
+    <!-- Amount Input -->
+    <label for="withdrawAmount">Enter Withdraw Amount ($):</label>
+    <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw" />
+
+    <!-- Method Selection -->
+    <label for="withdrawMethod">Select Withdrawal Method:</label>
+    <select id="withdrawMethod">
+      <option value="">-- Select Method --</option>
+      <option value="bsc">BSC BEP20</option>
+      <option value="trc">TRC20</option>
+      <option value="binance">Binance Pay</option>
+    </select>
+
+    <!-- Address Input -->
+    <label for="withdrawAddress">Enter Your Wallet Address / Pay ID:</label>
+    <input type="text" id="withdrawAddress" placeholder="Your wallet address or Binance Pay ID" />
+
+    <!-- Submit Button -->
+    <button onclick="submitWithdraw()">Request Withdrawal</button>
+  </div>
+
+  <!-- Confirmation Section -->
+  <div id="withdrawDetails" class="container hidden">
+    <h2>Withdrawal Requested</h2>
+    <div class="summary" id="summaryInfo"></div>
+    <div class="loading-text">⏳ Processing your withdrawal...</div>
+    <div class="next-text">Please wait while we process your request.</div>
+  </div>
+
+  <script>
+    function submitWithdraw() {
+      const method = document.getElementById("withdrawMethod").value;
+      const amount = document.getElementById("withdrawAmount").value.trim();
+      const address = document.getElementById("withdrawAddress").value.trim();
+
+      if (!method || !amount || parseFloat(amount) <= 0 || !address) {
+        alert("Please enter a valid amount, method, and wallet address.");
+        return;
+      }
+
+      // Switch views
+      document.getElementById("withdrawForm").classList.add("hidden");
+      document.getElementById("withdrawDetails").classList.remove("hidden");
+
+      const methodName = {
+        bsc: "BSC BEP20",
+        trc: "TRC20",
+        binance: "Binance Pay"
+      }[method];
+
+      const summary = `
+        <strong>Amount:</strong> $${parseFloat(amount).toFixed(2)}<br>
+        <strong>Method:</strong> ${methodName}<br>
+        <strong>Destination:</strong><br>${address}
+      `;
+
+      document.getElementById("summaryInfo").innerHTML = summary;
+    }
+  </script>
+</body>
+</html>

