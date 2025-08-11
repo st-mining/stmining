@@ -1,106 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            width: 300px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            text-align: center;
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    /* Dark Theme Design */
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #121212;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #fff;
+    }
+
+    .login-container {
+      background-color: #1f1f1f;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      width: 350px;
+      text-align: center;
+    }
+
+    .login-container h2 {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #00d1b2;
+      letter-spacing: 2px;
+    }
+
+    .login-container input {
+      width: 100%;
+      padding: 15px;
+      margin: 10px 0;
+      border: 1px solid #333;
+      border-radius: 8px;
+      background-color: #333;
+      color: #fff;
+      font-size: 16px;
+    }
+
+    .login-container input:focus {
+      outline: none;
+      border-color: #00d1b2;
+    }
+
+    .login-container button {
+      width: 100%;
+      padding: 15px;
+      background-color: #00d1b2;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+
+    .login-container button:hover {
+      background-color: #00b09d;
+    }
+
+    .error-message {
+      color: #ff4d4d;
+      font-size: 14px;
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    /* Subtle shadow animation for the login container */
+    .login-container {
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 15px rgba(0, 209, 178, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 25px rgba(0, 209, 178, 1);
+      }
+    }
+  </style>
 </head>
 <body>
 
-    <div class="login-container">
-        <h2>Login</h2>
-        <form id="login-form" onsubmit="event.preventDefault(); login();">
-            <input type="email" id="email" placeholder="Enter your email" required>
-            <input type="password" id="password" placeholder="Enter your password" required>
-            <button type="submit">Login</button>
-        </form>
-        <div id="error-message" class="error"></div>
-    </div>
+  <div class="login-container">
+    <h2>Login</h2>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Email" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+      <div class="error-message" id="error-message"></div>
+    </form>
+  </div>
 
-    <script>
-        // Users with emails and passwords (update these for your use case)
-        const users = {
-            "mahmoud@example.com": { password: "11223344", redirectTo: "overview.html" },
-            "angel@example.com": { password: "222222", redirectTo: "overview2.html" }
-        };
+  <script>
+    // Users object with login credentials and redirection page
+    const users = {
+      "mauzhassan88@gmail.com": { password: "11223344", redirectTo: "overview.html" },
+      "angeltraderinfo@gmail.com": { password: "222222", redirectTo: "overview2.html" }
+    };
 
-        function login() {
-            // Get email and password input values
-            const email = document.getElementById("email").value.trim();
-            const password = document.getElementById("password").value.trim();
-            const errorMessage = document.getElementById("error-message");
+    // Handle login submission
+    document.getElementById('login-form').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent form from submitting traditionally
 
-            // Reset error message
-            errorMessage.textContent = "";
+      // Get email and password entered by the user
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
 
-            // Debugging: Print the entered email and password
-            console.log("Entered Email:", email); 
-            console.log("Entered Password:", password); 
-
-            // Check if email exists in the users object
-            if (users[email]) {
-                console.log("Email found in users!");  // Debugging line
-
-                // Check if password matches
-                if (users[email].password === password) {
-                    console.log("Password matches! Redirecting...");
-                    window.location.href = users[email].redirectTo;
-                } else {
-                    console.log("Password mismatch!");  // Debugging line
-                    errorMessage.textContent = "Invalid password!";
-                }
-            } else {
-                console.log("Email not found!");  // Debugging line
-                errorMessage.textContent = "Invalid email!";
-            }
-        }
-    </script>
+      // Validate user credentials
+      if (users[email] && users[email].password === password) {
+        // Redirect to the specified page
+        window.location.href = users[email].redirectTo;
+      } else {
+        // Display error message
+        document.getElementById('error-message').textContent = "Invalid credentials. Please try again.";
+      }
+    });
+  </script>
 
 </body>
 </html>
