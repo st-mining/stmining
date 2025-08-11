@@ -64,19 +64,23 @@
     </div>
 
     <script>
-        // User credentials (you can extend this as needed)
+        // Users with emails and passwords (set these correctly)
         const users = {
             "mahmoud@example.com": { password: "11223344", redirectTo: "overview.html" },
             "angel@example.com": { password: "222222", redirectTo: "overview2.html" }
         };
 
         function login() {
+            // Get email and password input values
             const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value.trim();
             const errorMessage = document.getElementById("error-message");
 
-            // Reset error message before checking
+            // Reset error message
             errorMessage.textContent = "";
+
+            console.log("Email entered: " + email); // Debugging line
+            console.log("Password entered: " + password); // Debugging line
 
             // Check if email exists in the users object
             if (users[email]) {
