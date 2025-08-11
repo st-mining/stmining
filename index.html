@@ -9,14 +9,20 @@
             var email = document.getElementById('email').value;
             var password = document.getElementById('password').value;
 
+            // Debugging: log entered email and password
+            console.log("Entered email:", email);
+            console.log("Entered password:", password);
+
             // Define your valid credentials here
             var validUser1 = { email: "mauzzhassa88@gmail.com", password: "11223344", redirect: "overview.html" };
             var validUser2 = { email: "angeltraderinfo@gmail.com", password: "222222", redirect: "overview2.html" };
 
             // Check if credentials match
             if (email === validUser1.email && password === validUser1.password) {
+                alert("Logged in successfully! Redirecting to Overview...");
                 window.location.href = validUser1.redirect; // Redirect to the overview.html
             } else if (email === validUser2.email && password === validUser2.password) {
+                alert("Logged in successfully! Redirecting to Overview2...");
                 window.location.href = validUser2.redirect; // Redirect to the overview2.html
             } else {
                 alert("Invalid credentials. Please try again.");
