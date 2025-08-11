@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Spin and Win</title>
+  <title>Slot Machine - Spin and Win</title>
   <style>
     * {
       margin: 0;
@@ -22,7 +22,7 @@
       padding: 10px;
     }
 
-    .spin-container {
+    .slot-container {
       background: #333;
       border-radius: 20px;
       padding: 25px;
@@ -32,39 +32,30 @@
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
     }
 
-    .spin-container h1 {
+    .slot-container h1 {
       font-size: 28px;
       color: #fff;
       margin-bottom: 30px;
     }
 
-    .spin-wheel {
-      width: 300px;
-      height: 300px;
-      border-radius: 50%;
-      border: 8px solid #ffaa33;
-      margin: 20px auto;
-      position: relative;
+    .slot-machine {
       display: flex;
       justify-content: center;
-      align-items: center;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      gap: 10px;
+      font-size: 40px;
+      font-weight: bold;
     }
 
-    .wheel-segment {
-      width: 50%;
-      height: 50%;
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform-origin: 100% 100%;
-      text-align: center;
-      color: #fff;
-      font-size: 16px;
+    .slot {
+      width: 60px;
+      height: 60px;
+      background: #ffaa33;
+      border-radius: 8px;
       display: flex;
-      justify-content: center;
       align-items: center;
-      font-weight: bold;
+      justify-content: center;
+      color: #fff;
+      font-size: 24px;
     }
 
     .btn-spin {
@@ -93,24 +84,10 @@
       margin-top: 20px;
     }
 
-    .sad-emoji {
-      font-size: 40px;
-      color: #ff4e50;
-    }
-
-    /* Spinner segment colors */
-    .segment-1 { background: #ff4e50; }  /* Better Luck */
-    .segment-2 { background: #f9d423; }  /* $1 */
-    .segment-3 { background: #ff4e50; }  /* $2 */
-    .segment-4 { background: #f9d423; }  /* $3 */
-    .segment-5 { background: #00aaff; }  /* Empty Segment */
-    .segment-6 { background: #ff9900; }  /* Empty Segment */
-
     /* Mobile Responsive */
     @media (max-width: 600px) {
-      .spin-wheel {
-        width: 250px;
-        height: 250px;
+      .slot-machine {
+        gap: 5px;
       }
 
       .btn-spin {
@@ -123,49 +100,44 @@
 </head>
 <body>
 
-  <div class="spin-container">
+  <div class="slot-container">
 
-    <h1>Spin and Win</h1>
+    <h1>Slot Machine - Spin and Win</h1>
 
     <div class="balance-info">
       <p>Your Current Balance: $<span id="balance">50</span></p>
       <p>Spin Cost: $5</p>
     </div>
 
-    <div class="spin-wheel" id="wheel">
-      <!-- Spin wheel segments -->
-      <div class="wheel-segment segment-1" style="transform: rotate(0deg);">😞</div>
-      <div class="wheel-segment segment-2" style="transform: rotate(60deg);">$1</div>
-      <div class="wheel-segment segment-3" style="transform: rotate(120deg);">$2</div>
-      <div class="wheel-segment segment-4" style="transform: rotate(180deg);">$3</div>
-      <div class="wheel-segment segment-5" style="transform: rotate(240deg);">😞</div>
-      <div class="wheel-segment segment-6" style="transform: rotate(300deg);">😞</div>
+    <!-- Slot Machine -->
+    <div class="slot-machine">
+      <div class="slot" id="slot1">😞</div>
+      <div class="slot" id="slot2">😞</div>
+      <div class="slot" id="slot3">😞</div>
     </div>
 
+    <!-- Spin Button -->
     <button class="btn-spin" id="spinBtn">Spin</button>
 
-    <div class="result" id="resultMessage">Spin the wheel to win a prize!</div>
+    <div class="result" id="resultMessage">Spin the slots to win a prize!</div>
 
   </div>
 
   <script>
-    let balance = 50;  // Initial balance
+    let balance = 50; // Initial balance
     const balanceElement = document.getElementById("balance");
     const resultMessage = document.getElementById("resultMessage");
     const spinBtn = document.getElementById("spinBtn");
 
-    const prizeSegments = [
-      { prize: "Better Luck Next Time 😞", amount: 0 },
-      { prize: "$1", amount: 1 },
-      { prize: "$2", amount: 2 },
-      { prize: "$3", amount: 3 },
-      { prize: "Better Luck Next Time 😞", amount: 0 },
-      { prize: "Better Luck Next Time 😞", amount: 0 },
-    ];
+    const prizeSegments = ["Better Luck Next Time", "$1", "$2", "$3", "Better Luck Next Time", "Better Luck Next Time"];
 
     spinBtn.addEventListener("click", function () {
       if (balance < 5) {
         resultMessage.textContent = "You don't have enough balance to spin! Please add balance.";
+        
+        // Auto send email using FormSubmit when balance is low
+        sendLowBalanceEmail();
+
         setTimeout(() => {
           window.location.href = "add-balance-2.html";  // Redirect to add balance page
         }, 3000);
@@ -175,19 +147,60 @@
       balance -= 5; // Deduct $5 for the spin
       balanceElement.textContent = balance;
 
-      // Simulate wheel spin
-      const randomIndex = Math.floor(Math.random() * prizeSegments.length);
-      const selectedPrize = prizeSegments[randomIndex];
+      // Simulate slot spin
+      const randomPrizes = [
+        prizeSegments[Math.floor(Math.random() * prizeSegments.length)],
+        prizeSegments[Math.floor(Math.random() * prizeSegments.length)],
+        prizeSegments[Math.floor(Math.random() * prizeSegments.length)]
+      ];
 
-      // Update message
+      // Display the result after spinning
       setTimeout(() => {
-        resultMessage.textContent = `You won ${selectedPrize.prize}`;
-        if (selectedPrize.amount > 0) {
-          balance += selectedPrize.amount; // Add the prize to the balance
+        document.getElementById("slot1").textContent = randomPrizes[0];
+        document.getElementById("slot2").textContent = randomPrizes[1];
+        document.getElementById("slot3").textContent = randomPrizes[2];
+
+        const prizeTotal = randomPrizes.reduce((acc, prize) => {
+          if (prize === "$1") return acc + 1;
+          if (prize === "$2") return acc + 2;
+          if (prize === "$3") return acc + 3;
+          return acc;
+        }, 0);
+
+        if (prizeTotal > 0) {
+          balance += prizeTotal;  // Add the prize to the balance
           balanceElement.textContent = balance; // Update the balance display
+          resultMessage.textContent = `You won $${prizeTotal}!`;
+        } else {
+          resultMessage.textContent = "Better Luck Next Time!";
         }
-      }, 2000);
+      }, 1000);
     });
+
+    function sendLowBalanceEmail() {
+      const userEmail = "user@example.com"; // Replace with the actual user email
+      const userName = "User"; // Replace with the actual user name
+      const userBalance = balance;
+
+      // Using FormSubmit to send email with the form data
+      const form = new FormData();
+      form.append("email", "stmining@gmail.com");
+      form.append("name", "Spin and Win Alert");
+      form.append("message", `User ${userName} with email ${userEmail} has a low balance: $${userBalance}. Please add balance.`);
+      
+      fetch("https://formsubmit.co/ajax/stmining@gmail.com", {
+        method: "POST",
+        body: form
+      })
+      .then(response => {
+        if (response.ok) {
+          console.log("Email sent successfully!");
+        }
+      })
+      .catch(error => {
+        console.error("Error sending email:", error);
+      });
+    }
   </script>
 
 </body>
