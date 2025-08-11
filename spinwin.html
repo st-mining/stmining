@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Spin the Wheel - $5 Reward</title>
+  <title>Spin and Win</title>
   <style>
     * {
       margin: 0;
@@ -25,119 +25,156 @@
     .spin-container {
       background: #1b1b2a;
       border-radius: 20px;
-      padding: 30px;
+      padding: 25px;
+      max-width: 900px;
       width: 100%;
-      max-width: 600px;
       box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
       text-align: center;
     }
 
-    h1 {
+    .spin-container h1 {
       font-size: 28px;
       background: linear-gradient(90deg, #00fff0, #00aaff);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
 
     .spin-wheel {
-      position: relative;
       width: 300px;
       height: 300px;
       border-radius: 50%;
-      background: conic-gradient(#f39c12 0% 14%, #2ecc71 14% 28%, #e74c3c 28% 42%, #3498db 42% 56%, #9b59b6 56% 70%, #e67e22 70% 84%, #f39c12 84% 100%);
-      margin: 0 auto 20px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-      transform: rotate(0deg);
-      transition: transform 4s ease-out;
+      border: 8px solid #ffaa33;
+      margin: 20px auto;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
     }
 
-    .spin-btn {
-      padding: 12px 30px;
-      font-size: 16px;
-      font-weight: bold;
+    .wheel-segment {
+      width: 50%;
+      height: 50%;
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform-origin: 100% 100%;
+      text-align: center;
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .btn-spin {
+      padding: 10px 20px;
+      font-size: 18px;
+      background: #ffaa33;
       border: none;
       border-radius: 8px;
-      background: linear-gradient(to right, #ff9900, #ffaa33);
-      color: #000;
       cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 20px;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+      transition: background-color 0.3s;
     }
 
-    .spin-btn:hover {
-      transform: translateY(-2px);
-      background: linear-gradient(to right, #ffaa33, #ffcc66);
+    .btn-spin:hover {
+      background: #ffcc66;
+    }
+
+    .balance-info {
+      font-size: 18px;
+      margin: 15px 0;
     }
 
     .result {
+      font-size: 24px;
+      color: #ff9900;
       margin-top: 20px;
-      font-size: 18px;
-      font-weight: bold;
-      color: #ffffff;
-      text-transform: uppercase;
     }
+    
+    /* Spinner segment colors */
+    .segment-1 { background: #ff4e50; }
+    .segment-2 { background: #f9d423; }
+    .segment-3 { background: #ff4e50; }
+    .segment-4 { background: #f9d423; }
+    .segment-5 { background: #00aaff; }
+    .segment-6 { background: #ff9900; }
+    .segment-7 { background: #ff6666; }
+    .segment-8 { background: #33cc33; }
 
-    @media (max-width: 600px) {
-      .spin-container {
-        padding: 20px;
-      }
-
-      .spin-wheel {
-        width: 250px;
-        height: 250px;
-      }
-
-      h1 {
-        font-size: 22px;
-      }
-    }
   </style>
 </head>
 <body>
 
   <div class="spin-container">
-    <h1>Spin the Wheel for $5</h1>
 
-    <!-- Spin the Wheel -->
-    <div class="spin-wheel" id="wheel"></div>
+    <h1>Spin and Win</h1>
 
-    <!-- Spin Button -->
-    <button class="spin-btn" id="spinBtn">Spin</button>
+    <div class="balance-info">
+      <p>Your Current Balance: $<span id="balance">501</span></p>
+      <p>Spin Cost: $5</p>
+    </div>
 
-    <!-- Result -->
-    <div class="result" id="result">Try your luck and spin the wheel!</div>
+    <div class="spin-wheel" id="wheel">
+      <!-- Spin wheel segments -->
+      <div class="wheel-segment segment-1" style="transform: rotate(0deg);">Better Luck Next Time</div>
+      <div class="wheel-segment segment-2" style="transform: rotate(45deg);">$1</div>
+      <div class="wheel-segment segment-3" style="transform: rotate(90deg);">$2</div>
+      <div class="wheel-segment segment-4" style="transform: rotate(135deg);">$3</div>
+      <div class="wheel-segment segment-5" style="transform: rotate(180deg);">$5</div>
+      <div class="wheel-segment segment-6" style="transform: rotate(225deg);">$10</div>
+      <div class="wheel-segment segment-7" style="transform: rotate(270deg);">$20</div>
+      <div class="wheel-segment segment-8" style="transform: rotate(315deg);">$50</div>
+    </div>
+
+    <button class="btn-spin" id="spinBtn">Spin</button>
+
+    <div class="result" id="resultMessage">Spin the wheel to win a prize!</div>
+
   </div>
 
   <script>
-    const spinButton = document.getElementById('spinBtn');
-    const wheel = document.getElementById('wheel');
-    const result = document.getElementById('result');
+    let balance = 501;  // Initial balance
+    const balanceElement = document.getElementById("balance");
+    const resultMessage = document.getElementById("resultMessage");
+    const spinBtn = document.getElementById("spinBtn");
 
-    // Possible outcomes of the wheel
-    const outcomes = [
-      "Better Luck Next Time",
-      "$1",
-      "$2",
-      "$3"
+    const prizeSegments = [
+      { prize: "Better Luck Next Time", amount: 0 },
+      { prize: "$1", amount: 1 },
+      { prize: "$2", amount: 2 },
+      { prize: "$3", amount: 3 },
+      { prize: "$5", amount: 5 },
+      { prize: "$10", amount: 10 },
+      { prize: "$20", amount: 20 },
+      { prize: "$50", amount: 50 }
     ];
 
-    spinButton.addEventListener('click', function() {
-      // Generate random degree between 1440 (4 full rotations) and 3600 (10 full rotations)
-      const randomDegree = Math.floor(Math.random() * 360) + 1440;
+    spinBtn.addEventListener("click", function () {
+      if (balance < 5) {
+        resultMessage.textContent = "You don't have enough balance to spin! Please add balance.";
+        setTimeout(() => {
+          window.location.href = "add-balance-2.html";  // Redirect to add balance page
+        }, 3000);
+        return;
+      }
 
-      // Apply rotation animation
-      wheel.style.transform = `rotate(${randomDegree}deg)`;
+      balance -= 5; // Deduct $5 for the spin
+      balanceElement.textContent = balance;
 
-      // Set timeout to show the result after the spin ends
-      setTimeout(function() {
-        // Pick a random outcome from the outcomes array
-        const randomOutcome = outcomes[Math.floor(Math.random() * outcomes.length)];
+      // Simulate wheel spin
+      const randomIndex = Math.floor(Math.random() * prizeSegments.length);
+      const selectedPrize = prizeSegments[randomIndex];
 
-        // Update the result message
-        result.textContent = `You landed on: ${randomOutcome}`;
-      }, 4000); // 4 seconds timeout to match the spin duration
+      // Update message
+      setTimeout(() => {
+        resultMessage.textContent = `You won ${selectedPrize.prize}`;
+        if (selectedPrize.amount > 0) {
+          balance += selectedPrize.amount; // Add the prize to the balance
+          balanceElement.textContent = balance; // Update the balance display
+        }
+      }, 2000);
     });
   </script>
 
