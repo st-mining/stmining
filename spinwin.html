@@ -124,12 +124,16 @@
   </div>
 
   <script>
-    let balance = 50; // Initial balance
+    // Initialize balance from localStorage or default to $50
+    let balance = localStorage.getItem("balance") ? parseFloat(localStorage.getItem("balance")) : 50;
     const balanceElement = document.getElementById("balance");
     const resultMessage = document.getElementById("resultMessage");
     const spinBtn = document.getElementById("spinBtn");
 
     const prizeSegments = ["Better Luck Next Time", "$1", "$2", "$3", "Better Luck Next Time", "Better Luck Next Time"];
+
+    // Display current balance
+    balanceElement.textContent = balance;
 
     spinBtn.addEventListener("click", function () {
       if (balance < 5) {
@@ -145,6 +149,7 @@
       }
 
       balance -= 5; // Deduct $5 for the spin
+      localStorage.setItem("balance", balance); // Save the updated balance in localStorage
       balanceElement.textContent = balance;
 
       // Simulate slot spin
@@ -169,10 +174,11 @@
 
         if (prizeTotal > 0) {
           balance += prizeTotal;  // Add the prize to the balance
+          localStorage.setItem("balance", balance); // Save updated balance
           balanceElement.textContent = balance; // Update the balance display
           resultMessage.textContent = `You won $${prizeTotal}!`;
         } else {
-          resultMessage.textContent = "Better Luck Next Time!";
+          resultMessage.textContent = "😞 Better Luck Next Time!";
         }
       }, 1000);
     });
