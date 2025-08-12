@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Transactions</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
+      color: #fff;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .dashboard {
+      background: #1b1b2a;
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 900px;
+      width: 100%;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+    }
+    h2 {
+      text-align: center;
+      font-size: 26px;
+      margin-bottom: 25px;
+      background: linear-gradient(90deg, #00fff0, #00aaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .transaction {
+      background: #252535;
+      border: 1px solid #2f2f3f;
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: default;
+      margin-bottom: 15px;
+    }
+    .transaction .type {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ccc;
+    }
+    .transaction .amount {
+      font-size: 18px;
+      font-weight: bold;
+      color: #ff4e50;
+    }
+    .transaction:hover {
+      background: #2f2f45;
+    }
+    .modal {
+      display: none;
+      position: fixed; top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center; align-items: center;
+      z-index: 999;
+    }
+    .modal-content {
+      background: #1e1e2e;
+      border-radius: 14px;
+      padding: 25px;
+      max-width: 450px; width: 90%;
+      box-shadow: 0 0 20px rgba(0,0,0,0.8);
+      color: #eee;
+      position: relative;
+    }
+    .modal-content h3 {
+      color: #00ccff;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .detail-row {
+      display: flex; justify-content: space-between;
+      margin: 10px 0;
+      font-size: 14px;
+      border-bottom: 1px solid #333;
+      padding-bottom: 5px;
+    }
+    .label { color: #888; }
+    .close {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 22px; color: #ccc;
+      cursor: pointer;
+    }
+    .close:hover { color: #fff; }
+    @media (max-width: 600px) {
+      .transaction { flex-direction: column; align-items: flex-start; }
+      .amount { margin-top: 8px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>Transactions</h2>
+    <div class="transaction" onclick="openModal('Withdraw', '-$100.00', '2025‑08‑11', 'Success', 'ST PAY', 'XJAMES67')">
+      <div class="type">Withdraw</div>
+      <div class="amount">-$100.00</div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="transactionModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h3 id="modalType">Transaction Details</h3>
+      <div class="detail-row"><span class="label">Amount:</span><span id="modalAmount"></span></div>
+      <div class="detail-row"><span class="label">Date:</span><span id="modalDateTime"></span></div>
+      <div class="detail-row"><span class="label">Status:</span><span id="modalStatus"></span></div>
+      <div class="detail-row"><span class="label">Payment Method:</span><span id="modalMethod"></span></div>
+      <div class="detail-row"><span class="label">Payment ID:</span><span id="modalAddress"></span></div>
+    </div>
+  </div>
+
+  <script>
+    function openModal(type, amount, datetime, status, method, address) {
+      document.getElementById('modalType').textContent = type;
+      document.getElementById('modalAmount').textContent = amount;
+      document.getElementById('modalDateTime').textContent = datetime;
+      document.getElementById('modalStatus').textContent = status;
+      document.getElementById('modalMethod').textContent = method;
+      document.getElementById('modalAddress').textContent = address;
+      document.getElementById('transactionModal').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('transactionModal').style.display = 'none';
+    }
+    window.onclick = function(event) {
+      const modal = document.getElementById('transactionModal');
+      if (event.target === modal) closeModal();
+    };
+  </script>
+</body>
+</html>
