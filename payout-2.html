@@ -56,30 +56,11 @@
       display: none;
     }
 
-    .payment-details {
+    .success-message {
       text-align: center;
-      margin-top: 30px;
-    }
-
-    .summary {
-      background: #2e2e3e;
-      padding: 10px;
-      border-radius: 6px;
-      word-break: break-word;
-      margin-bottom: 10px;
-    }
-
-    .loading-text {
-      font-size: 16px;
-      margin-top: 10px;
-      color: #aaa;
-    }
-
-    .next-text {
-      margin-top: 15px;
-      font-size: 14px;
-      color: #888;
-      font-style: italic;
+      font-size: 18px;
+      color: #00ff99;
+      margin-top: 20px;
     }
   </style>
 </head>
@@ -87,14 +68,11 @@
   <div class="container">
     <h2>Payout</h2>
 
-    <!-- ✅ Updated FormSubmit Form -->
-    <form action="https://formsubmit.co/stminning@gmail.com" method="POST">
-      
-      <!-- Withdraw Amount -->
+    <!-- ✅ FormSubmit form with AJAX -->
+    <form id="withdrawForm">
       <label for="withdrawAmount">Enter Withdraw Amount ($):</label>
       <input type="number" name="Amount" id="withdrawAmount" placeholder="Enter amount to withdraw" required />
 
-      <!-- Withdrawal Method -->
       <label for="withdrawMethod">Select Withdrawal Method:</label>
       <select name="Method" id="withdrawMethod" required>
         <option value="">-- Select Method --</option>
@@ -104,19 +82,48 @@
         <option value="Binance Pay">Binance Pay</option>
       </select>
 
-      <!-- Wallet Address -->
       <label for="withdrawAddress">Enter Your Wallet Address / Pay ID:</label>
       <input type="text" name="Wallet Address" id="withdrawAddress" placeholder="Your wallet address or Binance Pay ID" required />
 
-      <!-- Hidden FormSubmit Settings -->
+      <!-- Hidden FormSubmit fields -->
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_autoresponse" value="Thank you! We've received your withdrawal request.">
-      <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html" />
 
-      <!-- Submit Button -->
       <button type="submit">Request Withdrawal</button>
     </form>
+
+    <!-- ✅ Success Message -->
+    <div id="successMessage" class="success-message hidden">
+      ✅ Withdrawal request sent successfully!
+    </div>
   </div>
+
+  <script>
+    document.getElementById("withdrawForm").addEventListener("submit", function (e) {
+      e.preventDefault(); // Prevent default form submission
+
+      const form = e.target;
+      const formData = new FormData(form);
+
+      fetch("https://formsubmit.co/ajax/stminning@gmail.com", {
+        method: "POST",
+        body: formData
+      })
+        .then(response => {
+          if (response.ok) {
+            // Hide the form and show success message
+            form.reset();
+            document.getElementById("successMessage").classList.remove("hidden");
+          } else {
+            alert("Something went wrong. Please try again.");
+          }
+        })
+        .catch(error => {
+          alert("Failed to send. Please check your connection or try later.");
+          console.error("Form submission error:", error);
+        });
+    });
+  </script>
 </body>
 </html>
