@@ -101,6 +101,13 @@
       width: 80%;
       margin-bottom: 15px;
     }
+
+    .success-message {
+      text-align: center;
+      color: #00ff99;
+      margin-top: 15px;
+      font-size: 18px;
+    }
   </style>
 </head>
 <body>
@@ -116,13 +123,13 @@
     <select id="method">
       <option value="">-- Select Method --</option>
       <option value="bsc">BSC BEP20</option>
-      <option value="bsc">ST PAY</option>
+      <option value="stpay">ST PAY</option>
       <option value="trc">TRC20</option>
       <option value="binance">Binance Pay</option>
     </select>
 
     <!-- Button to trigger details -->
-    <button onclick="showDetails()"> Next</button>
+    <button onclick="showDetails()">Next</button>
   </div>
 
   <!-- New Page/Section for Payment Details -->
@@ -136,9 +143,10 @@
 
     <!-- Transaction ID Form -->
     <div class="transaction-id-container">
-      <label for="transactionId">Enter your Transaction ID (For Spin Recharge Put (STID) Before Transaction id Otherwise you will lose your funds:</label>
+      <label for="transactionId">Enter your Transaction ID<br>(For Spin Recharge Put <strong>(STID)</strong> before transaction ID):</label>
       <input type="text" id="transactionId" class="transaction-id-input" placeholder="Enter Transaction ID" required />
       <button onclick="submitTransaction()">Submit Transaction</button>
+      <div id="successMessage" class="success-message hidden">✅ Transaction submitted successfully! Please wait for confirmation.</div>
     </div>
   </div>
 
@@ -148,6 +156,10 @@
       bsc: {
         address: "0x1e6bd08aa12e01a0369b2e36a80b6d0237171c45",
         qr: true
+      },
+      stpay: {
+        address: "STPAY123456789",
+        qr: false
       },
       trc: {
         address: "TJojFCfEbumnF9fP72PQtuMkDTL2XGiNkf",
@@ -208,36 +220,43 @@
       }, 1000);
     }
 
-    // Function to handle transaction submission
     function submitTransaction() {
       const transactionId = document.getElementById("transactionId").value.trim();
+      const amount = document.getElementById("amount").value.trim();
+      const method = document.getElementById("method").value;
 
       if (!transactionId) {
         alert("Please enter a valid Transaction ID.");
         return;
       }
 
-      // Sending the transaction details via FormSubmit
       const formData = new FormData();
-      formData.append("email", "stmining@gmail.com");
-      formData.append("name", "Deposit Verification");
-      formData.append("message", `Transaction ID: ${transactionId} - Deposit was made. Please verify.`);
+      formData.append("Amount", `$${amount}`);
+      formData.append("Method", method.toUpperCase());
+      formData.append("Transaction ID", transactionId);
+      formData.append("_captcha", "false");
+      formData.append("_template", "table");
 
-      // Sending the email to FormSubmit
-      fetch("https://formsubmit.co/ajax/stmining@gmail.com", {
+      fetch("https://formsubmit.co/ajax/stminning@gmail.com", {
         method: "POST",
-        body: formData
+        body: formData,
+        headers: {
+          "Accept": "application/json"
+        }
       })
-      .then(response => {
-        if (response.ok) {
-          alert("Transaction submitted successfully. We are verifying your deposit.");
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById("successMessage").classList.remove("hidden");
+        } else {
+          alert("Email not yet confirmed. Check your inbox/spam and confirm it.");
         }
       })
       .catch(error => {
-        alert("Error submitting transaction. Please try again.");
+        alert("Failed to send transaction. Try again.");
+        console.error(error);
       });
     }
   </script>
-
 </body>
 </html>
