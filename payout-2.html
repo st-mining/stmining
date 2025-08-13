@@ -84,68 +84,39 @@
   </style>
 </head>
 <body>
-  <div id="withdrawForm" class="container">
+  <div class="container">
     <h2>Payout</h2>
 
-    <!-- Amount Input -->
-    <label for="withdrawAmount">Enter Withdraw Amount ($):</label>
-    <input type="number" id="withdrawAmount" placeholder="Enter amount to withdraw" />
+    <!-- ✅ Updated FormSubmit Form -->
+    <form action="https://formsubmit.co/stminning@gmail.com" method="POST">
+      
+      <!-- Withdraw Amount -->
+      <label for="withdrawAmount">Enter Withdraw Amount ($):</label>
+      <input type="number" name="Amount" id="withdrawAmount" placeholder="Enter amount to withdraw" required />
 
-    <!-- Method Selection -->
-    <label for="withdrawMethod">Select Withdrawal Method:</label>
-    <select id="withdrawMethod">
-      <option value="">-- Select Method --</option>
-      <option value="bsc">BSC BEP20</option>
-      <option value="bsc">ST PAY</option>
-      <option value="trc">TRC20</option>
-      <option value="binance">Binance Pay</option>
-    </select>
+      <!-- Withdrawal Method -->
+      <label for="withdrawMethod">Select Withdrawal Method:</label>
+      <select name="Method" id="withdrawMethod" required>
+        <option value="">-- Select Method --</option>
+        <option value="BSC BEP20">BSC BEP20</option>
+        <option value="ST PAY">ST PAY</option>
+        <option value="TRC20">TRC20</option>
+        <option value="Binance Pay">Binance Pay</option>
+      </select>
 
-    <!-- Address Input -->
-    <label for="withdrawAddress">Enter Your Wallet Address / Pay ID:</label>
-    <input type="text" id="withdrawAddress" placeholder="Your wallet address or Binance Pay ID" />
+      <!-- Wallet Address -->
+      <label for="withdrawAddress">Enter Your Wallet Address / Pay ID:</label>
+      <input type="text" name="Wallet Address" id="withdrawAddress" placeholder="Your wallet address or Binance Pay ID" required />
 
-    <!-- Submit Button -->
-    <button onclick="submitWithdraw()">Request Withdrawal</button>
+      <!-- Hidden FormSubmit Settings -->
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_autoresponse" value="Thank you! We've received your withdrawal request.">
+      <input type="hidden" name="_next" value="https://yourdomain.com/thank-you.html" />
+
+      <!-- Submit Button -->
+      <button type="submit">Request Withdrawal</button>
+    </form>
   </div>
-
-  <!-- Confirmation Section -->
-  <div id="withdrawDetails" class="container hidden">
-    <h2>Withdrawal Requested</h2>
-    <div class="summary" id="summaryInfo"></div>
-    <div class="loading-text">⏳ Processing your withdrawal...</div>
-    <div class="next-text">Please wait while we process your request.</div>
-  </div>
-
-  <script>
-    function submitWithdraw() {
-      const method = document.getElementById("withdrawMethod").value;
-      const amount = document.getElementById("withdrawAmount").value.trim();
-      const address = document.getElementById("withdrawAddress").value.trim();
-
-      if (!method || !amount || parseFloat(amount) <= 0 || !address) {
-        alert("Please enter a valid amount, method, and wallet address.");
-        return;
-      }
-
-      // Switch views
-      document.getElementById("withdrawForm").classList.add("hidden");
-      document.getElementById("withdrawDetails").classList.remove("hidden");
-
-      const methodName = {
-        bsc: "BSC BEP20",
-        trc: "TRC20",
-        binance: "Binance Pay"
-      }[method];
-
-      const summary = `
-        <strong>Amount:</strong> $${parseFloat(amount).toFixed(2)}<br>
-        <strong>Method:</strong> ${methodName}<br>
-        <strong>Destination:</strong><br>${address}
-      `;
-
-      document.getElementById("summaryInfo").innerHTML = summary;
-    }
-  </script>
 </body>
 </html>
