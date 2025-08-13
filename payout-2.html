@@ -11,7 +11,6 @@
       color: #fff;
       padding: 40px 20px;
     }
-
     .container {
       max-width: 500px;
       margin: auto;
@@ -22,7 +21,6 @@
       border-top: 5px solid;
       border-image: linear-gradient(to right, lime, cyan) 1;
     }
-
     h2 {
       text-align: center;
       margin-bottom: 20px;
@@ -30,7 +28,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     input, select, button {
       width: 100%;
       padding: 12px;
@@ -39,23 +36,17 @@
       border-radius: 8px;
       font-size: 16px;
     }
-
     input, select {
       background: #2e2e3e;
       color: #fff;
     }
-
     button {
       background: linear-gradient(to right, #00ffcc, #00ccff);
       color: #000;
       font-weight: bold;
       cursor: pointer;
     }
-
-    .hidden {
-      display: none;
-    }
-
+    .hidden { display: none; }
     .success-message {
       text-align: center;
       font-size: 18px;
@@ -67,8 +58,6 @@
 <body>
   <div class="container">
     <h2>Payout</h2>
-
-    <!-- ✅ FormSubmit form with AJAX -->
     <form id="withdrawForm">
       <label for="withdrawAmount">Enter Withdraw Amount ($):</label>
       <input type="number" name="Amount" id="withdrawAmount" placeholder="Enter amount to withdraw" required />
@@ -83,46 +72,51 @@
       </select>
 
       <label for="withdrawAddress">Enter Your Wallet Address / Pay ID:</label>
-      <input type="text" name="Wallet Address" id="withdrawAddress" placeholder="Your wallet address or Binance Pay ID" required />
+      <input type="text" name="Wallet_Address" id="withdrawAddress" placeholder="Wallet address or Binance Pay ID" required />
 
-      <!-- Hidden FormSubmit fields -->
+      <!-- FormSubmit Specific Fields -->
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_template" value="table">
       <input type="hidden" name="_autoresponse" value="Thank you! We've received your withdrawal request.">
+      <input type="hidden" name="_url" value="https://yourdomain.com/withdraw.html">
 
       <button type="submit">Request Withdrawal</button>
     </form>
 
-    <!-- ✅ Success Message -->
     <div id="successMessage" class="success-message hidden">
-      ✅ Withdrawal request sent successfully!
+       Withdrawal request sent successfully!
+    </div>
+    <div id="confirmNotice" class="success-message hidden" style="color: #ffcc00;">
+      ⚠ Please check your email and confirm your form to start receiving submissions.
     </div>
   </div>
 
   <script>
-    document.getElementById("withdrawForm").addEventListener("submit", function (e) {
-      e.preventDefault(); // Prevent default form submission
+    document.getElementById("withdrawForm").addEventListener("submit", function(e) {
+      e.preventDefault();
 
       const form = e.target;
       const formData = new FormData(form);
 
       fetch("https://formsubmit.co/ajax/stminning@gmail.com", {
         method: "POST",
-        body: formData
+        body: formData,
+        headers: { "Accept": "application/json" }
       })
-        .then(response => {
-          if (response.ok) {
-            // Hide the form and show success message
-            form.reset();
-            document.getElementById("successMessage").classList.remove("hidden");
-          } else {
-            alert("Something went wrong. Please try again.");
-          }
-        })
-        .catch(error => {
-          alert("Failed to send. Please check your connection or try later.");
-          console.error("Form submission error:", error);
-        });
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          form.reset();
+          document.getElementById("successMessage").classList.remove("hidden");
+        } else {
+          // First submit may require confirmation
+          document.getElementById("confirmNotice").classList.remove("hidden");
+        }
+      })
+      .catch(err => {
+        alert("Submission failed. Please try again.");
+        console.error("Error:", err);
+      });
     });
   </script>
 </body>
