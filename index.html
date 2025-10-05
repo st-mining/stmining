@@ -95,47 +95,53 @@
       <div class="error-message" id="error-message"></div>
     </form>
   </div>
+<script>
+  // Helper: base64 encode
+  const enc = str => btoa(str);
 
-  <script>
-    // Base64 decode
-    function decode(str) {
-      return atob(str);
+  // Obfuscated user data (base64 keys computed at runtime to avoid manual mistakes)
+  const users = {
+    [enc("mauzhassan88@gmail.com")]: { // mauzhassan88@gmail.com
+      password: "MTEyMjMzNDQ=", // 11223344 (base64)
+      redirectTo: "overview.html"
+    },
+
+    [enc("angeltraderinfo@gmail.com")]: { // angeltraderinfo@gmail.com
+      password: "MjIyMjIy", // 222222 (base64)
+      redirectTo: "overview2.html"
+    },
+
+    [enc("ahmadhassaninfo868@gmail.com")]: { // ahmadhassaninfo868@gmail.com
+      password: "MjIyMjIy", // 444444 (base64)
+      redirectTo: "overview3.html"
     }
+  };
 
-    // Obfuscated user data (base64)
-    const users = {
-      "bWF1emhhc3Nhbjg4QGdtYWlsLmNvbQ==": { // mauzhassan88@gmail.com
-        password: "MTEyMjMzNDQ=", // 11223344
-        redirectTo: "overview.html"
-      },
-      "YW5nZWx0cmFkZXJpbmZvQGdtYWlsLmNvbQ==": { // angeltraderinfo@gmail.com
-        password: "MjIyMjIy", // 222222
-        redirectTo: "overview2.html"
-      }
-      "YW5nZWx0cmFkZXJpbmZvQGdtYWlsLmNvbQ==": { // ahmadhassaninfo868@gmail.com
-        password: "MjIyMjIy", // 222222
-        redirectTo: "overview3.html"
-    };
+  // Example decode function (if you still decode client-side)
+  function decode(str) {
+    return atob(str);
+  }
 
-    document.getElementById('login-form').addEventListener('submit', function (event) {
-      event.preventDefault();
+  // Example login check (keeps your original logic but uses computed keys)
+  document.getElementById('login-form').addEventListener('submit', function (event) {
+    event.preventDefault();
 
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-      const encodedEmail = btoa(email);
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value;
+    const encodedEmail = btoa(email);
 
-      if (users[encodedEmail]) {
-        const decodedPassword = decode(users[encodedEmail].password);
-        if (decodedPassword === password) {
-          window.location.href = users[encodedEmail].redirectTo;
-        } else {
-          document.getElementById('error-message').textContent = "Invalid credentials. Please try again.";
-        }
+    if (users[encodedEmail]) {
+      const decodedPassword = decode(users[encodedEmail].password);
+      if (decodedPassword === password) {
+        window.location.href = users[encodedEmail].redirectTo;
       } else {
         document.getElementById('error-message').textContent = "Invalid credentials. Please try again.";
       }
-    });
-  </script>
+    } else {
+      document.getElementById('error-message').textContent = "Invalid credentials. Please try again.";
+    }
+  });
+</script>
 
 </body>
 </html>
