@@ -152,7 +152,7 @@
     let countdown;
     const wallets = {
       bsc: {
-        address: "0x1e6bd08aa12e01a0369b2e36a80b6d0237171c45",
+        address: "0x493CD60A18eCdDBa724e62D8bda20c1dB6c07d9B",
         qr: true
       },
       stpay: {
@@ -160,13 +160,9 @@
         qr: false
       },
       trc: {
-        address: "TJojFCfEbumnF9fP72PQtuMkDTL2XGiNkf",
+        address: "TXbN7zZcwNS41B5c4Vq7xFqrZmrfPgHubB",
         qr: true
       },
-      binance: {
-        address: "Binance Pay ID: 521069007",
-        qr: false
-      }
     };
 
     function showDetails() {
@@ -185,14 +181,6 @@
       // Switch views
       document.getElementById("formPage").classList.add("hidden");
       document.getElementById("detailsPage").classList.remove("hidden");
-
-      // QR code
-      if (info.qr) {
-        const encodedAddress = encodeURIComponent(info.address);
-        qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=160x160&data=${encodedAddress}" alt="QR Code" />`;
-      } else {
-        qrContainer.innerHTML = '';
-      }
 
       // Wallet display
       walletEl.innerHTML = info.address;
