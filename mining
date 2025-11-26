@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mining</title>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #05050f, #0a0a20, #020207);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: white;
+      display: flex;
+      justify-content: center;
+      padding: 25px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 500px;
+      text-align: center;
+      padding: 25px;
+      background: rgba(25,25,45,0.55);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 0 35px rgba(0,0,0,0.6);
+      animation: fadeIn 0.8s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg,#00eaff,#00c2ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Back button */
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 20px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      color: #ddd;
+      transition: 0.25s;
+    }
+    .back-btn:hover {
+      background: rgba(255,255,255,0.15);
+    }
+
+    /* Mining button */
+    #startBtn {
+      margin-top: 20px;
+      padding: 16px 30px;
+      font-size: 20px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(90deg,#007bff,#00ffc6);
+      color: #000;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.25s;
+      box-shadow: 0 0 20px #00ffc622;
+    }
+
+    #startBtn:disabled {
+      background: #333;
+      color: #888;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    #startBtn:hover:not(:disabled) {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px #00ffc655;
+    }
+
+    /* Timer */
+    #timer {
+      font-size: 22px;
+      font-weight: 600;
+      margin-top: 20px;
+      color: #00eaff;
+    }
+
+    /* Progress bar */
+    .progress-box {
+      width: 100%;
+      height: 14px;
+      background: #111;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg,#00ffb7,#00aaff);
+      border-radius: 10px;
+      transition: width 1s linear;
+    }
+
+    /* Puzzle Modal */
+    .modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(5px);
+    }
+
+    .modal-content {
+      width: 90%;
+      max-width: 420px;
+      background: #151526;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+      animation: pop 0.25s;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.85); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .close {
+      float: right;
+      font-size: 30px;
+      cursor: pointer;
+      color: #888;
+    }
+    .close:hover { color: #fff; }
+
+    .puzzle-box {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    input {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      border-radius: 10px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+    }
+
+    .reward-popup {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-size: 26px;
+      animation: fade 0.4s;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="back-btn" onclick="history.back()">⬅ Back</div>
+
+    <h2>Mining Center</h2>
+
+    <div id="timer">Start Mining</div>
+
+    <div class="progress-box">
+      <div id="progress" class="progress"></div>
+    </div>
+
+    <button id="startBtn" onclick="openPuzzle()">⭐ Start Mining</button>
+</div>
+
+<!-- Puzzle Modal -->
+<div id="puzzleModal" class="modal">
+  <div class="modal-content">
+      <span class="close" onclick="closePuzzle()">&times;</span>
+      <h3>Solve Puzzle to Start Mining</h3>
+      <div id="puzzleArea" class="puzzle-box"></div>
+      <input id="puzzleInput" placeholder="Enter answer...">
+      <button onclick="checkPuzzle()" style="margin-top:15px;padding:10px 20px;border-radius:10px;font-weight:600;">Submit</button>
+  </div>
+</div>
+
+<div class="reward-popup" id="rewardPopup">
+  🎉 Mining Complete! Reward Added!
+</div>
+
+<!-- Sound Effect -->
+<audio id="ding" src="https://assets.mixkit.co/sfx/preview/mixkit-achievement-bell-600.mp3"></audio>
+
+<script>
+/*-----------------------
+  Random Puzzle Types
+------------------------*/
+function generatePuzzle() {
+    const type = Math.floor(Math.random() * 3); 
+
+    if (type === 0) {
+        // Math puzzle
+        let a = Math.floor(Math.random() * 10) + 1;
+        let b = Math.floor(Math.random() * 10) + 1;
+        puzzleAnswer = a + b;
+        puzzleArea.innerHTML = `What is <b>${a} + ${b}</b>?`;
+    }
+    else if (type === 1) {
+        // Slider puzzle
+        puzzleAnswer = "SLIDE";
+        puzzleArea.innerHTML = `
+            Slide to Unlock 👉 <br><br>
+            <input type="range" min="0" max="100" value="0" id="slider">
+        `;
+        setTimeout(() => {
+            document.getElementById("slider").oninput = function() {
+                if (this.value > 95) {
+                    puzzleInput.value = "SLIDE";
+                }
+            };
+        }, 200);
+    }
+    else {
+        // Drag puzzle
+        puzzleAnswer = "OK";
+        puzzleArea.innerHTML = `
+            Drag the 🔵 into the box:<br><br>
+            <div style="display:flex;justify-content:center;gap:15px;">
+                <div draggable="true" id="drag" style="width:40px;height:40px;background:#00cfff;border-radius:50%;cursor:grab;"></div>
+                <div id="drop" style="width:60px;height:60px;border:2px dashed #fff;border-radius:10px;"></div>
+            </div>
+        `;
+
+        setTimeout(() => {
+            const drag = document.getElementById("drag");
+            const drop = document.getElementById("drop");
+
+            drag.ondragstart = () => drag.classList.add("dragging");
+            drop.ondragover = e => e.preventDefault();
+            drop.ondrop = () => { puzzleInput.value = "OK"; };
+        }, 200);
+    }
+}
+
+/*-----------------------
+  Puzzle Modal Controls
+------------------------*/
+let puzzleAnswer = "";
+
+function openPuzzle() {
+    document.getElementById("puzzleModal").style.display = "flex";
+    generatePuzzle();
+}
+function closePuzzle() {
+    document.getElementById("puzzleModal").style.display = "none";
+}
+
+/*-----------------------
+  Check Puzzle
+------------------------*/
+function checkPuzzle() {
+    const inp = document.getElementById("puzzleInput").value.trim();
+
+    if (inp == puzzleAnswer) {
+        closePuzzle();
+        startMining();
+    } else {
+        alert("Wrong answer. Try again!");
+    }
+}
+
+/*-----------------------
+       MINING LOGIC
+------------------------*/
+let miningDuration = 24 * 60 * 60 * 1000; // 24 hours
+let startTime = localStorage.getItem("mining_start");
+
+function startMining() {
+    startTime = Date.now();
+    localStorage.setItem("mining_start", startTime);
+
+    document.getElementById("ding").play();
+    updateUI();
+}
+
+function updateUI() {
+    const startBtn = document.getElementById("startBtn");
+    const timer = document.getElementById("timer");
+    const progress = document.getElementById("progress");
+
+    if (!startTime) {
+        timer.innerHTML = "Start Mining";
+        return;
+    }
+
+    let now = Date.now();
+    let diff = now - startTime;
+
+    if (diff >= miningDuration) {
+        timer.innerHTML = "Mining Complete!";
+        progress.style.width = "100%";
+        startBtn.disabled = false;
+
+        // Reward popup
+        document.getElementById("rewardPopup").style.display = "flex";
+        setTimeout(() => {
+          document.getElementById("rewardPopup").style.display = "none";
+        }, 3000);
+
+        return;
+    }
+
+    startBtn.disabled = true;
+
+    let remaining = miningDuration - diff;
+    let hours = Math.floor(remaining / (1000 * 60 * 60));
+    let minutes = Math.floor((remaining / (1000 * 60)) % 60);
+    let seconds = Math.floor((remaining / 1000) % 60);
+
+    timer.innerHTML = `${hours}h ${minutes}m ${seconds}s`;
+
+    let percent = (diff / miningDuration) * 100;
+    progress.style.width = percent + "%";
+}
+
+// Update every second
+setInterval(updateUI, 1000);
+updateUI();
+
+</script>
+
+</body>
+</html>
