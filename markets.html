@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Markets — Buy & My Coins</title>
+<style>
+:root{
+  --bg:#070814; --card:#0f1220; --muted:#9fb0d6;
+  --accent:#00d8ff; --pos:#1aff8c; --neg:#ff6b6b;
+  --glass: rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family: "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg,#05060a,#071026);
+  color:#e8f4ff; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  padding:16px;
+}
+
+/* App shell */
+.app{
+  max-width:1100px; margin:0 auto; background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:14px; padding:16px; border:1px solid rgba(255,255,255,0.03);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+/* top bar */
+.topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:12px; }
+.top-left{ display:flex; align-items:center; gap:12px; }
+.backbtn{ background:transparent; border:1px solid rgba(255,255,255,0.06); color:var(--muted); padding:8px 12px; border-radius:10px; cursor:pointer; }
+.title{ font-weight:800; font-size:18px; background:linear-gradient(90deg,var(--accent),#0077ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+/* tabs */
+.tabs{ display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap; }
+.tab{ padding:8px 14px; border-radius:10px; cursor:pointer; border:1px solid rgba(255,255,255,0.03); background:transparent; color:var(--muted); font-weight:700; }
+.tab.active{ background: linear-gradient(90deg,#072033, #0b2a40); color:var(--accent); box-shadow: inset 0 1px 0 rgba(255,255,255,0.02); }
+
+/* table header */
+.thead{ display:grid; grid-template-columns: 1fr 140px 100px 180px; gap:12px; color:var(--muted); font-size:13px; padding:10px 12px; border-bottom:1px solid rgba(255,255,255,0.03); align-items:center; margin-bottom:8px; }
+
+/* rows */
+.list{ display:flex; flex-direction:column; gap:10px; }
+.row{ display:grid; grid-template-columns: 1fr 140px 100px 180px; gap:12px; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02); align-items:center; transition: transform .12s, box-shadow .12s; }
+.row:hover{ transform:translateY(-4px); box-shadow:0 18px 40px rgba(0,0,0,0.5); }
+
+.coin-title{ font-weight:800; font-size:15px; color:#eaf6ff; }
+.coin-sub{ color:var(--muted); font-size:13px; }
+
+.price{ font-weight:800; font-size:16px; color:#eaf6ff; }
+.change{ font-weight:700; font-size:14px; }
+.change.pos{ color:var(--pos); }
+.change.neg{ color:var(--neg); }
+
+.buy-box{ display:flex; gap:8px; align-items:center; justify-content:flex-end; }
+.input{ padding:8px 10px; border-radius:8px; background:#0b1220; border:1px solid rgba(255,255,255,0.03); color:#fff; width:100px; }
+.btn-buy{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:800; background:linear-gradient(90deg,#ffd27a,#ff9f1c); color:#000; }
+
+/* my coins card */
+.mycoins{ display:flex; flex-direction:column; gap:12px; }
+.hold-card{ padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent); border:1px solid rgba(255,255,255,0.02); display:flex; gap:12px; align-items:center; justify-content:space-between; }
+.hold-info{ display:flex; gap:12px; align-items:center; }
+.hold-name{ font-weight:800; }
+.hold-units{ color:var(--muted); font-size:13px; }
+.sell-btn{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; background:linear-gradient(90deg,#ff8b8b,#ff4c4c); color:#fff; font-weight:800; }
+
+/* responsive */
+@media (max-width:800px){
+  .thead, .row{ grid-template-columns: 1fr 120px 90px 140px; }
+  .buy-box{ justify-content:flex-start; }
+  .input{ width:80px; }
+}
+@media (max-width:520px){
+  .thead{ display:none; }
+  .row{ grid-template-columns: 1fr; gap:6px; padding:10px; }
+  .buy-box{ display:flex; width:100%; justify-content:space-between; margin-top:6px; }
+  .coin-sub{ display:none; }
+}
+
+.toast{ position:fixed; right:18px; bottom:18px; background:linear-gradient(180deg,#071223,#021226); padding:10px 12px; border-radius:10px; box-shadow:0 12px 40px rgba(0,0,0,0.6); color:#eaf6ff; border-left:4px solid var(--accent); }
+.toast.err{ border-left-color:var(--neg); }
+</style>
+</head>
+<body>
+  <div class="app">
+
+    <!-- TOP BAR (BALANCE REMOVED) -->
+    <div class="topbar">
+      <div class="top-left">
+        <button class="backbtn" onclick="history.back()">← Back</button>
+        <div>
+          <div class="title">Crypto Market</div>
+          <div style="color:var(--muted); font-size:13px">Live markets • Buy & manage your coins</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tabs" role="tablist">
+      <div id="tabMarkets" class="tab active" role="tab" onclick="switchTab('markets')">Markets</div>
+      <div id="tabMy" class="tab" role="tab" onclick="switchTab('my')">My Coins</div>
+    </div>
+
+    <!-- Markets -->
+    <div id="panelMarkets">
+      <div class="thead">
+        <div>Coin</div>
+        <div>Price (USDT)</div>
+        <div>24h %</div>
+        <div style="text-align:right">Buy (USD)</div>
+      </div>
+
+      <div id="marketsList" class="list"></div>
+    </div>
+
+    <!-- My Coins -->
+    <div id="panelMy" style="display:none">
+      <div id="myCoinsList" class="mycoins"></div>
+    </div>
+
+  </div>
+
+  <div id="toasts"></div>
+
+<script>
+/* ------- SAME JS — ONLY BALANCE UI REMOVED -------- */
+
+/* Storage */
+const BAL_KEY = 'pro_markets_balance';
+const HOLD_KEY = 'pro_markets_holdings';
+const HISTORY_KEY = 'pro_markets_history';
+
+if (localStorage.getItem(BAL_KEY) === null) localStorage.setItem(BAL_KEY, String(1000.00));
+let balance = parseFloat(localStorage.getItem(BAL_KEY) || '1000');
+
+let holdings = JSON.parse(localStorage.getItem(HOLD_KEY) || '[]');
+let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+
+/* Binance */
+const BINANCE_SYMBOLS = ['BTCUSDT','ETHUSDT','BNBUSDT','SOLUSDT','XRPUSDT','DOGEUSDT','ADAUSDT','TRXUSDT'];
+const CUSTOM = [
+  { symbol:'STCOIN', display:'ST COIN', price:1557.00 },
+  { symbol:'STOX', display:'STOX', price:20.00 }
+];
+
+const marketsList = document.getElementById('marketsList');
+const myCoinsList = document.getElementById('myCoinsList');
+
+/* Send toast */
+function toast(msg,type='ok'){
+  const el = document.createElement('div');
+  el.className='toast'+(type==='err'?' err':'');
+  el.innerText = msg;
+  document.getElementById('toasts').appendChild(el);
+  setTimeout(()=>el.remove(),3000);
+}
+
+/* No balance UI anymore — but value still works for buy/sell */
+function setBalance(v){
+  balance = Math.max(0, Number(v));
+  localStorage.setItem(BAL_KEY, balance.toFixed(2));
+}
+
+const rows = {};
+
+function makeMarketRow(symbol, display, initPrice){
+  const row = document.createElement('div');
+  row.className='row';
+  row.dataset.sym = symbol;
+
+  row.innerHTML = `
+    <div>
+      <div class="coin-title">${display}</div>
+      <div class="coin-sub">${symbol}</div>
+    </div>
+    <div><div id="price-${symbol}" class="price">$${initPrice.toFixed(2)}</div></div>
+    <div><div id="change-${symbol}" class="change">0.00%</div></div>
+    <div style="text-align:right">
+      <div class="buy-box">
+        <input id="input-${symbol}" class="input" type="number" min="0" placeholder="USD">
+        <button id="buy-${symbol}" class="btn-buy">Buy</button>
+      </div>
+    </div>
+  `;
+  marketsList.appendChild(row);
+
+  rows[symbol] = {
+    priceEl: document.getElementById(`price-${symbol}`),
+    changeEl: document.getElementById(`change-${symbol}`),
+    inputEl: document.getElementById(`input-${symbol}`),
+    buyBtn: document.getElementById(`buy-${symbol}`),
+    symbol,
+    display
+  };
+
+  rows[symbol].buyBtn.addEventListener('click',()=>handleBuy(symbol));
+}
+
+function buildRows(){
+  marketsList.innerHTML='';
+  BINANCE_SYMBOLS.forEach(s=> makeMarketRow(s.replace('USDT',''), s.replace('USDT',''), 0));
+  CUSTOM.forEach(c=> makeMarketRow(c.symbol, c.display, c.price));
+}
+
+/* BUY */
+function handleBuy(symbol){
+  const r = rows[symbol];
+  const usd = Number(r.inputEl.value);
+  if (!usd || usd <= 0) return toast("Enter valid amount","err");
+  if (usd > balance) return toast("Insufficient balance","err");
+
+  const price = Number(r.priceEl.textContent.replace(/[^0-9.\-]/g,'')) || 0;
+  if (!price) return toast("Price unavailable","err");
+
+  const units = usd / price;
+
+  setBalance(balance - usd);
+
+  const ex = holdings.find(h=>h.symbol===symbol);
+  if (ex){
+    const cost = ex.avgPrice * ex.units + usd;
+    const total = ex.units + units;
+    ex.units = total;
+    ex.avgPrice = cost / total;
+  } else {
+    holdings.push({symbol, units, avgPrice:price, display:r.display});
+  }
+
+  localStorage.setItem(HOLD_KEY, JSON.stringify(holdings));
+  r.inputEl.value='';
+
+  renderMyCoins();
+  toast(`Bought $${usd.toFixed(2)} of ${symbol}`);
+}
+
+/* SELL */
+function handleSell(symbol){
+  const idx = holdings.findIndex(h=>h.symbol===symbol);
+  if (idx===-1) return;
+
+  const h = holdings[idx];
+  const price = Number(rows[symbol].priceEl.textContent.replace(/[^0-9.\-]/g,'')) || 0;
+  const usd = h.units * price;
+
+  setBalance(balance + usd);
+
+  holdings.splice(idx,1);
+  localStorage.setItem(HOLD_KEY, JSON.stringify(holdings));
+
+  renderMyCoins();
+  toast(`Sold ${symbol} for $${usd.toFixed(2)}`);
+}
+
+/* MY COINS */
+function renderMyCoins(){
+  myCoinsList.innerHTML='';
+  if (!holdings.length){
+    myCoinsList.innerHTML='<div style="color:var(--muted)">No holdings yet — buy from Markets.</div>';
+    return;
+  }
+
+  holdings.forEach(h=>{
+    const price = Number(rows[h.symbol].priceEl.textContent.replace(/[^0-9.\-]/g,'')) || 0;
+    const value = h.units * price;
+    const cost = h.units * h.avgPrice;
+    const pnl = value - cost;
+    const pct = (pnl/cost)*100 || 0;
+
+    const card = document.createElement('div');
+    card.className='hold-card';
+    card.innerHTML = `
+      <div class="hold-info">
+        <div>
+          <div class="hold-name">${h.display}</div>
+          <div class="hold-units">${h.units.toFixed(6)} units • avg $${h.avgPrice.toFixed(2)}</div>
+        </div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-weight:800">$${value.toFixed(2)}</div>
+        <div style="color:${pnl>=0?'var(--pos)':'var(--neg)'}; font-weight:700">
+          ${pnl>=0?'+':'-'}$${Math.abs(pnl).toFixed(2)} (${pct>=0?'+':''}${pct.toFixed(2)}%)
+        </div>
+        <button class="sell-btn" style="margin-top:8px" onclick="handleSell('${h.symbol}')">Sell</button>
+      </div>
+    `;
+    myCoinsList.appendChild(card);
+  });
+}
+
+/* LIVE BINANCE */
+function startBinance(){
+  const ws = new WebSocket("wss://stream.binance.com:9443/ws/!ticker@arr");
+  ws.onmessage = e=>{
+    const data = JSON.parse(e.data);
+    BINANCE_SYMBOLS.forEach(sym=>{
+      const d = data.find(x=>x.s===sym);
+      if (!d) return;
+      const s = sym.replace('USDT','');
+      const price = Number(d.c);
+      const pct = Number(d.P);
+      updateCell(s, price, pct);
+    });
+    renderMyCoins();
+  };
+  ws.onclose = ()=>setTimeout(startBinance,2000);
+}
+
+function updateCell(symbol, price, pct){
+  const r = rows[symbol];
+  if (!r) return;
+  r.priceEl.textContent = "$"+price.toFixed(2);
+  r.changeEl.textContent = (pct>=0?"+":"")+pct.toFixed(2)+"%";
+  r.changeEl.className="change "+(pct>=0?'pos':'neg');
+}
+
+/* CUSTOM COIN SIMULATION */
+function simulateCustom(){
+  setInterval(()=>{
+    CUSTOM.forEach(c=>{
+      const row = rows[c.symbol];
+      if (!row) return;
+      let p = Number(row.priceEl.textContent.replace(/[^0-9.\-]/g,'')) || c.price;
+      const change = (Math.random()*0.6 - 0.3);
+      const np = +(p * (1 + change/100)).toFixed(2);
+      updateCell(c.symbol, np, change);
+    });
+    renderMyCoins();
+  },1000);
+}
+
+/* TABS */
+function switchTab(t){
+  panelMarkets.style.display = t==="markets" ? "" : "none";
+  panelMy.style.display = t==="my" ? "" : "none";
+  tabMarkets.classList.toggle("active", t==="markets");
+  tabMy.classList.toggle("active", t==="my");
+}
+
+/* INIT */
+buildRows();
+renderMyCoins();
+startBinance();
+simulateCustom();
+</script>
+</body>
+</html>
