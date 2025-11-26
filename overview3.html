@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Dashboard</title>
+
   <style>
     * {
       margin: 0;
@@ -26,66 +27,42 @@
       background: #1b1b2a;
       border-radius: 20px;
       padding: 25px;
-      max-width: 900px;
       width: 100%;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+      max-width: 900px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
     }
 
+    /* ★ Premium Gold Buttons For All ★ */
     .button-group {
       display: flex;
       justify-content: center;
-      gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 20px;
+      gap: 10px;
+      margin-bottom: 25px;
     }
 
     .btn {
-      padding: 5px 12px;
-      font-size: 11px;
-      font-weight: 600;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
       border: none;
-      border-radius: 6px;
-      background: linear-gradient(to right, #ff9900, #ffaa33);
+      border-radius: 12px;
+      background: linear-gradient(45deg, #ff9900, #ffdd55);
       color: #000;
       cursor: pointer;
       text-decoration: none;
-      transition: all 0.2s ease;
-      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
       display: inline-flex;
-      align-items: center;
       justify-content: center;
-      min-width: 80px;
+      align-items: center;
+      transition: 0.25s ease;
+      box-shadow: 0 5px 15px rgba(255,165,0,0.35);
+      min-width: 110px;
     }
 
     .btn:hover {
-      transform: translateY(-1px);
-      background: linear-gradient(to right, #ffaa33, #ffcc66);
-    }
-
-    .btn-lucky {
-      background: linear-gradient(270deg, #ff4e50, #f9d423, #ff4e50);
-      background-size: 600% 600%;
-      color: #fff;
-      font-weight: 700;
-      box-shadow: 0 0 12px #f9d423, 0 0 24px #ff4e50;
-      animation: shine 3s ease-in-out infinite;
-    }
-
-    .btn-lucky:hover {
-      background-size: 800% 800%;
-      box-shadow: 0 0 20px #f9d423, 0 0 30px #ff4e50;
-    }
-
-    @keyframes shine {
-      0% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-      100% {
-        background-position: 0% 50%;
-      }
+      transform: translateY(-3px) scale(1.05);
+      background: linear-gradient(45deg, #ffb84d, #fff0a8);
+      box-shadow: 0 8px 20px rgba(255,200,50,0.55);
     }
 
     h1 {
@@ -97,87 +74,84 @@
       -webkit-text-fill-color: transparent;
     }
 
+    /* Cards */
     .card-container {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
       gap: 18px;
       margin-bottom: 15px;
     }
 
     .card {
       background: linear-gradient(145deg, #26263a, #1c1c2b);
-      border-radius: 12px;
       padding: 18px;
+      border-radius: 13px;
       text-align: center;
+      border: 1px solid #313144;
       position: relative;
-      border: 1px solid #2f2f3f;
     }
 
     .card::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
+      content:"";
       height: 4px;
       width: 100%;
       background: linear-gradient(90deg, red, orange, yellow);
-      border-top-left-radius: 12px;
-      border-top-right-radius: 12px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 13px 13px 0 0;
     }
 
     .card-title {
-      font-size: 12px;
-      color: #bbbbbb;
-      margin-bottom: 6px;
-      text-transform: uppercase;
+      font-size: 13px;
+      color: #bdbdbd;
       letter-spacing: 1px;
+      margin-bottom: 6px;
     }
 
     .card-value {
-      font-size: 22px;
+      font-size: 23px;
       font-weight: bold;
       color: #ffffff;
     }
 
     .update-info {
       text-align: center;
+      margin-top: 10px;
       color: #888;
       font-size: 12px;
       font-style: italic;
     }
 
-    @media (max-width: 600px) {
-      .dashboard {
-        padding: 18px;
-      }
-
-      h1 {
-        font-size: 22px;
-      }
-
+    /* Mobile Optimization */
+    @media(max-width: 600px) {
+      .dashboard { padding: 20px; }
+      h1 { font-size: 22px; }
       .btn {
-        padding: 4px 10px;
-        font-size: 10px;
-        min-width: 70px;
+        padding: 8px 12px;
+        font-size: 11px;
+        min-width: 90px;
       }
-
-      .card-value {
-        font-size: 18px;
-      }
+      .card-value { font-size: 18px; }
     }
   </style>
 </head>
+
 <body>
 
   <div class="dashboard">
 
     <div class="button-group">
-      <a href="add-balance-3.html" class="btn" target="_blank" rel="noopener noreferrer">Add Balance</a>
-      <a href="payout-2.html" class="btn" target="_blank" rel="noopener noreferrer">Payout</a>
-      <a href="discover.html" class="btn" target="_blank" rel="noopener noreferrer">Discover</a>
-      <a href="spinwin.html" class="btn" target="_blank" rel="noopener noreferrer">Spin and Win</a> <!-- ✅ New Button -->
-      <a href="tid3.html" class="btn" target="_blank" rel="noopener noreferrer">Transactions</a> <!-- ✅ New Button -->
-      <a href="events.html" class="btn btn-lucky" target="_blank" rel="noopener noreferrer">🎉 Events</a>
+      <a href="add-balance-3.html" class="btn">Add Balance</a>
+      <a href="payout-2.html" class="btn">Payout</a>
+      <a href="discover.html" class="btn">Discover</a>
+      <a href="spinwin.html" class="btn">Spin & Win</a>
+      <a href="tid3.html" class="btn">Transactions</a>
+
+      <!-- ⭐ NEW BUTTON YOU REQUESTED -->
+      <a href="mining.html" class="btn">Mining</a>
+<a href="markets.html" class="btn">Markets</a>
+      <a href="events.html" class="btn">Events</a>
     </div>
 
     <h1>Overview</h1>
@@ -187,14 +161,17 @@
         <div class="card-title">Balance</div>
         <div class="card-value">$100</div>
       </div>
+
       <div class="card">
         <div class="card-title">Total Invest</div>
         <div class="card-value">$00</div>
       </div>
+
       <div class="card">
         <div class="card-title">Profit</div>
         <div class="card-value">$00</div>
       </div>
+
       <div class="card">
         <div class="card-title">Withdrawal</div>
         <div class="card-value">$00</div>
@@ -202,7 +179,6 @@
     </div>
 
     <div class="update-info">Updated from last month to zero.</div>
-
   </div>
 
 </body>
