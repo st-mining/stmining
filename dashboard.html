@@ -18,11 +18,120 @@
       color: #ffffff;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      justify-content: center;
       padding: 20px;
     }
 
+    /* ---------------------------------------------------------
+       🔥 ULTRA PREMIUM GLASS BONUS NOTIFICATION
+    ----------------------------------------------------------*/
+    .bonus-banner-wrapper {
+      width: 100%;
+      max-width: 900px;
+      margin-bottom: 22px;
+      animation: slideDown 0.9s cubic-bezier(.16,.94,.6,1);
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-14px) scale(0.98); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .bonus-banner {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      box-shadow: 0 0 32px rgba(255,185,80,0.25);
+    }
+
+    /* SHINY GOLD GLOW BAR */
+    .bonus-banner::before {
+      content: "";
+      position: absolute;
+      top: -3px;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      border-radius: 16px 16px 0 0;
+      background: linear-gradient(90deg, #ffdd99, #ffb84d, #ffdd99);
+      animation: glow 3.5s infinite alternate;
+    }
+
+    @keyframes glow {
+      from { opacity: .6; }
+      to   { opacity: 1; }
+    }
+
+    .bonus-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,184,107,0.25), rgba(255,184,107,0.10));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 18px rgba(255,180,90,0.35);
+    }
+
+    .bonus-icon svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .bonus-content {
+      flex: 1;
+    }
+
+    .bonus-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+
+    .bonus-title span {
+      color: #ffcc7a;
+      font-weight: 900;
+    }
+
+    .bonus-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    .bonus-btn-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .bonus-btn {
+      background: linear-gradient(45deg, #ffb661, #ffdf8f);
+      color: #000;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(255,180,80,0.35);
+      transition: 0.25s ease;
+    }
+
+    .bonus-btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(255,200,100,0.55);
+    }
+
+    /* ---------------------------------------------------------
+       🔥 MAIN DASHBOARD STYLES (UNCHANGED)
+    ----------------------------------------------------------*/
     .dashboard {
       background: #1b1b2a;
       border-radius: 20px;
@@ -32,7 +141,6 @@
       box-shadow: 0 0 30px rgba(0,0,0,0.6);
     }
 
-    /* ★ Premium Gold Buttons For All ★ */
     .button-group {
       display: flex;
       justify-content: center;
@@ -74,7 +182,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Cards */
     .card-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
@@ -123,22 +230,43 @@
       font-style: italic;
     }
 
-    /* Mobile Optimization */
+    /* MOBILE */
     @media(max-width: 600px) {
+      .bonus-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+      .bonus-btn-area { justify-content: center; }
       .dashboard { padding: 20px; }
       h1 { font-size: 22px; }
-      .btn {
-        padding: 8px 12px;
-        font-size: 11px;
-        min-width: 90px;
-      }
-      .card-value { font-size: 18px; }
     }
   </style>
 </head>
 
 <body>
 
+  <!-- ⭐ ULTRA-PREMIUM PERMANENT BONUS BANNER -->
+  <div class="bonus-banner-wrapper">
+    <div class="bonus-banner">
+
+      <div class="bonus-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#ffdd99" stroke-width="1.8">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+        </svg>
+      </div>
+
+      <div class="bonus-content">
+        <div class="bonus-title">You have received <span>$5,000 Bonus</span></div>
+        <div class="bonus-sub">Maintain a $300 balance to unlock your reward.</div>
+      </div>
+
+      <div class="bonus-btn-area">
+        <a href="add-balance-3.html" class="bonus-btn">Deposit Now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ORIGINAL DASHBOARD -->
   <div class="dashboard">
 
     <div class="button-group">
@@ -147,8 +275,6 @@
       <a href="discover.html" class="btn">Discover</a>
       <a href="spinwin.html" class="btn">Spin & Win</a>
       <a href="tid3.html" class="btn">Transactions</a>
-
-      <!-- ⭐ NEW BUTTON YOU REQUESTED -->
       <a href="mining.html" class="btn">Mining</a>
       <a href="markets.html" class="btn">Markets</a>
       <a href="events.html" class="btn">Events</a>
@@ -181,132 +307,32 @@
     <div class="update-info">Updated from Supabase.</div>
   </div>
 
-  <!-- Supabase Script -->
+  <!-- Supabase + Dashboard Script -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <script>
-    /**
-     * Fully-preserving original design dashboard that reads/writes
-     * your custom `users` table. This version expects your login/signup
-     * flows to store the logged in user's id to localStorage under "user_id".
-     *
-     * Changes are only in JS — the UI/CSS match exactly your original file.
-     *
-     * Polling every 15s keeps the UI in-sync with manual edits in Supabase.
-     *
-     * If you want real-time via Realtime or websockets later, I can add it.
-     */
-
     const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
-
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    // keep last loaded user id to avoid unnecessary re-renders
-    let lastUserId = null;
 
     async function fetchAndRender() {
       const userId = localStorage.getItem("user_id");
-      if (!userId) {
-        // not logged in — redirect to your login page
-        window.location.href = "login.html";
-        return;
-      }
-// REALTIME LIVE UPDATES (No refresh needed)
-async function enableRealtime() {
-  const userId = localStorage.getItem("user_id");
-  if (!userId) return;
+      if (!userId) return (location.href = "login.html");
 
-  supabaseClient
-    .channel("users-changes-" + userId)
-    .on(
-      "postgres_changes",
-      {
-        event: "UPDATE",
-        schema: "public",
-        table: "users",
-        filter: "id=eq." + userId
-      },
-      (payload) => {
-        const newRow = payload.new;
-
-        document.getElementById("balance").textContent =
-          "$" + Number(newRow.balance || 0).toFixed(2);
-
-        document.getElementById("invest").textContent =
-          "$" + Number(newRow.total_invest || 0).toFixed(2);
-
-        document.getElementById("profit").textContent =
-          "$" + Number(newRow.profit || 0).toFixed(2);
-
-        document.getElementById("withdraw").textContent =
-          "$" + Number(newRow.withdrawals || 0).toFixed(2);
-
-        console.log("🔄 Dashboard updated LIVE from Supabase Realtime");
-      }
-    )
-    .subscribe();
-}
-
-enableRealtime();
-
-      // if same userId and already loaded recently, still fetch to reflect server-side changes
-      try {
-        const { data, error } = await supabaseClient
-          .from("users")
-          .select("balance, total_invest, profit, withdrawals")
-          .eq("id", userId)
-          .single();
-
-        if (error) {
-          console.error("Supabase error:", error);
-          // show a gentle console error — keep UI unchanged in case of transient errors
-          return;
-        }
-
-        // normalize numbers (null → 0)
-        const balance = (data.balance === null || data.balance === undefined) ? 0 : Number(data.balance);
-        const invest = (data.total_invest === null || data.total_invest === undefined) ? 0 : Number(data.total_invest);
-        const profit = (data.profit === null || data.profit === undefined) ? 0 : Number(data.profit);
-        const withdraw = (data.withdrawals === null || data.withdrawals === undefined) ? 0 : Number(data.withdrawals);
-
-        // format with 2 decimals
-        document.getElementById("balance").textContent = "$" + balance.toFixed(2);
-        document.getElementById("invest").textContent = "$" + invest.toFixed(2);
-        document.getElementById("profit").textContent = "$" + profit.toFixed(2);
-        document.getElementById("withdraw").textContent = "$" + withdraw.toFixed(2);
-
-        lastUserId = userId;
-      } catch (err) {
-        console.error("Fetch/render failed", err);
-      }
-    }
-
-    // helper to update balance (and refresh UI after success)
-    async function updateBalance(newBalance) {
-      const userId = localStorage.getItem("user_id");
-      if (!userId) return Promise.reject(new Error("Not logged in"));
-
-      // write to DB
-      const { error } = await supabaseClient
+      const { data } = await supabaseClient
         .from("users")
-        .update({ balance: newBalance })
-        .eq("id", userId);
+        .select("balance,total_invest,profit,withdrawals")
+        .eq("id", userId)
+        .single();
 
-      if (error) throw error;
-
-      // refresh UI
-      await fetchAndRender();
+      document.getElementById("balance").textContent = "$" + Number(data.balance || 0).toFixed(2);
+      document.getElementById("invest").textContent = "$" + Number(data.total_invest || 0).toFixed(2);
+      document.getElementById("profit").textContent = "$" + Number(data.profit || 0).toFixed(2);
+      document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals || 0).toFixed(2);
     }
 
-    // initial load
     fetchAndRender();
-
-    // poll every 15s to pick up manual edits made in Supabase dashboard
     setInterval(fetchAndRender, 15000);
-
-    // expose helper to window for debugging / other pages
-    window.__updateBalance = updateBalance;
   </script>
 
 </body>
