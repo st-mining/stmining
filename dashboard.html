@@ -6,12 +6,7 @@
   <title>Dashboard</title>
 
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
@@ -23,20 +18,9 @@
       padding: 20px;
     }
 
-    /* ---------------------------------------------------------
-       🔥 ULTRA PREMIUM GLASS BONUS NOTIFICATION
-    ----------------------------------------------------------*/
-    .bonus-banner-wrapper {
-      width: 100%;
-      max-width: 900px;
-      margin-bottom: 22px;
-      animation: slideDown 0.9s cubic-bezier(.16,.94,.6,1);
-    }
-
-    @keyframes slideDown {
-      from { opacity: 0; transform: translateY(-14px) scale(0.98); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
+    /* ------------------- BONUS BANNER ------------------- */
+    .bonus-banner-wrapper { width: 100%; max-width: 900px; margin-bottom: 22px; animation: slideDown 0.9s cubic-bezier(.16,.94,.6,1); }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
     .bonus-banner {
       background: rgba(255, 255, 255, 0.07);
@@ -52,66 +36,34 @@
       box-shadow: 0 0 32px rgba(255,185,80,0.25);
     }
 
-    /* SHINY GOLD GLOW BAR */
     .bonus-banner::before {
       content: "";
       position: absolute;
-      top: -3px;
-      left: 0;
-      width: 100%;
-      height: 4px;
+      top: -3px; left: 0;
+      width: 100%; height: 4px;
       border-radius: 16px 16px 0 0;
       background: linear-gradient(90deg, #ffdd99, #ffb84d, #ffdd99);
       animation: glow 3.5s infinite alternate;
     }
 
-    @keyframes glow {
-      from { opacity: .6; }
-      to   { opacity: 1; }
-    }
+    @keyframes glow { from { opacity: .6; } to { opacity: 1; } }
 
     .bonus-icon {
-      width: 62px;
-      height: 62px;
+      width: 62px; height: 62px;
       border-radius: 14px;
       background: linear-gradient(180deg, rgba(255,184,107,0.25), rgba(255,184,107,0.10));
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       box-shadow: 0 6px 18px rgba(255,180,90,0.35);
     }
 
-    .bonus-icon svg {
-      width: 36px;
-      height: 36px;
-    }
+    .bonus-icon svg { width: 36px; height: 36px; }
 
-    .bonus-content {
-      flex: 1;
-    }
+    .bonus-content { flex: 1; }
+    .bonus-title { font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 3px; }
+    .bonus-title span { color: #ffcc7a; font-weight: 900; }
+    .bonus-sub { font-size: 13px; color: rgba(255,255,255,0.82); }
 
-    .bonus-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 3px;
-    }
-
-    .bonus-title span {
-      color: #ffcc7a;
-      font-weight: 900;
-    }
-
-    .bonus-sub {
-      font-size: 13px;
-      color: rgba(255,255,255,0.82);
-    }
-
-    .bonus-btn-area {
-      display: flex;
-      align-items: center;
-    }
-
+    .bonus-btn-area { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .bonus-btn {
       background: linear-gradient(45deg, #ffb661, #ffdf8f);
       color: #000;
@@ -122,16 +74,11 @@
       text-decoration: none;
       box-shadow: 0 6px 18px rgba(255,180,80,0.35);
       transition: 0.25s ease;
+      cursor: pointer;
     }
+    .bonus-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(255,200,100,0.55); }
 
-    .bonus-btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 10px 25px rgba(255,200,100,0.55);
-    }
-
-    /* ---------------------------------------------------------
-       🔥 MAIN DASHBOARD STYLES (UNCHANGED)
-    ----------------------------------------------------------*/
+    /* ------------------- DASHBOARD ------------------- */
     .dashboard {
       background: #1b1b2a;
       border-radius: 20px;
@@ -142,13 +89,8 @@
     }
 
     .button-group {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 25px;
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;
     }
-
     .btn {
       padding: 10px 18px;
       font-size: 13px;
@@ -166,7 +108,6 @@
       box-shadow: 0 5px 15px rgba(255,165,0,0.35);
       min-width: 110px;
     }
-
     .btn:hover {
       transform: translateY(-3px) scale(1.05);
       background: linear-gradient(45deg, #ffb84d, #fff0a8);
@@ -188,7 +129,6 @@
       gap: 18px;
       margin-bottom: 15px;
     }
-
     .card {
       background: linear-gradient(145deg, #26263a, #1c1c2b);
       padding: 18px;
@@ -197,7 +137,6 @@
       border: 1px solid #313144;
       position: relative;
     }
-
     .card::before {
       content:"";
       height: 4px;
@@ -208,34 +147,41 @@
       left: 0;
       border-radius: 13px 13px 0 0;
     }
+    .card-title { font-size: 13px; color: #bdbdbd; letter-spacing: 1px; margin-bottom: 6px; }
+    .card-value { font-size: 23px; font-weight: bold; color: #ffffff; }
+    .update-info { text-align: center; margin-top: 10px; color: #888; font-size: 12px; font-style: italic; }
 
-    .card-title {
-      font-size: 13px;
-      color: #bdbdbd;
-      letter-spacing: 1px;
-      margin-bottom: 6px;
+    /* ------------------- REVIEWS MODAL ------------------- */
+    .reviews-modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      max-height: 60vh;
+      background: rgba(30,30,40,0.95);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 20px rgba(255,185,80,0.35);
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+      overflow: hidden;
     }
-
-    .card-value {
-      font-size: 23px;
-      font-weight: bold;
-      color: #ffffff;
+    .reviews-modal.active { display: flex; }
+    .close-reviews {
+      position: absolute; top: 10px; right: 12px;
+      background: transparent; border: none; font-size: 22px; color: #fff; cursor: pointer;
     }
+    .reviews-scroll { display: flex; flex-direction: column; gap: 12px; overflow: hidden; position: relative; }
+    .review-item { display: flex; gap: 12px; align-items: flex-start; }
+    .review-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
+    .review-content { display: flex; flex-direction: column; }
+    .review-name { font-weight: 700; font-size: 14px; color: #ffcc7a; }
+    .review-text { font-size: 13px; color: #fff; }
 
-    .update-info {
-      text-align: center;
-      margin-top: 10px;
-      color: #888;
-      font-size: 12px;
-      font-style: italic;
-    }
-
-    /* MOBILE */
-    @media(max-width: 600px) {
-      .bonus-banner {
-        flex-direction: column;
-        text-align: center;
-      }
+    @media(max-width:600px){
+      .bonus-banner { flex-direction: column; text-align: center; }
       .bonus-btn-area { justify-content: center; }
       .dashboard { padding: 20px; }
       h1 { font-size: 22px; }
@@ -245,30 +191,27 @@
 
 <body>
 
-  <!-- ⭐ ULTRA-PREMIUM PERMANENT BONUS BANNER -->
+  <!-- ⭐ BONUS BANNER -->
   <div class="bonus-banner-wrapper">
     <div class="bonus-banner">
-
       <div class="bonus-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="#ffdd99" stroke-width="1.8">
           <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
         </svg>
       </div>
-
       <div class="bonus-content">
         <div class="bonus-title">You have received <span>$5,000 Bonus</span></div>
         <div class="bonus-sub">Maintain a $300 balance to unlock your reward.</div>
       </div>
-
       <div class="bonus-btn-area">
         <a href="add-balance-3.html" class="bonus-btn">Deposit Now</a>
+        <button class="bonus-btn" id="seeReviewsBtn">See Reviews</button>
       </div>
     </div>
   </div>
 
-  <!-- ORIGINAL DASHBOARD -->
+  <!-- DASHBOARD -->
   <div class="dashboard">
-
     <div class="button-group">
       <a href="add-balance-3.html" class="btn">Add Balance</a>
       <a href="payout-2.html" class="btn">Payout</a>
@@ -287,17 +230,14 @@
         <div class="card-title">Balance</div>
         <div class="card-value" id="balance">$00</div>
       </div>
-
       <div class="card">
         <div class="card-title">Total Invest</div>
         <div class="card-value" id="invest">$00</div>
       </div>
-
       <div class="card">
         <div class="card-title">Profit</div>
         <div class="card-value" id="profit">$00</div>
       </div>
-
       <div class="card">
         <div class="card-title">Withdrawals</div>
         <div class="card-value" id="withdraw">$00</div>
@@ -307,9 +247,14 @@
     <div class="update-info">Updated from Supabase.</div>
   </div>
 
-  <!-- Supabase + Dashboard Script -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- REVIEWS MODAL -->
+  <div class="reviews-modal" id="reviewsModal">
+    <button class="close-reviews" id="closeReviews">×</button>
+    <div class="reviews-scroll" id="reviewsScroll"></div>
+  </div>
 
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
@@ -317,23 +262,48 @@
 
     async function fetchAndRender() {
       const userId = localStorage.getItem("user_id");
-      if (!userId) return (location.href = "login.html");
-
-      const { data } = await supabaseClient
-        .from("users")
-        .select("balance,total_invest,profit,withdrawals")
-        .eq("id", userId)
-        .single();
-
-      document.getElementById("balance").textContent = "$" + Number(data.balance || 0).toFixed(2);
-      document.getElementById("invest").textContent = "$" + Number(data.total_invest || 0).toFixed(2);
-      document.getElementById("profit").textContent = "$" + Number(data.profit || 0).toFixed(2);
-      document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals || 0).toFixed(2);
+      if(!userId) return location.href="login.html";
+      const { data } = await supabaseClient.from("users").select("balance,total_invest,profit,withdrawals").eq("id", userId).single();
+      document.getElementById("balance").textContent = "$" + Number(data.balance||0).toFixed(2);
+      document.getElementById("invest").textContent = "$" + Number(data.total_invest||0).toFixed(2);
+      document.getElementById("profit").textContent = "$" + Number(data.profit||0).toFixed(2);
+      document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals||0).toFixed(2);
     }
-
     fetchAndRender();
     setInterval(fetchAndRender, 15000);
-  </script>
 
+    // ---------------- REVIEWS ----------------
+    const sampleReviews = Array.from({length:50}, (_,i)=>({
+      name:`User${Math.floor(Math.random()*999+1)}`,
+      avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
+      text:`Yeah! I received $${(Math.floor(Math.random()*9000+1000))}. Thank you so much!`
+    }));
+    const seeReviewsBtn = document.getElementById("seeReviewsBtn");
+    const reviewsModal = document.getElementById("reviewsModal");
+    const reviewsScroll = document.getElementById("reviewsScroll");
+    const closeReviews = document.getElementById("closeReviews");
+
+    seeReviewsBtn.onclick = ()=>{
+      reviewsScroll.innerHTML="";
+      const inner = document.createElement("div"); inner.className="reviews-inner";
+      const allReviews = [...sampleReviews, ...sampleReviews];
+      allReviews.forEach(r=>{
+        const div = document.createElement("div"); div.className="review-item";
+        div.innerHTML=`<div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
+          <div class="review-content">
+            <div class="review-name">${r.name}</div>
+            <div class="review-text">${r.text}</div>
+          </div>`;
+        inner.appendChild(div);
+      });
+      reviewsScroll.appendChild(inner);
+      reviewsModal.classList.add("active");
+
+      let start=0; const scrollHeight=inner.scrollHeight/2;
+      function animateScroll(){ start+=0.5; if(start>=scrollHeight) start=0; inner.style.transform=`translateY(-${start}px)`; requestAnimationFrame(animateScroll);}
+      animateScroll();
+    };
+    closeReviews.onclick=()=>reviewsModal.classList.remove("active");
+  </script>
 </body>
 </html>
