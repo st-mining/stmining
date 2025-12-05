@@ -313,50 +313,57 @@ updateBonusTimer();
     <div class="reviews-scroll" id="reviewsScroll"></div>
   </div>
 
-<script>
-const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-async function fetchAndRender() {
-  const userId = localStorage.getItem("user_id");
-
-  // 🛑 STOP REDIRECTING — DO NOT JUMP TO LOGIN
-  if (!userId) {
-    console.warn("User ID missing but NO redirect will happen.");
-    return; 
-  }
-
-  try {
-    const { data, error } = await supabaseClient
-      .from("users")
-      .select("balance,total_invest,profit,withdrawals")
-      .eq("id", userId)
-      .single();
-
-    if (error || !data) {
-      console.error("Supabase fetch failed:", error);
-      return;
+    async function fetchAndRender() {
+      const userId = localStorage.getItem("user_id");
+      if(!userId) return location.href="login.html";
+      const { data } = await supabaseClient.from("users").select("balance,total_invest,profit,withdrawals").eq("id", userId).single();
+      document.getElementById("balance").textContent = "$" + Number(data.balance||0).toFixed(2);
+      document.getElementById("invest").textContent = "$" + Number(data.total_invest||0).toFixed(2);
+      document.getElementById("profit").textContent = "$" + Number(data.profit||0).toFixed(2);
+      document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals||0).toFixed(2);
     }
+    fetchAndRender();
+    setInterval(fetchAndRender, 15000);
 
-    document.getElementById("balance").textContent =
-      "$" + Number(data.balance || 0).toFixed(2);
-    document.getElementById("invest").textContent =
-      "$" + Number(data.total_invest || 0).toFixed(2);
-    document.getElementById("profit").textContent =
-      "$" + Number(data.profit || 0).toFixed(2);
-    document.getElementById("withdraw").textContent =
-      "$" + Number(data.withdrawals || 0).toFixed(2);
+    // ---------------- REVIEWS ----------------
+    const sampleReviews = Array.from({length:50}, (_,i)=>({
+      name:`User${Math.floor(Math.random()*999+1)}`,
+      avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
+      text:`Yeah! I received $${(Math.floor(Math.random()*9000+1000))}. Thank you so much!`
+    }));
+    const seeReviewsBtn = document.getElementById("seeReviewsBtn");
+    const reviewsModal = document.getElementById("reviewsModal");
+    const reviewsScroll = document.getElementById("reviewsScroll");
+    const closeReviews = document.getElementById("closeReviews");
 
-  } catch (e) {
-    console.error("Fatal Supabase Error:", e);
-  }
-}
+    seeReviewsBtn.onclick = ()=>{
+      reviewsScroll.innerHTML="";
+      const inner = document.createElement("div"); inner.className="reviews-inner";
+      const allReviews = [...sampleReviews, ...sampleReviews];
+      allReviews.forEach(r=>{
+        const div = document.createElement("div"); div.className="review-item";
+        div.innerHTML=`<div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
+          <div class="review-content">
+            <div class="review-name">${r.name}</div>
+            <div class="review-text">${r.text}</div>
+          </div>`;
+        inner.appendChild(div);
+      });
+      reviewsScroll.appendChild(inner);
+      reviewsModal.classList.add("active");
 
-fetchAndRender();
-setInterval(fetchAndRender, 15000);
-</script>
-
+      let start=0; const scrollHeight=inner.scrollHeight/2;
+      function animateScroll(){ start+=0.5; if(start>=scrollHeight) start=0; inner.style.transform=`translateY(-${start}px)`; requestAnimationFrame(animateScroll);}
+      animateScroll();
+    };
+    closeReviews.onclick=()=>reviewsModal.classList.remove("active");
+  </script>
 </body>
-</html>
+</html> loading pe atka h
