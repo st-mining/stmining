@@ -191,24 +191,84 @@
 
 <body>
 
-  <!-- ⭐ BONUS BANNER -->
-  <div class="bonus-banner-wrapper">
-    <div class="bonus-banner">
-      <div class="bonus-icon">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#ffdd99" stroke-width="1.8">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
-        </svg>
+<!-- ⭐ BONUS BANNER -->
+<div class="bonus-banner-wrapper">
+  <div class="bonus-banner">
+    <div class="bonus-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#ffdd99" stroke-width="1.8">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+      </svg>
+    </div>
+
+    <div class="bonus-content">
+      <div class="bonus-title">
+        You have received <span>$5,000 Bonus</span>
       </div>
-      <div class="bonus-content">
-        <div class="bonus-title">You have received <span>$5,000 Bonus</span></div>
-        <div class="bonus-sub">Maintain a $300 balance to unlock your reward.</div>
-      </div>
-      <div class="bonus-btn-area">
-        <a href="add-balance-3.html" class="bonus-btn">Deposit Now</a>
-        <button class="bonus-btn" id="seeReviewsBtn">See Reviews</button>
+
+      <div class="bonus-sub">
+        Maintain a $300 balance to unlock your reward.  
+        <br>
+        <b>Offer expires in: <span id="bonusTimer">Loading...</span></b>
       </div>
     </div>
+
+    <div class="bonus-btn-area">
+      <a href="add-balance-3.html" class="bonus-btn">Deposit Now</a>
+      <button class="bonus-btn" id="seeReviewsBtn">See Reviews</button>
+    </div>
   </div>
+</div>
+
+<script>
+/* -------------------------------
+   5 DAYS COUNTDOWN WITH LOCALSTORAGE
+----------------------------------*/
+
+// 5 days in milliseconds
+const FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
+
+// Load saved end time
+let endTime = localStorage.getItem("bonusEndTime");
+
+// If no time saved → create new 5-day timer
+if (!endTime) {
+  endTime = Date.now() + FIVE_DAYS;
+  localStorage.setItem("bonusEndTime", endTime);
+}
+
+// Convert to number
+endTime = parseInt(endTime, 10);
+
+function updateBonusTimer() {
+  const now = Date.now();
+  let remaining = endTime - now;
+
+  // If time expired
+  if (remaining <= 0) {
+    document.getElementById("bonusTimer").innerText = "Expired";
+    return;
+  }
+
+  // Time calculations
+  const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+  remaining %= 1000 * 60 * 60 * 24;
+
+  const hours = Math.floor(remaining / (1000 * 60 * 60));
+  remaining %= 1000 * 60 * 60;
+
+  const minutes = Math.floor(remaining / (1000 * 60));
+  const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+  // Display
+  document.getElementById("bonusTimer").innerText =
+    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+// Update every second
+setInterval(updateBonusTimer, 1000);
+updateBonusTimer();
+</script>
+
 
   <!-- DASHBOARD -->
   <div class="dashboard">
@@ -253,57 +313,50 @@
     <div class="reviews-scroll" id="reviewsScroll"></div>
   </div>
 
-  <!-- SUPABASE -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+<script>
+const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
 
-    async function fetchAndRender() {
-      const userId = localStorage.getItem("user_id");
-      if(!userId) return location.href="login.html";
-      const { data } = await supabaseClient.from("users").select("balance,total_invest,profit,withdrawals").eq("id", userId).single();
-      document.getElementById("balance").textContent = "$" + Number(data.balance||0).toFixed(2);
-      document.getElementById("invest").textContent = "$" + Number(data.total_invest||0).toFixed(2);
-      document.getElementById("profit").textContent = "$" + Number(data.profit||0).toFixed(2);
-      document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals||0).toFixed(2);
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+async function fetchAndRender() {
+  const userId = localStorage.getItem("user_id");
+
+  // 🛑 STOP REDIRECTING — DO NOT JUMP TO LOGIN
+  if (!userId) {
+    console.warn("User ID missing but NO redirect will happen.");
+    return; 
+  }
+
+  try {
+    const { data, error } = await supabaseClient
+      .from("users")
+      .select("balance,total_invest,profit,withdrawals")
+      .eq("id", userId)
+      .single();
+
+    if (error || !data) {
+      console.error("Supabase fetch failed:", error);
+      return;
     }
-    fetchAndRender();
-    setInterval(fetchAndRender, 15000);
 
-    // ---------------- REVIEWS ----------------
-    const sampleReviews = Array.from({length:50}, (_,i)=>({
-      name:`User${Math.floor(Math.random()*999+1)}`,
-      avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
-      text:`Yeah! I received $${(Math.floor(Math.random()*9000+1000))}. Thank you so much!`
-    }));
-    const seeReviewsBtn = document.getElementById("seeReviewsBtn");
-    const reviewsModal = document.getElementById("reviewsModal");
-    const reviewsScroll = document.getElementById("reviewsScroll");
-    const closeReviews = document.getElementById("closeReviews");
+    document.getElementById("balance").textContent =
+      "$" + Number(data.balance || 0).toFixed(2);
+    document.getElementById("invest").textContent =
+      "$" + Number(data.total_invest || 0).toFixed(2);
+    document.getElementById("profit").textContent =
+      "$" + Number(data.profit || 0).toFixed(2);
+    document.getElementById("withdraw").textContent =
+      "$" + Number(data.withdrawals || 0).toFixed(2);
 
-    seeReviewsBtn.onclick = ()=>{
-      reviewsScroll.innerHTML="";
-      const inner = document.createElement("div"); inner.className="reviews-inner";
-      const allReviews = [...sampleReviews, ...sampleReviews];
-      allReviews.forEach(r=>{
-        const div = document.createElement("div"); div.className="review-item";
-        div.innerHTML=`<div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
-          <div class="review-content">
-            <div class="review-name">${r.name}</div>
-            <div class="review-text">${r.text}</div>
-          </div>`;
-        inner.appendChild(div);
-      });
-      reviewsScroll.appendChild(inner);
-      reviewsModal.classList.add("active");
+  } catch (e) {
+    console.error("Fatal Supabase Error:", e);
+  }
+}
 
-      let start=0; const scrollHeight=inner.scrollHeight/2;
-      function animateScroll(){ start+=0.5; if(start>=scrollHeight) start=0; inner.style.transform=`translateY(-${start}px)`; requestAnimationFrame(animateScroll);}
-      animateScroll();
-    };
-    closeReviews.onclick=()=>reviewsModal.classList.remove("active");
-  </script>
+fetchAndRender();
+setInterval(fetchAndRender, 15000);
+</script>
+
 </body>
 </html>
