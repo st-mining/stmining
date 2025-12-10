@@ -1,300 +1,277 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dashboard</title>
-<style>
-  /* ---------- Reset & Base ---------- */
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{
-    font-family:"Segoe UI",Tahoma, Geneva, Verdana, sans-serif;
-    background:linear-gradient(180deg,#06070a 0%, #0f0f12 60%);
-    color:#fff;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:20px;
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard</title>
 
-  /* ---------- Fancy Banner (animated) ---------- */
-  .bonus-banner-wrapper{width:100%;max-width:980px;margin-bottom:22px;animation:enterY .7s cubic-bezier(.16,.94,.6,1)}
-  @keyframes enterY{from{opacity:0;transform:translateY(-18px) scale(.98)}to{opacity:1;transform:none}}
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
 
-  .bonus-banner{
-    position:relative;
-    overflow:hidden;
-    border-radius:18px;
-    padding:22px;
-    display:flex;
-    gap:18px;
-    align-items:center;
-    background:linear-gradient(135deg, rgba(255,186,90,0.06), rgba(255,150,60,0.02));
-    border:1px solid rgba(255,200,110,0.06);
-    box-shadow:0 10px 40px rgba(255,170,60,0.06), inset 0 1px 0 rgba(255,255,255,0.02);
-    backdrop-filter: blur(10px) saturate(140%);
-  }
+    /* ------------------- BONUS BANNER ------------------- */
+    .bonus-banner-wrapper { width: 100%; max-width: 900px; margin-bottom: 22px; animation: slideDown 0.9s cubic-bezier(.16,.94,.6,1); }
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
-  /* top glow stripe */
-  .bonus-banner::before{
-    content:"";
-    position:absolute;left:0;top:0;height:6px;width:100%;
-    background:linear-gradient(90deg,#ffd27a,#ffb84d,#ffd27a);
-    opacity:.95;
-    filter:drop-shadow(0 4px 12px rgba(255,160,60,0.18));
-    transform-origin:left center;
-    animation:glowPulse 3s infinite ease-in-out;
-  }
-  @keyframes glowPulse{0%{opacity:.7}50%{opacity:1}100%{opacity:.7}}
+    .bonus-banner {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(18px) saturate(180%);
+      -webkit-backdrop-filter: blur(18px) saturate(180%);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      position: relative;
+      box-shadow: 0 0 32px rgba(255,185,80,0.25);
+    }
 
-  /* soft floating particles */
-  .banner-particle{
-    position:absolute;width:8px;height:8px;border-radius:50%;
-    background:rgba(255,220,120,0.12);filter:blur(.6px);
-    animation:floatParticle 7s linear infinite;
-    pointer-events:none;
-  }
-  @keyframes floatParticle{
-    0%{transform:translateY(0) scale(.8);opacity:.9}
-    50%{transform:translateY(-18px) scale(1.1);opacity:.6}
-    100%{transform:translateY(0) scale(.8);opacity:.9}
-  }
+    .bonus-banner::before {
+      content: "";
+      position: absolute;
+      top: -3px; left: 0;
+      width: 100%; height: 4px;
+      border-radius: 16px 16px 0 0;
+      background: linear-gradient(90deg, #ffdd99, #ffb84d, #ffdd99);
+      animation: glow 3.5s infinite alternate;
+    }
 
-  /* sweeping light */
-  .bonus-banner::after{
-    content:"";
-    position:absolute;left:-160px;top:-40px;width:160px;height:200%;
-    background:linear-gradient(120deg,transparent, rgba(255,255,255,0.12), transparent);
-    transform:rotate(-12deg);
-    animation:lightSweep 3.6s linear infinite;
-    mix-blend-mode:screen;
-  }
-  @keyframes lightSweep{0%{left:-180px}100%{left:140%}}
+    @keyframes glow { from { opacity: .6; } to { opacity: 1; } }
 
-  .bonus-icon{
-    width:68px;height:68px;border-radius:14px;display:flex;align-items:center;justify-content:center;
-    background:linear-gradient(180deg,rgba(255,200,120,0.18),rgba(255,150,40,0.08));
-    box-shadow:0 10px 30px rgba(255,160,70,0.08);
-    transform:translateZ(0);animation:iconFloat 3s ease-in-out infinite;
-  }
-  @keyframes iconFloat{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
+    .bonus-icon {
+      width: 62px; height: 62px;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(255,184,107,0.25), rgba(255,184,107,0.10));
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 6px 18px rgba(255,180,90,0.35);
+    }
 
-  .bonus-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:.2px}
-  .bonus-title span{color:#fff7e6;background:linear-gradient(90deg,#ffcc7a,#ffdca6);padding:2px 6px;border-radius:6px;font-weight:900}
-  .bonus-sub{font-size:13px;color:rgba(255,255,255,0.85)}
+    .bonus-icon svg { width: 36px; height: 36px; }
 
-  .bonus-btn-area{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-  .bonus-btn{
-    padding:10px 16px;border-radius:12px;font-weight:800;border:none;cursor:pointer;
-    background:linear-gradient(135deg,#ffda8c,#ffa94d);
-    color:#000;box-shadow:0 8px 26px rgba(255,160,70,0.12);transition:transform .18s ease;
-  }
-  .bonus-btn:hover{transform:translateY(-4px);filter:brightness(1.03)}
+    .bonus-content { flex: 1; }
+    .bonus-title { font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 3px; }
+    .bonus-title span { color: #ffcc7a; font-weight: 900; }
+    .bonus-sub { font-size: 13px; color: rgba(255,255,255,0.82); }
 
-  /* ---------- Dashboard / Cards (original style preserved) ---------- */
-  .dashboard{background:#0f1220;border-radius:18px;padding:24px;width:100%;max-width:980px;box-shadow:0 30px 60px rgba(0,0,0,0.6)}
-  .button-group{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:22px}
-  .btn{padding:10px 18px;border-radius:12px;background:linear-gradient(45deg,#ff9900,#ffdd55);color:#000;font-weight:700;min-width:110px;box-shadow:0 8px 20px rgba(255,150,30,0.08)}
-  .btn:hover{transform:translateY(-4px)}
-  h1{text-align:center;margin-bottom:20px;font-size:28px;background:linear-gradient(90deg,#9ef6ff,#7bd1ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+    .bonus-btn-area { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .bonus-btn {
+      background: linear-gradient(45deg, #ffb661, #ffdf8f);
+      color: #000;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 6px 18px rgba(255,180,80,0.35);
+      transition: 0.25s ease;
+      cursor: pointer;
+    }
+    .bonus-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(255,200,100,0.55); }
 
-  .card-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:16px}
-  .card{background:linear-gradient(145deg,#12121a,#1a1a2a);padding:16px;border-radius:12px;text-align:center;position:relative;border:1px solid rgba(255,255,255,0.02)}
-  .card::before{content:"";height:4px;width:100%;position:absolute;top:0;left:0;border-radius:12px 12px 0 0;background:linear-gradient(90deg,#ff6a00,#ffd500)}
-a {
-  text-decoration: none !important;
-}
+    /* ------------------- DASHBOARD ------------------- */
+    .dashboard {
+      background: #1b1b2a;
+      border-radius: 20px;
+      padding: 25px;
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.6);
+    }
 
+    .button-group {
+      display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;
+    }
+    .btn {
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #ff9900, #ffdd55);
+      color: #000;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.25s ease;
+      box-shadow: 0 5px 15px rgba(255,165,0,0.35);
+      min-width: 110px;
+    }
+    .btn:hover {
+      transform: translateY(-3px) scale(1.05);
+      background: linear-gradient(45deg, #ffb84d, #fff0a8);
+      box-shadow: 0 8px 20px rgba(255,200,50,0.55);
+    }
 
-  .card-title{font-size:13px;color:#cfcfcf}.card-value{font-size:22px;font-weight:800;color:#fff}
-  .update-info{text-align:center;margin-top:10px;color:#9aa0b0;font-size:12px}
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      font-size: 28px;
+      background: linear-gradient(90deg, #00fff0, #00aaff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-  /* ---------- Reviews modal (unchanged look) ---------- */
-  .reviews-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;max-height:64vh;background:linear-gradient(180deg,#0f1113,#0b0c0f);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.04);display:none;flex-direction:column;z-index:999;overflow:hidden}
-  .reviews-modal.active{display:flex}
-  .close-reviews{position:absolute;top:10px;right:12px;background:transparent;border:0;color:#fff;font-size:22px;cursor:pointer}
-  .reviews-scroll{display:flex;flex-direction:column;gap:12px;overflow:hidden;padding-top:6px}
-  .review-item{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:8px;border-radius:10px}
-  .review-avatar{width:44px;height:44px;border-radius:50%;background-size:cover;background-position:center;flex-shrink:0}
-  .review-content{display:flex;flex-direction:column}
-  .review-name{font-weight:800;color:#ffdca6}.review-text{font-size:13px;color:#e6eef5}
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 18px;
+      margin-bottom: 15px;
+    }
+    .card {
+      background: linear-gradient(145deg, #26263a, #1c1c2b);
+      padding: 18px;
+      border-radius: 13px;
+      text-align: center;
+      border: 1px solid #313144;
+      position: relative;
+    }
+    .card::before {
+      content:"";
+      height: 4px;
+      width: 100%;
+      background: linear-gradient(90deg, red, orange, yellow);
+      position: absolute;
+      top: 0;
+      left: 0;
+      border-radius: 13px 13px 0 0;
+    }
+    .card-title { font-size: 13px; color: #bdbdbd; letter-spacing: 1px; margin-bottom: 6px; }
+    .card-value { font-size: 23px; font-weight: bold; color: #ffffff; }
+    .update-info { text-align: center; margin-top: 10px; color: #888; font-size: 12px; font-style: italic; }
 
-  .review-chat-btn{margin-top:6px;padding:6px 10px;border-radius:8px;border:none;background:#25D366;color:#001;font-weight:700;cursor:pointer}
+    /* ------------------- REVIEWS MODAL ------------------- */
+    .reviews-modal {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      max-height: 60vh;
+      background: rgba(30,30,40,0.95);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 20px rgba(255,185,80,0.35);
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+      overflow: hidden;
+    }
+    .reviews-modal.active { display: flex; }
+    .close-reviews {
+      position: absolute; top: 10px; right: 12px;
+      background: transparent; border: none; font-size: 22px; color: #fff; cursor: pointer;
+    }
+    .reviews-scroll { display: flex; flex-direction: column; gap: 12px; overflow: hidden; position: relative; }
+    .review-item { display: flex; gap: 12px; align-items: flex-start; }
+    .review-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
+    .review-content { display: flex; flex-direction: column; }
+    .review-name { font-weight: 700; font-size: 14px; color: #ffcc7a; }
+    .review-text { font-size: 13px; color: #fff; }
 
-  /* ---------- User Chat (mini popup but 'normal' size) ---------- */
-  .review-chat-popup{position:fixed;right:20px;bottom:120px;width:380px;max-height:520px;background:#071018;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(0,0,0,.6);display:flex;flex-direction:column;overflow:hidden;z-index:100000}
-  .rc-header{display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(90deg,#075e54,#128C7E);color:#fff}
-  .rc-header img{width:40px;height:40px;border-radius:50%;object-fit:cover}
-  .rc-body{flex:1;padding:12px;overflow:auto;background:linear-gradient(180deg,#061017,#071217);display:flex;flex-direction:column;gap:10px}
-  .rc-input{display:flex;gap:8px;padding:10px;background:#05121a}
-  .rc-input input{flex:1;padding:10px;border-radius:8px;border:0;background:#0b1720;color:#fff;outline:none}
-  .rc-input .rc-file{display:none}
-  .rc-send{background:#25D366;border:none;color:#001;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:800}
-
-  .bubble{padding:8px 12px;border-radius:14px;max-width:78%;font-size:14px}
-  .bubble.me{align-self:flex-end;background:#DCF8C6;color:#002; border-radius:14px 6px 14px 14px}
-  .bubble.other{align-self:flex-start;background:#e9f3f6;color:#0b2a2a;display:flex;align-items:center;gap:8px;border-radius:6px 14px 14px 14px}
-  .bubble img.msg-img{max-width:220px;border-radius:10px;display:block}
-  .bubble .small-dp{width:34px;height:34px;border-radius:50%;object-fit:cover}
-  /* FUTURISTIC HOLOGRAM BANNER */
-.banner-wrapper {
-  width: 100%;
-  max-width: 900px;
-  margin-bottom: 25px;
-}
-
-.holo-banner {
-  position: relative;
-  padding: 22px;
-  border-radius: 18px;
-  border: 1px solid rgba(0,255,255,0.15);
-  background: radial-gradient(circle at 20% 20%, rgba(0,180,255,0.25), rgba(0,0,15,0.8));
-  box-shadow: 0 0 25px rgba(0,255,255,0.25);
-  overflow: hidden;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  animation: holoFloat 5s ease-in-out infinite;
-}
-
-@keyframes holoFloat {
-  0% { transform: translateY(0); }
-  50% { transform: translateY(-4px); }
-  100% { transform: translateY(0); }
-}
-
-.holo-left {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
-.holo-icon {
-  padding: 12px;
-  border-radius: 50%;
-  background: rgba(0,255,255,0.12);
-  box-shadow: 0 0 15px rgba(0,255,255,0.35);
-}
-
-.holo-title {
-  font-size: 19px;
-  font-weight: 800;
-}
-.holo-title span {
-  color: #00eaff;
-  text-shadow: 0 0 8px #00eaff;
-}
-
-.holo-sub {
-  color: #c9faff;
-  font-size: 13px;
-}
-
-.holo-right {
-  display: flex;
-  gap: 10px;
-}
-
-.holo-btn {
-  background: linear-gradient(90deg, #00eaff, #0088ff);
-  padding: 9px 16px;
-  color: #000;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  border: none;
-  box-shadow: 0 0 12px rgba(0,200,255,0.5);
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.holo-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 0 18px rgba(0,255,255,0.7);
-}
-
-/* holo waveform animation */
-.holo-glow {
-  position: absolute;
-  top: 0;
-  left: -180px;
-  width: 140px;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0,255,255,0.4), transparent);
-  animation: holoMove 3.5s linear infinite;
-}
-
-@keyframes holoMove {
-  from { transform: translateX(0); }
-  to { transform: translateX(420px); }
-}
-
-@media (max-width: 650px){
-  .holo-banner {
-    flex-direction: column;
-    text-align: center;
-    gap: 18px;
-  }
-  .holo-right {
-    justify-content: center;
-    width: 100%;
-  }
-}
-
-
-  /* ---------- Support (single toggle, no icon inside window) ---------- */
-  #supportFloatingBtn{position:fixed;bottom:25px;right:20px;z-index:99999}
-  #supportToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#128C7E,#21c28b);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 12px 40px rgba(0,0,0,0.4)}
-  .support-window{position:fixed;bottom:95px;right:20px;width:360px;max-height:480px;border-radius:12px;overflow:hidden;display:none;z-index:99999;background:linear-gradient(180deg,#071018,#041019);border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
-  .support-header{padding:12px;color:#fff;background:linear-gradient(90deg,#0b7a63,#128C7E);display:flex;align-items:center;gap:10px}
-  .support-body{padding:12px;height:320px;overflow:auto}
-  .support-input{display:flex;padding:10px;background:#02121a;gap:8px}
-  .support-input input{flex:1;padding:8px;border-radius:8px;border:0;background:#07202a;color:#fff;outline:none}
-  .support-input button{background:#128C7E;padding:8px 12px;border-radius:8px;border:0;color:#fff;cursor:pointer}
-
-  @media(max-width:700px){
-    .bonus-banner{padding:16px;border-radius:12px}
-    .review-chat-popup{right:10px;bottom:90px;width:92%;max-height:60vh}
-    .support-window{right:10px;bottom:90px;width:92%;max-height:60vh}
-    .dashboard{padding:18px}
-  }
-</style>
+    @media(max-width:600px){
+      .bonus-banner { flex-direction: column; text-align: center; }
+      .bonus-btn-area { justify-content: center; }
+      .dashboard { padding: 20px; }
+      h1 { font-size: 22px; }
+    }
+  </style>
 </head>
+
 <body>
 
-  <!-- ⭐ FUTURISTIC HOLOGRAM BONUS BANNER -->
-<div class="banner-wrapper">
-  <div class="holo-banner">
-    <div class="holo-left">
-      <div class="holo-icon">
-        <img src="https://cdn-icons-png.flaticon.com/512/992/992651.png" width="42">
+<!-- ⭐ BONUS BANNER -->
+<div class="bonus-banner-wrapper">
+  <div class="bonus-banner">
+    <div class="bonus-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#ffdd99" stroke-width="1.8">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
+      </svg>
+    </div>
+
+    <div class="bonus-content">
+      <div class="bonus-title">
+        You have received <span>$5,000 Bonus</span>
       </div>
-      <div>
-        <div class="holo-title">🎁 You unlocked <span>$5,000 Bonus</span></div>
-        <div class="holo-sub">Maintain $300 balance to claim.<br>
-        Expires in: <b id="bonusTimer">Loading…</b></div>
+
+      <div class="bonus-sub">
+        Maintain a $300 balance to unlock your reward.  
+        <br>
+        <b>Offer expires in: <span id="bonusTimer">Loading...</span></b>
       </div>
     </div>
 
-    <div class="holo-right">
-      <a href="add-balance-3.html" class="holo-btn">Deposit</a>
-      <button id="seeReviewsBtn" class="holo-btn">Reviews</button>
+    <div class="bonus-btn-area">
+      <a href="add-balance-3.html" class="bonus-btn">Deposit Now</a>
+      <button class="bonus-btn" id="seeReviewsBtn">See Reviews</button>
     </div>
-
-    <div class="holo-glow"></div>
   </div>
 </div>
 
+<script>
+/* -------------------------------
+   5 DAYS COUNTDOWN WITH LOCALSTORAGE
+----------------------------------*/
 
-  <!-- floating particles (decorative) -->
-  <div class="banner-particle" style="left:8%;top:12%;animation-delay:0s"></div>
-  <div class="banner-particle" style="left:24%;top:30%;width:6px;height:6px;background:rgba(255,200,110,0.08);animation-delay:1.2s"></div>
-  <div class="banner-particle" style="left:70%;top:18%;width:10px;height:10px;background:rgba(255,230,140,0.06);animation-delay:.4s"></div>
-  <div class="banner-particle" style="left:86%;top:44%;width:7px;height:7px;background:rgba(255,210,120,0.06);animation-delay:1.8s"></div>
+// 5 days in milliseconds
+const FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
 
-  <!-- Dashboard original -->
-  <div class="dashboard" role="main" aria-label="Dashboard overview">
+// Load saved end time
+let endTime = localStorage.getItem("bonusEndTime");
+
+// If no time saved → create new 5-day timer
+if (!endTime) {
+  endTime = Date.now() + FIVE_DAYS;
+  localStorage.setItem("bonusEndTime", endTime);
+}
+
+// Convert to number
+endTime = parseInt(endTime, 10);
+
+function updateBonusTimer() {
+  const now = Date.now();
+  let remaining = endTime - now;
+
+  // If time expired
+  if (remaining <= 0) {
+    document.getElementById("bonusTimer").innerText = "Expired";
+    return;
+  }
+
+  // Time calculations
+  const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+  remaining %= 1000 * 60 * 60 * 24;
+
+  const hours = Math.floor(remaining / (1000 * 60 * 60));
+  remaining %= 1000 * 60 * 60;
+
+  const minutes = Math.floor(remaining / (1000 * 60));
+  const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+
+  // Display
+  document.getElementById("bonusTimer").innerText =
+    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+}
+
+// Update every second
+setInterval(updateBonusTimer, 1000);
+updateBonusTimer();
+</script>
+
+
+  <!-- DASHBOARD -->
+  <div class="dashboard">
     <div class="button-group">
       <a href="add-balance-3.html" class="btn">Add Balance</a>
       <a href="payout-2.html" class="btn">Payout</a>
@@ -309,548 +286,84 @@ a {
     <h1>Overview</h1>
 
     <div class="card-container">
-      <div class="card"><div class="card-title">Balance</div><div class="card-value" id="balance">$00</div></div>
-      <div class="card"><div class="card-title">Total Invest</div><div class="card-value" id="invest">$00</div></div>
-      <div class="card"><div class="card-title">Profit</div><div class="card-value" id="profit">$00</div></div>
-      <div class="card"><div class="card-title">Withdrawals</div><div class="card-value" id="withdraw">$00</div></div>
+      <div class="card">
+        <div class="card-title">Balance</div>
+        <div class="card-value" id="balance">$00</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Total Invest</div>
+        <div class="card-value" id="invest">$00</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Profit</div>
+        <div class="card-value" id="profit">$00</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Withdrawals</div>
+        <div class="card-value" id="withdraw">$00</div>
+      </div>
     </div>
 
     <div class="update-info">Updated from Supabase.</div>
   </div>
 
-  <!-- Reviews modal -->
-  <div class="reviews-modal" id="reviewsModal" role="dialog" aria-modal="true" aria-hidden="true">
-    <button class="close-reviews" id="closeReviews" aria-label="Close reviews">×</button>
+  <!-- REVIEWS MODAL -->
+  <div class="reviews-modal" id="reviewsModal">
+    <button class="close-reviews" id="closeReviews">×</button>
     <div class="reviews-scroll" id="reviewsScroll"></div>
   </div>
 
-  <!-- Support floating (single toggle) -->
-  <div id="supportFloatingBtn">
-    <div id="supportToggle" title="Open Support Chat">💬</div>
-  </div>
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  <!-- Support window (no avatar inside header) -->
-  <div class="support-window" id="supportWindow" aria-hidden="true">
-    <div class="support-header">
-      <div style="font-weight:700">Support Chat</div>
-      <div style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">Admin replies from panel</div>
-    </div>
-    <div class="support-body" id="supportMessages"></div>
-    <div class="support-input">
-      <input id="supportInput" placeholder="Type message to support..." />
-      <button id="supportSend">Send</button>
-    </div>
-  </div>
-
-  <!-- Note: user chat popups are created dynamically per review chat click -->
-
-  <!-- FIREBASE v8 -->
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
-<script>
-/* -------------------------------
-   FIREBASE CONFIG (SAME JO DIYA THA)
------------------------------------ */
-const firebaseConfig = {
-    apiKey: "AIzaSyB0j3fTtE1HYoshQb5FtAJBB5BI9wt3ykg",
-    authDomain: "lova-d503f.firebaseapp.com",
-    databaseURL: "https://lova-d503f-default-rtdb.firebaseio.com",
-    projectId: "lova-d503f",
-    storageBucket: "lova-d503f.appspot.com",
-    messagingSenderId: "50167847192",
-    appId: "1:50167847192:web:648c7a49574e908786266d"
-};
-
-
-firebase.initializeApp(firebaseConfig);
-
-/* ------ FIREBASE OBJECTS ------ */
-const dbRT = firebase.database();     // realtime database
-const dbFS = firebase.firestore();    // firestore
-
-/* ---------------------------
-   USER ID / PROFILE (local)
-   ---------------------------
-   Make sure you set these in localStorage before using the page:
-     localStorage.setItem('user_id', 'USER123');
-     localStorage.setItem('user_name', 'Ali');
-     localStorage.setItem('user_avatar', 'https://...jpg');
-*/
-const localUserId = localStorage.getItem('user_id') || null;
-const localUserName = localStorage.getItem('user_name') || 'You';
-const localUserAvatar = localStorage.getItem('user_avatar') || 'https://i.pravatar.cc/150?img=3';
-
-/* ---------------------------------------
-   Realtime listener: incoming admin replies
-   - Admin should write messages to path: chats/{userId} with fields:
-       { from: 'admin', type: 'support'|'review', partner?: 'PartnerName', text, img, timestamp, avatar }
-   - User messages written by client use from:'user' and include same fields.
-----------------------------------------*/
-function startRealtimeListeners(){
-  if(!localUserId) return;
-
-  const ref = dbRT.ref('chats/' + localUserId);
-  ref.off(); // avoid duplicate listeners
-  ref.on('child_added', snap => {
-    let m = snap.val();
-    if(!m) return;
-    // skip if we've processed it already
-    if(m._processed) return;
-
-    // --- NORMALIZE incoming message shapes ---
-    // If admin used old "sender" field, convert to "from"
-    if(m.sender && !m.from){
-      m.from = (m.sender === 'admin') ? 'admin' : (m.sender === 'user' ? 'user' : m.sender);
-    }
-    // ensure type exists
-    if(!m.type) m.type = 'support';
-    // normalize avatar
-    m.avatar = m.avatar || m.userAvatar || '';
-
-    // mark processed to avoid duplicate handling
-    try { snap.ref.update({ _processed: true }); } catch(e){ /* ignore */ }
-
-    // incoming from admin
-    if(m.from === 'admin'){
-      if(m.type === 'support'){
-        appendSupportIncoming(m);
-        // save to support conversation
-        const conv = loadConversation('support') || [];
-        conv.push({ from: 'admin', text: m.text || '', img: m.img || '', ts: m.timestamp || Date.now(), avatar: m.avatar||'' });
-        saveConversation('support', conv);
-      } else if(m.type === 'review'){
-        const partner = m.partner || 'Admin';
-        // save to partner conversation
-        const conv = loadConversation(partner) || [];
-        conv.push({ from: 'other', text: m.text || '', img: m.img || '', ts: m.timestamp || Date.now(), avatar: m.avatar||'' });
-        saveConversation(partner, conv);
-        // if popup open, append directly
-        if(activeMiniChats[partner]){
-          const body = activeMiniChats[partner].querySelector('.rc-body');
-          appendMsgToBody(body, { from: 'other', text: m.text || '', img: m.img || '' }, m.avatar || 'https://i.pravatar.cc/150?img=5');
-          body.scrollTop = body.scrollHeight;
-        } else {
-          // optional: show small UI hint (not implemented)
-        }
-      } else {
-        // fallback: show as support
-        appendSupportIncoming(m);
-        const conv = loadConversation('support') || [];
-        conv.push({ from: 'admin', text: m.text || '', img: m.img || '', ts: m.timestamp || Date.now(), avatar: m.avatar||'' });
-        saveConversation('support', conv);
-      }
-    } else {
-      // messages from 'user' or others — ignore (these are local user's own messages or irrelevant)
-    }
-  });
-}
-
-/* -------------------------------------------------
-   Helper: send message to admin (realtime)
-   - type: 'support' or 'review'
-   - partner: for review-type messages (the review user name)
---------------------------------------------------*/
-function pushMessageToBackend({ type = 'support', partner = '', text = '', img = '' }){
-  if(!localUserId){
-    console.warn('No local user id set; cannot push message to backend.');
-    return;
-  }
-  const payload = {
-    from: 'user',
-    userId: localUserId,
-    userName: localUserName,
-    avatar: localUserAvatar,
-    type,
-    partner: partner || '',
-    text: text || '',
-    img: img || '',
-    timestamp: Date.now()
-  };
-  return dbRT.ref('chats/' + localUserId).push(payload);
-}
-
-/* -------------------------------------------------
-   Support: append incoming admin message to support UI
---------------------------------------------------*/
-function appendSupportIncoming(m){
-  const sbody = document.getElementById('supportMessages');
-  if(!sbody) return;
-  const row = document.createElement('div');
-  row.style.marginBottom = '10px';
-  const wrapper = document.createElement('div');
-  wrapper.style.display = 'flex';
-  wrapper.style.alignItems = 'flex-start';
-  wrapper.style.gap = '8px';
-  const dp = document.createElement('img');
-  dp.src = m.avatar || 'https://i.pravatar.cc/150?img=5';
-  dp.style.width = '34px';
-  dp.style.height = '34px';
-  dp.style.borderRadius = '50%';
-  wrapper.appendChild(dp);
-  const bubble = document.createElement('div');
-  bubble.style.background = '#e9f3f6';
-  bubble.style.color = '#0b2a2a';
-  bubble.style.padding = '8px 10px';
-  bubble.style.borderRadius = '8px';
-  bubble.textContent = m.text || '';
-  wrapper.appendChild(bubble);
-  if(m.img){
-    const im = document.createElement('img');
-    im.src = m.img;
-    im.style.maxWidth = '180px';
-    im.style.display = 'block';
-    im.style.marginTop = '8px';
-    wrapper.appendChild(im);
-  }
-  row.appendChild(wrapper);
-  sbody.appendChild(row);
-  sbody.scrollTop = sbody.scrollHeight;
-}
-
-/* -------------------------------------------------
-   UI: Support send handler (sends to realtime backend)
--------------------------------------------------*/
-supportToggle = document.getElementById("supportToggle");
-supportWindow = document.getElementById("supportWindow");
-supportMessages = document.getElementById("supportMessages");
-supportInput = document.getElementById("supportInput");
-supportSend = document.getElementById("supportSend");
-
-supportToggle.addEventListener("click", ()=>{
-  const show = supportWindow.style.display === "block";
-  supportWindow.style.display = show ? "none" : "block";
-  supportWindow.setAttribute("aria-hidden", show ? "true" : "false");
-  if(!show && localUserId) {
-    // when opened, load conversation
-    const conv = loadConversation('support') || [];
-    supportMessages.innerHTML = '';
-    conv.forEach(m => {
-      if(m.from === 'user'){
-        const row = document.createElement('div');
-        row.style.marginBottom = '10px';
-        const bubble = document.createElement('div');
-        bubble.style.background = '#0b6f59';
-        bubble.style.color = '#fff';
-        bubble.style.padding = '8px 10px';
-        bubble.style.borderRadius = '8px';
-        bubble.style.display = 'inline-block';
-        bubble.textContent = m.text || '';
-        row.appendChild(bubble);
-        supportMessages.appendChild(row);
-      } else {
-        appendSupportIncoming(m);
-      }
-    });
-    supportMessages.scrollTop = supportMessages.scrollHeight;
-  }
-});
-
-supportSend.addEventListener("click", sendSupportMessage);
-supportInput.addEventListener("keypress", e=>{ if(e.key==='Enter') sendSupportMessage(); });
-
-function sendSupportMessage(){
-  const text = supportInput.value.trim();
-  if(!text) return;
-  // append locally immediately
-  const row = document.createElement("div");
-  row.style.marginBottom = "10px";
-  const bubble = document.createElement("div");
-  bubble.style.background = "#0b6f59";
-  bubble.style.color = "#fff";
-  bubble.style.padding = "8px 10px";
-  bubble.style.borderRadius = "8px";
-  bubble.style.display = "inline-block";
-  bubble.textContent = text;
-  row.appendChild(bubble);
-  supportMessages.appendChild(row);
-  supportMessages.scrollTop = supportMessages.scrollHeight;
-  supportInput.value = "";
-  // save to local conversation
-  const conv = loadConversation('support') || [];
-  conv.push({ from: 'user', text: text, img: '', ts: Date.now() });
-  saveConversation('support', conv);
-  // push to backend
-  pushMessageToBackend({ type: 'support', text: text, img: '' })
-    .catch(err => console.error('Push support error', err));
-}
-
-/* -------------------------------------------------
-   Reviews demo (UI) + mini chat popup logic
--------------------------------------------------*/
-const sampleReviews = Array.from({length:36},(_,i)=>({
-  name:`User${100+Math.floor(Math.random()*900)}`,
-  avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
-  text:`I received $${1000+Math.floor(Math.random()*9000)} — very happy!`
-}));
-
-const seeReviewsBtn = document.getElementById("seeReviewsBtn");
-const reviewsModal = document.getElementById("reviewsModal");
-const reviewsScroll = document.getElementById("reviewsScroll");
-const closeReviews = document.getElementById("closeReviews");
-
-seeReviewsBtn.addEventListener("click", ()=>{
-  reviewsScroll.innerHTML = "";
-  const container = document.createElement("div");
-  container.className = "reviews-inner";
-  const all = [...sampleReviews, ...sampleReviews];
-  all.forEach(r=>{
-    const item = document.createElement("div");
-    item.className = "review-item";
-    item.innerHTML = `
-      <div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
-      <div class="review-content">
-        <div class="review-name">${r.name}</div>
-        <div class="review-text">${r.text}</div>
-        <div style="margin-top:8px"><button class="review-chat-btn" data-name="${r.name}" data-avatar="${r.avatar}">Chat</button></div>
-      </div>
-    `;
-    container.appendChild(item);
-  });
-  reviewsScroll.appendChild(container);
-  reviewsModal.classList.add("active");
-  // attach events for chat buttons:
-  reviewsModal.querySelectorAll(".review-chat-btn").forEach(btn=>{
-    btn.addEventListener("click", e=>{
-      const name = btn.dataset.name;
-      const avatar = btn.dataset.avatar;
-      openReviewChatMini(name, avatar);
-    });
-  });
-  let start = 0, max = container.scrollHeight/2;
-  function animate(){ start += 0.45; if(start>=max) start=0; container.style.transform = `translateY(-${start}px)`; requestAnimationFrame(animate); }
-  requestAnimationFrame(animate);
-});
-closeReviews.addEventListener("click", ()=> reviewsModal.classList.remove("active"));
-
-/* -------------------------------------------------
-   Mini chat system (localStorage-backed conversation)
-   - When user sends a message in a mini chat, we:
-     1) append locally and save to localStorage
-     2) push to backend so admin can receive and reply (type:'review', partner: partnerName)
---------------------------------------------------*/
-const activeMiniChats = {}; // name => element
-
-function loadConversation(name){
-  const key = `chat_conv_${name}`;
-  const raw = localStorage.getItem(key);
-  return raw ? JSON.parse(raw) : [];
-}
-function saveConversation(name, messages){
-  const key = `chat_conv_${name}`;
-  localStorage.setItem(key, JSON.stringify(messages));
-}
-
-function openReviewChatMini(name, avatar){
-  if(activeMiniChats[name]){
-    const el = activeMiniChats[name];
-    el.style.display = "flex";
-    el.querySelector(".rc-body").scrollTop = el.querySelector(".rc-body").scrollHeight;
-    return;
-  }
-
-  const popup = document.createElement("div");
-  popup.className = "review-chat-popup";
-  popup.innerHTML = `
-    <div class="rc-header">
-      <img src="${avatar}" alt="${name}">
-      <div style="font-weight:800">${name}</div>
-      <div style="margin-left:auto;cursor:pointer;opacity:.9" class="rc-close" title="Close">✕</div>
-    </div>
-    <div class="rc-body" data-name="${name}"></div>
-    <div class="rc-input">
-      <input class="rc-text" placeholder="Message ${name}..." />
-      <input type="file" accept="image/*" class="rc-file" />
-      <button class="rc-send">Send</button>
-    </div>
-  `;
-  document.body.appendChild(popup);
-  activeMiniChats[name] = popup;
-
-  const body = popup.querySelector(".rc-body");
-  const input = popup.querySelector(".rc-text");
-  const fileInput = popup.querySelector(".rc-file");
-  const sendBtn = popup.querySelector(".rc-send");
-  const closeBtn = popup.querySelector(".rc-close");
-
-  // populate history
-  const history = loadConversation(name);
-  history.forEach(msg=>{
-    appendMsgToBody(body, msg, avatar);
-  });
-  body.scrollTop = body.scrollHeight;
-
-  closeBtn.addEventListener("click", ()=>{ popup.style.display = 'none'; });
-
-  sendBtn.addEventListener("click", async ()=>{
-    const text = input.value.trim();
-    const files = fileInput.files;
-    if(!text && (!files || files.length===0)) return;
-
-    const msg = { from: 'me', text: text || null, img: null, ts: Date.now() };
-
-    if(files && files.length){
-      const file = files[0];
-      msg.img = await readFileAsDataURL(file);
-    }
-    // append locally
-    appendMsgToBody(body, msg, avatar);
-    body.scrollTop = body.scrollHeight;
-    input.value = "";
-    fileInput.value = "";
-    // save to conversation localStorage
-    const conv = loadConversation(name) || [];
-    conv.push({ from: 'me', text: msg.text || '', img: msg.img || '', ts: msg.ts });
-    saveConversation(name, conv);
-    // push to backend so admin panel gets the message and can reply
-    pushMessageToBackend({ type: 'review', partner: name, text: msg.text || '', img: msg.img || '' })
-      .catch(err => console.error('Push review message error', err));
-  });
-
-  fileInput.addEventListener("change", ()=>{ /* handled in send flow */ });
-  input.addEventListener("keypress", e=>{ if(e.key === "Enter") sendBtn.click(); });
-
-  activeMiniChats[name] = popup;
-  popup.style.display = "flex";
-}
-
-/* -------------------------------------------------
-   Append message bubble helper (used for mini chats)
-   - msg: { from: 'me'|'other', text, img }
-   - partnerAvatar: avatar url used for 'other' messages
---------------------------------------------------*/
-function appendMsgToBody(bodyEl, msg, partnerAvatar){
-  if(msg.from === 'me' || msg.from === 'user'){
-    const b = document.createElement("div");
-    b.className = "bubble me";
-    if(msg.text) b.appendChild(document.createTextNode(msg.text));
-    if(msg.img){
-      const im = document.createElement("img");
-      im.className = "msg-img";
-      im.src = msg.img;
-      im.alt = "image";
-      im.style.marginTop = msg.text ? "8px": "0";
-      b.appendChild(im);
-    }
-    bodyEl.appendChild(b);
-  } else {
-    const bwrap = document.createElement("div");
-    bwrap.className = "bubble other";
-    const dp = document.createElement("img");
-    dp.className = "small-dp";
-    dp.src = partnerAvatar;
-    dp.alt = "dp";
-    dp.style.marginRight = '8px';
-    if(msg.img){
-      const cont = document.createElement("div");
-      cont.style.display = 'flex';
-      cont.style.flexDirection = 'column';
-      const t = document.createElement("div");
-      if(msg.text) t.appendChild(document.createTextNode(msg.text));
-      const im = document.createElement("img");
-      im.className = "msg-img";
-      im.src = msg.img;
-      im.alt = "image";
-      im.style.marginTop = msg.text ? '8px' : '0';
-      cont.appendChild(t);
-      cont.appendChild(im);
-      bwrap.appendChild(dp);
-      bwrap.appendChild(cont);
-    } else {
-      bwrap.appendChild(dp);
-      const txt = document.createElement("div");
-      txt.style.wordBreak = "break-word";
-      txt.textContent = msg.text || "";
-      bwrap.appendChild(txt);
-    }
-    bodyEl.appendChild(bwrap);
-  }
-}
-
-/* -------------------------------------------------
-   readFileAsDataURL helper
---------------------------------------------------*/
-function readFileAsDataURL(file){
-  return new Promise((res, rej) => {
-    const fr = new FileReader();
-    fr.onload = () => res(fr.result);
-    fr.onerror = e=> rej(e);
-    fr.readAsDataURL(file);
-  });
-}
-
-/* -------------------------------------------------
-   Accessibility: close popups on Escape
---------------------------------------------------*/
-document.addEventListener("keydown", e=>{
-  if(e.key === "Escape"){
-    Object.values(activeMiniChats).forEach(el=>el.style.display='none');
-    reviewsModal.classList.remove("active");
-    supportWindow.style.display = "none";
-  }
-});
-
-/* -------------------------------------------------
-   Init: start listeners if user id available
---------------------------------------------------*/
-if(localUserId){
-  startRealtimeListeners();
-  // also restore support conversation preview if exists
-  const supportConv = loadConversation('support') || [];
-  // nothing auto-displayed until user opens support window
-}
-
-/* -------------------------------------------------
-   Supabase & balance fetch (unchanged)
---------------------------------------------------*/
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  const FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
-  let endTime = localStorage.getItem("bonusEndTime");
-  if (!endTime) { endTime = Date.now() + FIVE_DAYS; localStorage.setItem("bonusEndTime", endTime); }
-  endTime = parseInt(endTime, 10);
-  function updateBonusTimer(){
-    let remaining = endTime - Date.now();
-    if (remaining <= 0) return document.getElementById("bonusTimer").innerText = "Expired";
-    const d = Math.floor(remaining / (1000*60*60*24));
-    remaining %= 1000*60*60*24;
-    const h = Math.floor(remaining / (1000*60*60));
-    remaining %= 1000*60*60;
-    const m = Math.floor(remaining / (1000*60));
-    const s = Math.floor((remaining % (1000*60))/1000);
-    document.getElementById("bonusTimer").innerText = `${d}d ${h}h ${m}m ${s}s`;
-  }
-  setInterval(updateBonusTimer,1000);
-  updateBonusTimer();
-
-  async function fetchAndRender(){
-    const userId = localStorage.getItem("user_id");
-    if(!userId){
-      console.warn("No user_id found — not redirecting (safe fallback).");
-      document.getElementById("balance").textContent = "$0.00";
-      document.getElementById("invest").textContent = "$0.00";
-      document.getElementById("profit").textContent = "$0.00";
-      document.getElementById("withdraw").textContent = "$0.00";
-      return;
-    }
-    try{
-      const { data, error } = await supabaseClient.from("users").select("balance,total_invest,profit,withdrawals").eq("id", userId).single();
-      if(error){ console.error("Supabase error:", error); return; }
+    async function fetchAndRender() {
+      const userId = localStorage.getItem("user_id");
+      if(!userId) return location.href="login.html";
+      const { data } = await supabaseClient.from("users").select("balance,total_invest,profit,withdrawals").eq("id", userId).single();
       document.getElementById("balance").textContent = "$" + Number(data.balance||0).toFixed(2);
       document.getElementById("invest").textContent = "$" + Number(data.total_invest||0).toFixed(2);
       document.getElementById("profit").textContent = "$" + Number(data.profit||0).toFixed(2);
       document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals||0).toFixed(2);
-    }catch(err){ console.error("Fetch error:", err); }
-  }
-  fetchAndRender();
-  setInterval(fetchAndRender,15000);
-</script>
+    }
+    fetchAndRender();
+    setInterval(fetchAndRender, 15000);
+
+    // ---------------- REVIEWS ----------------
+    const sampleReviews = Array.from({length:50}, (_,i)=>({
+      name:`User${Math.floor(Math.random()*999+1)}`,
+      avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
+      text:`Yeah! I received $${(Math.floor(Math.random()*9000+1000))}. Thank you so much!`
+    }));
+    const seeReviewsBtn = document.getElementById("seeReviewsBtn");
+    const reviewsModal = document.getElementById("reviewsModal");
+    const reviewsScroll = document.getElementById("reviewsScroll");
+    const closeReviews = document.getElementById("closeReviews");
+
+    seeReviewsBtn.onclick = ()=>{
+      reviewsScroll.innerHTML="";
+      const inner = document.createElement("div"); inner.className="reviews-inner";
+      const allReviews = [...sampleReviews, ...sampleReviews];
+      allReviews.forEach(r=>{
+        const div = document.createElement("div"); div.className="review-item";
+        div.innerHTML=`<div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
+          <div class="review-content">
+            <div class="review-name">${r.name}</div>
+            <div class="review-text">${r.text}</div>
+          </div>`;
+        inner.appendChild(div);
+      });
+      reviewsScroll.appendChild(inner);
+      reviewsModal.classList.add("active");
+
+      let start=0; const scrollHeight=inner.scrollHeight/2;
+      function animateScroll(){ start+=0.5; if(start>=scrollHeight) start=0; inner.style.transform=`translateY(-${start}px)`; requestAnimationFrame(animateScroll);}
+      animateScroll();
+    };
+    closeReviews.onclick=()=>reviewsModal.classList.remove("active");
+  </script>
 </body>
 </html>
