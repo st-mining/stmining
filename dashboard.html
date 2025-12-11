@@ -4,7 +4,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dashboard</title>
+<title>Dashboard (User) - Fixed</title>
 <style>
   /* ---------- Reset & Base ---------- */
   *{box-sizing:border-box;margin:0;padding:0}
@@ -1023,11 +1023,6 @@ document.addEventListener("change", async function (e) {
 const activeMiniChats = {};
 
 /* sample reviews for UI demo */
-const sampleReviews = Array.from({length:24},(_,i)=>({
-  name:`User${100+Math.floor(Math.random()*900)}`,
-  avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
-  text:`I received $${1000+Math.floor(Math.random()*9000)} — very happy!`
-}));
 
 const seeReviewsBtn = document.getElementById("seeReviewsBtn");
 const reviewsModal = document.getElementById("reviewsModal");
