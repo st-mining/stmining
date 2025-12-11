@@ -1,369 +1,409 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard</title>
-
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
-
-    /* ------------------- BONUS BANNER ------------------- */
-    .bonus-banner-wrapper { width: 100%; max-width: 900px; margin-bottom: 22px; animation: slideDown 0.9s cubic-bezier(.16,.94,.6,1); }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-    .bonus-banner {
-      background: rgba(255, 255, 255, 0.07);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 20px 22px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      position: relative;
-      box-shadow: 0 0 32px rgba(255,185,80,0.25);
-    }
-
-    .bonus-banner::before {
-      content: "";
-      position: absolute;
-      top: -3px; left: 0;
-      width: 100%; height: 4px;
-      border-radius: 16px 16px 0 0;
-      background: linear-gradient(90deg, #ffdd99, #ffb84d, #ffdd99);
-      animation: glow 3.5s infinite alternate;
-    }
-
-    @keyframes glow { from { opacity: .6; } to { opacity: 1; } }
-
-    .bonus-icon {
-      width: 62px; height: 62px;
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(255,184,107,0.25), rgba(255,184,107,0.10));
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 6px 18px rgba(255,180,90,0.35);
-    }
-
-    .bonus-icon svg { width: 36px; height: 36px; }
-
-    .bonus-content { flex: 1; }
-    .bonus-title { font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 3px; }
-    .bonus-title span { color: #ffcc7a; font-weight: 900; }
-    .bonus-sub { font-size: 13px; color: rgba(255,255,255,0.82); }
-
-    .bonus-btn-area { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .bonus-btn {
-      background: linear-gradient(45deg, #ffb661, #ffdf8f);
-      color: #000;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      box-shadow: 0 6px 18px rgba(255,180,80,0.35);
-      transition: 0.25s ease;
-      cursor: pointer;
-    }
-    .bonus-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(255,200,100,0.55); }
-
-    /* ------------------- DASHBOARD ------------------- */
-    .dashboard {
-      background: #1b1b2a;
-      border-radius: 20px;
-      padding: 25px;
-      width: 100%;
-      max-width: 900px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.6);
-    }
-
-    .button-group {
-      display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;
-    }
-    .btn {
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(45deg, #ff9900, #ffdd55);
-      color: #000;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.25s ease;
-      box-shadow: 0 5px 15px rgba(255,165,0,0.35);
-      min-width: 110px;
-    }
-    .btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      background: linear-gradient(45deg, #ffb84d, #fff0a8);
-      box-shadow: 0 8px 20px rgba(255,200,50,0.55);
-    }
-
-    h1 {
-      text-align: center;
-      margin-bottom: 25px;
-      font-size: 28px;
-      background: linear-gradient(90deg, #00fff0, #00aaff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 18px;
-      margin-bottom: 15px;
-    }
-    .card {
-      background: linear-gradient(145deg, #26263a, #1c1c2b);
-      padding: 18px;
-      border-radius: 13px;
-      text-align: center;
-      border: 1px solid #313144;
-      position: relative;
-    }
-    .card::before {
-      content:"";
-      height: 4px;
-      width: 100%;
-      background: linear-gradient(90deg, red, orange, yellow);
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-radius: 13px 13px 0 0;
-    }
-    .card-title { font-size: 13px; color: #bdbdbd; letter-spacing: 1px; margin-bottom: 6px; }
-    .card-value { font-size: 23px; font-weight: bold; color: #ffffff; }
-    .update-info { text-align: center; margin-top: 10px; color: #888; font-size: 12px; font-style: italic; }
-
-    /* ------------------- REVIEWS MODAL ------------------- */
-    .reviews-modal {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 320px;
-      max-height: 60vh;
-      background: rgba(30,30,40,0.95);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 0 20px rgba(255,185,80,0.35);
-      padding: 20px;
-      display: none;
-      flex-direction: column;
-      z-index: 999;
-      overflow: hidden;
-    }
-    .reviews-modal.active { display: flex; }
-    .close-reviews {
-      position: absolute; top: 10px; right: 12px;
-      background: transparent; border: none; font-size: 22px; color: #fff; cursor: pointer;
-    }
-    .reviews-scroll { display: flex; flex-direction: column; gap: 12px; overflow: hidden; position: relative; }
-    .review-item { display: flex; gap: 12px; align-items: flex-start; }
-    .review-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
-    .review-content { display: flex; flex-direction: column; }
-    .review-name { font-weight: 700; font-size: 14px; color: #ffcc7a; }
-    .review-text { font-size: 13px; color: #fff; }
-
-    @media(max-width:600px){
-      .bonus-banner { flex-direction: column; text-align: center; }
-      .bonus-btn-area { justify-content: center; }
-      .dashboard { padding: 20px; }
-      h1 { font-size: 22px; }
-    }
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Admin Chat Panel (Firebase v8) - Roman Urdu</title>
+<style>
+  body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#f4f6fb;color:#111}
+  .wrap{display:flex;height:100vh}
+  .left{width:320px;background:#fff;border-right:1px solid #e3e6ea;overflow:auto}
+  .left h2{margin:0;padding:14px;background:#5b3db3;color:#fff}
+  .user-row{display:flex;gap:10px;align-items:center;padding:12px;border-bottom:1px solid #f1f2f4;cursor:pointer}
+  .user-row:hover{background:#fafbff}
+  .user-row img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+  .user-meta{font-size:14px}
+  .status{font-size:12px;color:#666}
+  .right{flex:1;display:flex;flex-direction:column}
+  .header{padding:12px;background:#5b3db3;color:#fff;display:flex;align-items:center;gap:10px}
+  .header img{width:48px;height:48px;border-radius:50%;object-fit:cover}
+  .messages{flex:1;padding:16px;overflow:auto;background:#f7f8fb}
+  .msg{max-width:70%;padding:10px;border-radius:10px;margin-bottom:10px;word-break:break-word}
+  .msg.admin{background:#5b3db3;color:#fff;margin-left:auto}
+  .msg.user{background:#eef2ff;color:#111}
+  .msg img{max-width:240px;border-radius:8px;display:block;margin-top:8px}
+  .controls{padding:10px;border-top:1px solid #e6e9ef;background:#fff;display:flex;gap:8px;align-items:center}
+  .controls input[type="text"]{flex:1;padding:10px;border-radius:8px;border:1px solid #d7dbe1}
+  .btn{padding:10px 12px;border-radius:8px;border:0;cursor:pointer;font-weight:700}
+  .btn.send{background:#28a745;color:#fff}
+  .btn.img{background:#ff9800;color:#fff}
+  .btn.delete{background:#dc3545;color:#fff}
+  .small{font-size:12px;color:#666}
+  .action-row{margin-left:auto;display:flex;gap:8px}
+  .chat-actions{display:flex;gap:8px}
+</style>
 </head>
-
 <body>
 
-<!-- ⭐ BONUS BANNER -->
-<div class="bonus-banner-wrapper">
-  <div class="bonus-banner">
-    <div class="bonus-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#ffdd99" stroke-width="1.8">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
-      </svg>
+<div class="wrap">
+  <!-- left: chats list -->
+  <div class="left" id="chatsList">
+    <h2>Chats</h2>
+    <!-- chat items injected here -->
+  </div>
+
+  <!-- right: chat window -->
+  <div class="right">
+    <div class="header" id="chatHeader">
+      <div style="font-weight:800">Select a chat</div>
+      <div class="action-row" style="margin-left:auto">
+        <div class="small" id="lastActive">—</div>
+        <div class="chat-actions" style="margin-left:12px">
+          <button class="btn delete" id="deleteMsgBtn" title="Delete selected message" style="display:none">Delete Msg</button>
+          <button class="btn delete" id="deleteChatBtn" title="Delete entire chat" style="display:none">Delete Chat</button>
+        </div>
+      </div>
     </div>
 
-    <div class="bonus-content">
-      <div class="bonus-title">
-        You have received <span>$5,000 Bonus</span>
-      </div>
+    <div class="messages" id="messages"></div>
 
-      <div class="bonus-sub">
-        Maintain a $300 balance to unlock your reward.  
-        <br>
-        <b>Offer expires in: <span id="bonusTimer">Loading...</span></b>
-      </div>
-    </div>
-
-    <div class="bonus-btn-area">
-      <a href="add-balance-3.html" class="bonus-btn">Deposit Now</a>
-      <button class="bonus-btn" id="seeReviewsBtn">See Reviews</button>
+    <div class="controls">
+      <input type="text" id="adminInput" placeholder="Type message..." />
+      <button class="btn img" id="pickImgBtn">📷</button>
+      <input type="file" id="imgPicker" accept="image/*" style="display:none" />
+      <button class="btn send" id="sendBtn">Send</button>
     </div>
   </div>
 </div>
 
+<!-- Firebase v8 -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <script>
-/* -------------------------------
-   5 DAYS COUNTDOWN WITH LOCALSTORAGE
-----------------------------------*/
+/*
+  Admin panel - v8 Firebase
+  - Paste as single file
+  - Uses DB path: chats/{chatId}/{msgId}
+  - Message object assumed: { id, from, sender, userId, userName, avatar, type, partner, text, img, timestamp }
+*/
 
-// 5 days in milliseconds
-const FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
+/* ---------- config - use your existing config ---------- */
+const firebaseConfig = {
+  apiKey: "AIzaSyB0j3fTtE1HYoshQb5FtAJBB5BI9wt3ykg",
+  authDomain: "lova-d503f.firebaseapp.com",
+  databaseURL: "https://lova-d503f-default-rtdb.firebaseio.com",
+  projectId: "lova-d503f",
+  storageBucket: "lova-d503f.appspot.com",
+  messagingSenderId: "50167847192",
+  appId: "1:50167847192:web:648c7a49574e908786266d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-// Load saved end time
-let endTime = localStorage.getItem("bonusEndTime");
+/* Admin identity (optional, shown as sender) */
+const ADMIN_NAME = "Admin";
+const ADMIN_AVATAR = "https://i.pravatar.cc/150?img=12";
 
-// If no time saved → create new 5-day timer
-if (!endTime) {
-  endTime = Date.now() + FIVE_DAYS;
-  localStorage.setItem("bonusEndTime", endTime);
+/* UI refs */
+const chatsList = document.getElementById('chatsList');
+const chatHeader = document.getElementById('chatHeader');
+const messagesEl = document.getElementById('messages');
+const adminInput = document.getElementById('adminInput');
+const sendBtn = document.getElementById('sendBtn');
+const pickImgBtn = document.getElementById('pickImgBtn');
+const imgPicker = document.getElementById('imgPicker');
+const deleteMsgBtn = document.getElementById('deleteMsgBtn');
+const deleteChatBtn = document.getElementById('deleteChatBtn');
+const lastActiveEl = document.getElementById('lastActive');
+
+let currentChat = null;   // chatId string
+let currentMsgs = {};     // local snapshot of messages for current chat keyed by msgId
+let selectedMsgId = null; // message selected for deletion
+
+/* helper: format time */
+function timeAgo(ts){
+  if(!ts) return '';
+  const diff = Date.now() - Number(ts);
+  if(diff < 60000) return 'just now';
+  if(diff < 3600000) return Math.floor(diff/60000) + 'm ago';
+  if(diff < 86400000) return Math.floor(diff/3600000) + 'h ago';
+  return new Date(Number(ts)).toLocaleString();
 }
 
-// Convert to number
-endTime = parseInt(endTime, 10);
+/* load chats list once and on updates */
+const chatsRef = db.ref('chats');
+let chatsListeners = {}; // to keep child listeners if needed
 
-function updateBonusTimer() {
-  const now = Date.now();
-  let remaining = endTime - now;
+function refreshChatsList(snapshot){
+  const val = snapshot.val() || {};
+  chatsList.innerHTML = '<h2>Chats</h2>';
+  // build array of {chatId, lastTs, firstMsg, msgsCount}
+  const arr = Object.keys(val).map(chatId=>{
+    const msgs = val[chatId] || {};
+    const list = Object.values(msgs);
+    // get last timestamp
+    const last = list.reduce((a,b)=> a && a.timestamp && b.timestamp ? (a.timestamp > b.timestamp ? a : b) : (a.timestamp? a: b), list[0] || {});
+    const first = list[0] || {};
+    return { chatId, lastTs: last ? last.timestamp || 0 : 0, first, count: list.length };
+  });
+  // sort by lastTs desc (most recent first)
+  arr.sort((a,b)=> b.lastTs - a.lastTs);
 
-  // If time expired
-  if (remaining <= 0) {
-    document.getElementById("bonusTimer").innerText = "Expired";
+  arr.forEach(item=>{
+    const chatId = item.chatId;
+    const name = item.first.userName || chatId;
+    const avatar = item.first.avatar || 'https://i.pravatar.cc/80';
+    const online = (Date.now() - (item.lastTs||0) < 30000) ? 'online' : 'offline';
+    const lastText = item.first.text ? (item.first.text.slice(0,60)) : (item.first.img ? '[image]' : '');
+    const el = document.createElement('div');
+    el.className = 'user-row';
+    el.innerHTML = `
+      <img src="${avatar}" />
+      <div style="flex:1">
+        <div class="user-meta"><strong>${escapeHtml(name)}</strong></div>
+        <div class="status">${escapeHtml(lastText)} · <span style="color:${online==='online'? '#198754':'#6c757d'}">${online}</span></div>
+      </div>
+    `;
+    el.addEventListener('click', ()=> openChat(chatId));
+    chatsList.appendChild(el);
+  });
+
+  // if no chats, show message
+  if(arr.length === 0){
+    const p = document.createElement('div');
+    p.style.padding = '12px';
+    p.innerHTML = '<div class="small">No chats yet.</div>';
+    chatsList.appendChild(p);
+  }
+}
+
+/* attach listener */
+chatsRef.on('value', refreshChatsList);
+
+/* open chat: remove any old listeners and attach new child listeners for messages */
+let currentChatListener = null;
+function openChat(chatId){
+  if(!chatId) return;
+  // detach previous
+  if(currentChatListener && currentChat){
+    db.ref('chats/' + currentChat).off('child_added', currentChatListener);
+    db.ref('chats/' + currentChat).off('child_changed', currentChatListener);
+    db.ref('chats/' + currentChat).off('child_removed', currentChatListener);
+  }
+  currentChat = chatId;
+  selectedMsgId = null;
+  deleteMsgBtn.style.display = 'none';
+  deleteChatBtn.style.display = 'inline-block';
+  messagesEl.innerHTML = '<div class="small">Loading...</div>';
+  chatHeader.innerHTML = '<img src="https://i.pravatar.cc/80" /><div style="font-weight:800">Loading...</div><div class="action-row" style="margin-left:auto"><div class="small" id="lastActive">—</div></div>';
+
+  // fetch snapshot once (to compute header info) and then attach realtime child listeners
+  db.ref('chats/' + chatId).once('value').then(snap=>{
+    const msgs = snap.val() || {};
+    const arr = Object.keys(msgs).map(k=> ({ id:k, ...msgs[k] }));
+    // sort by timestamp asc
+    arr.sort((a,b)=> (Number(a.timestamp||0) - Number(b.timestamp||0)));
+    currentMsgs = {}; arr.forEach(m=> currentMsgs[m.id] = m);
+
+    // header: user info from first or last message
+    const first = arr[0] || {};
+    const displayName = first.userName || chatId;
+    const avatar = first.avatar || 'https://i.pravatar.cc/80';
+    chatHeader.innerHTML = `<img src="${avatar}" /><div style="font-weight:800">${escapeHtml(displayName)}<div class="small" style="font-weight:normal">${escapeHtml(chatId)}</div></div>
+      <div class="action-row" style="margin-left:auto">
+        <div class="small" id="lastActive">—</div>
+        <div class="chat-actions" style="margin-left:12px">
+          <button class="btn delete" id="deleteChatBtnInline">Delete Chat</button>
+        </div>
+      </div>`;
+
+    // wire delete chat inline button
+    const delChatBtnInline = document.getElementById('deleteChatBtnInline');
+    if(delChatBtnInline){
+      delChatBtnInline.onclick = ()=> {
+        if(!confirm('Delete entire chat? This will remove messages for both sides.')) return;
+        db.ref('chats/' + chatId).remove().then(()=> {
+          messagesEl.innerHTML = '<div class="small">Chat deleted.</div>';
+          currentChat = null;
+          deleteChatBtn.style.display = 'none';
+        }).catch(err=> alert('Delete failed: '+ err.message));
+      };
+    }
+
+    renderMessages(arr);
+    updateLastActive(arr);
+
+    // now attach child listeners for live updates (child_added, child_changed, child_removed)
+    currentChatListener = function(childSnap){
+      const key = childSnap.key;
+      const val = childSnap.val();
+      if(!val) return;
+      // put into currentMsgs then re-render sorted
+      currentMsgs[key] = val;
+      const arr2 = Object.keys(currentMsgs).map(k=> ({ id:k, ...currentMsgs[k] }));
+      arr2.sort((a,b)=> Number(a.timestamp||0) - Number(b.timestamp||0));
+      renderMessages(arr2);
+      updateLastActive(arr2);
+    };
+    // child_added
+    db.ref('chats/' + chatId).on('child_added', currentChatListener);
+    db.ref('chats/' + chatId).on('child_changed', (snap)=> {
+      const key = snap.key; const v = snap.val();
+      if(v === null){ // removed -> handle in removed listener
+        delete currentMsgs[key];
+      } else {
+        currentMsgs[key] = v;
+      }
+      const arr2 = Object.keys(currentMsgs).map(k=> ({ id:k, ...currentMsgs[k] }));
+      arr2.sort((a,b)=> Number(a.timestamp||0) - Number(b.timestamp||0));
+      renderMessages(arr2);
+      updateLastActive(arr2);
+    });
+    db.ref('chats/' + chatId).on('child_removed', (snap)=> {
+      const key = snap.key;
+      delete currentMsgs[key];
+      const arr2 = Object.keys(currentMsgs).map(k=> ({ id:k, ...currentMsgs[k] }));
+      arr2.sort((a,b)=> Number(a.timestamp||0) - Number(b.timestamp||0));
+      renderMessages(arr2);
+      updateLastActive(arr2);
+    });
+
+  }).catch(err=>{
+    messagesEl.innerHTML = '<div class="small">Error loading chat: '+ err.message +'</div>';
+  });
+}
+
+/* render messages array (sorted asc) */
+function renderMessages(arr){
+  messagesEl.innerHTML = '';
+  arr.forEach(m=>{
+    const div = document.createElement('div');
+    const className = (m.from === 'admin' || m.sender === 'admin') ? 'msg admin' : 'msg user';
+    div.className = 'msg ' + ((className.indexOf('admin')>-1)?'admin':'user');
+    div.dataset.msgId = m.id || '';
+    // message header small (timestamp + delete icon)
+    const meta = document.createElement('div');
+    meta.style.fontSize = '12px';
+    meta.style.color = '#666';
+    meta.style.marginBottom = '6px';
+    meta.innerText = timeAgo(m.timestamp) + (m.userName ? ' · ' + m.userName : '');
+    div.appendChild(meta);
+
+    if(m.text){
+      const t = document.createElement('div');
+      t.innerText = m.text;
+      div.appendChild(t);
+    }
+    if(m.img){
+      const im = document.createElement('img');
+      im.src = m.img;
+      im.style.maxWidth = '320px';
+      div.appendChild(im);
+    }
+
+    // attach click to select for deletion (toggles)
+    div.addEventListener('click', ()=>{
+      // highlight selection
+      const prev = messagesEl.querySelector('.msg.selected');
+      if(prev) prev.classList.remove('selected');
+      div.classList.add('selected');
+      selectedMsgId = div.dataset.msgId;
+      deleteMsgBtn.style.display = 'inline-block';
+    });
+
+    messagesEl.appendChild(div);
+  });
+  messagesEl.scrollTop = messagesEl.scrollHeight;
+}
+
+/* update last active UI */
+function updateLastActive(arr){
+  if(!arr || arr.length === 0){
+    lastActiveEl.innerText = '—';
     return;
   }
-
-  // Time calculations
-  const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-  remaining %= 1000 * 60 * 60 * 24;
-
-  const hours = Math.floor(remaining / (1000 * 60 * 60));
-  remaining %= 1000 * 60 * 60;
-
-  const minutes = Math.floor(remaining / (1000 * 60));
-  const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
-
-  // Display
-  document.getElementById("bonusTimer").innerText =
-    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  const last = arr[arr.length-1];
+  const ago = timeAgo(last.timestamp);
+  const online = (Date.now() - Number(last.timestamp||0) < 30000) ? 'online' : 'offline';
+  lastActiveEl.innerText = `${ago} · ${online}`;
 }
 
-// Update every second
-setInterval(updateBonusTimer, 1000);
-updateBonusTimer();
-</script>
+/* send text message (admin) */
+sendBtn.addEventListener('click', sendAdminText);
+adminInput.addEventListener('keypress', (e)=> { if(e.key === 'Enter') sendAdminText(); });
 
+function sendAdminText(){
+  if(!currentChat) return alert('Koi chat select karo.');
+  const txt = adminInput.value.trim();
+  if(!txt) return;
+  const msgId = Date.now().toString() + '_' + Math.floor(Math.random()*9999);
+  const payload = {
+    id: msgId,
+    from: 'admin',
+    sender: 'admin',
+    text: txt,
+    img: '',
+    avatar: ADMIN_AVATAR,
+    timestamp: Date.now()
+  };
+  db.ref('chats/' + currentChat + '/' + msgId).set(payload).then(()=>{
+    adminInput.value = '';
+    // UI will update via listener
+  }).catch(err=> alert('Send failed: ' + err.message));
+}
 
-  <!-- DASHBOARD -->
-  <div class="dashboard">
-    <div class="button-group">
-      <a href="add-balance-3.html" class="btn">Add Balance</a>
-      <a href="payout-2.html" class="btn">Payout</a>
-      <a href="discover.html" class="btn">Discover</a>
-      <a href="spinwin.html" class="btn">Spin & Win</a>
-      <a href="tid3.html" class="btn">Transactions</a>
-      <a href="mining.html" class="btn">Mining</a>
-      <a href="markets.html" class="btn">Markets</a>
-      <a href="events.html" class="btn">Events</a>
-    </div>
-
-    <h1>Overview</h1>
-
-    <div class="card-container">
-      <div class="card">
-        <div class="card-title">Balance</div>
-        <div class="card-value" id="balance">$00</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Total Invest</div>
-        <div class="card-value" id="invest">$00</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Profit</div>
-        <div class="card-value" id="profit">$00</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Withdrawals</div>
-        <div class="card-value" id="withdraw">$00</div>
-      </div>
-    </div>
-
-    <div class="update-info">Updated from Supabase.</div>
-  </div>
-
-  <!-- REVIEWS MODAL -->
-  <div class="reviews-modal" id="reviewsModal">
-    <button class="close-reviews" id="closeReviews">×</button>
-    <div class="reviews-scroll" id="reviewsScroll"></div>
-  </div>
-
-  <!-- SUPABASE -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-    async function fetchAndRender() {
-      const userId = localStorage.getItem("user_id");
-      if(!userId) return location.href="login.html";
-      const { data } = await supabaseClient.from("users").select("balance,total_invest,profit,withdrawals").eq("id", userId).single();
-      document.getElementById("balance").textContent = "$" + Number(data.balance||0).toFixed(2);
-      document.getElementById("invest").textContent = "$" + Number(data.total_invest||0).toFixed(2);
-      document.getElementById("profit").textContent = "$" + Number(data.profit||0).toFixed(2);
-      document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals||0).toFixed(2);
-    }
-    fetchAndRender();
-    setInterval(fetchAndRender, 15000);
-
-    // ---------------- REVIEWS ----------------
-    const sampleReviews = Array.from({length:50}, (_,i)=>({
-      name:`User${Math.floor(Math.random()*999+1)}`,
-      avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
-      text:`Yeah! I received $${(Math.floor(Math.random()*9000+1000))}. Thank you so much!`
-    }));
-    const seeReviewsBtn = document.getElementById("seeReviewsBtn");
-    const reviewsModal = document.getElementById("reviewsModal");
-    const reviewsScroll = document.getElementById("reviewsScroll");
-    const closeReviews = document.getElementById("closeReviews");
-
-    seeReviewsBtn.onclick = ()=>{
-      reviewsScroll.innerHTML="";
-      const inner = document.createElement("div"); inner.className="reviews-inner";
-      const allReviews = [...sampleReviews, ...sampleReviews];
-      allReviews.forEach(r=>{
-        const div = document.createElement("div"); div.className="review-item";
-        div.innerHTML=`<div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
-          <div class="review-content">
-            <div class="review-name">${r.name}</div>
-            <div class="review-text">${r.text}</div>
-          </div>`;
-        inner.appendChild(div);
-      });
-      reviewsScroll.appendChild(inner);
-      reviewsModal.classList.add("active");
-
-      let start=0; const scrollHeight=inner.scrollHeight/2;
-      function animateScroll(){ start+=0.5; if(start>=scrollHeight) start=0; inner.style.transform=`translateY(-${start}px)`; requestAnimationFrame(animateScroll);}
-      animateScroll();
+/* pick image */
+pickImgBtn.addEventListener('click', ()=> {
+  if(!currentChat) return alert('Koi chat select karo.');
+  imgPicker.click();
+});
+imgPicker.addEventListener('change', function(){
+  const file = this.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const base64 = e.target.result;
+    const msgId = Date.now().toString() + '_' + Math.floor(Math.random()*9999);
+    const payload = {
+      id: msgId,
+      from: 'admin',
+      sender: 'admin',
+      text: '',
+      img: base64,
+      avatar: ADMIN_AVATAR,
+      timestamp: Date.now()
     };
-    closeReviews.onclick=()=>reviewsModal.classList.remove("active");
-  </script>
+    db.ref('chats/' + currentChat + '/' + msgId).set(payload).then(()=> {
+      // done
+    }).catch(err=> alert('Send image failed: '+ err.message));
+  };
+  reader.readAsDataURL(file);
+  this.value = '';
+});
+
+/* delete selected message */
+deleteMsgBtn.addEventListener('click', ()=>{
+  if(!currentChat || !selectedMsgId) return;
+  if(!confirm('Delete this message for both sides?')) return;
+  db.ref('chats/' + currentChat + '/' + selectedMsgId).remove().then(()=>{
+    selectedMsgId = null;
+    deleteMsgBtn.style.display = 'none';
+    // UI update via listener
+  }).catch(err=> alert('Delete failed: '+ err.message));
+});
+
+/* delete entire chat (button) */
+deleteChatBtn.addEventListener('click', ()=>{
+  if(!currentChat) return;
+  if(!confirm('Delete ENTIRE chat for both sides?')) return;
+  db.ref('chats/' + currentChat).remove().then(()=> {
+    currentChat = null;
+    messagesEl.innerHTML = '<div class="small">Chat deleted.</div>';
+    deleteChatBtn.style.display = 'none';
+  }).catch(err=> alert('Delete chat failed: '+ err.message));
+});
+
+/* util: escape html */
+function escapeHtml(s){
+  if(!s) return '';
+  return String(s).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]);});
+}
+
+/* Clean up: ensure window unload removes listeners */
+window.addEventListener('beforeunload', ()=> {
+  try { db.ref('chats').off(); if(currentChat) db.ref('chats/' + currentChat).off(); } catch(e){}
+});
+</script>
 </body>
 </html>
