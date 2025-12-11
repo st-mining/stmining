@@ -1,4 +1,3 @@
-<!-- PART 1/4 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1568,6 +1567,7 @@ document.getElementById("supportImgPicker").addEventListener("change", function 
         and unlock <span class="bonus">$10,000</span> instantly!
     </p>
 </div>
+
 <script>
 const canvas = document.getElementById("fireCanvas");
 const ctx = canvas.getContext("2d");
@@ -1610,6 +1610,51 @@ function animate() {
 
 animate();
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+  const TEN_DAYS = 10 * 24 * 60 * 60 * 1000;
+
+  let endTime = localStorage.getItem("bonus_10day_end");
+
+  // Create new end time if missing or broken
+  if (!endTime || isNaN(Number(endTime))) {
+    endTime = Date.now() + TEN_DAYS;
+    localStorage.setItem("bonus_10day_end", endTime);
+  }
+
+  endTime = Number(endTime);
+
+  function updateBonusTimer() {
+    const el = document.getElementById("bonusTimer");
+    if (!el) return;  // element not loaded yet
+
+    const now = Date.now();
+    let remaining = endTime - now;
+
+    if (remaining <= 0) {
+      el.textContent = "Expired";
+      return;
+    }
+
+    const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+    remaining %= 86400000;
+
+    const hours = Math.floor(remaining / (1000 * 60 * 60));
+    remaining %= 3600000;
+
+    const minutes = Math.floor(remaining / (1000 * 60));
+    const seconds = Math.floor((remaining % 60000) / 1000);
+
+    el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+
+  updateBonusTimer();
+  setInterval(updateBonusTimer, 1000);
+
+});
+</script>
+
 <!-- SUPABASE LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
