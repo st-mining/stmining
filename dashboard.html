@@ -1,369 +1,1692 @@
+<!-- PART 1/4 -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dashboard</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Dashboard (User) - Fixed</title>
+<style>
+  /* ---------- Reset & Base ---------- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:"Segoe UI",Tahoma, Geneva, Verdana, sans-serif;
+    background:linear-gradient(180deg,#06070a 0%, #0f0f12 60%);
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:20px;
+  }
 
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right top, #0f0f0f, #1c1c1c);
-      color: #ffffff;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 20px;
-    }
+  /* ---------- Fancy Banner (animated) ---------- */
+  .bonus-banner-wrapper{width:100%;max-width:980px;margin-bottom:22px;animation:enterY .7s cubic-bezier(.16,.94,.6,1)}
+  @keyframes enterY{from{opacity:0;transform:translateY(-18px) scale(.98)}to{opacity:1;transform:none}}
 
-    /* ------------------- BONUS BANNER ------------------- */
-    .bonus-banner-wrapper { width: 100%; max-width: 900px; margin-bottom: 22px; animation: slideDown 0.9s cubic-bezier(.16,.94,.6,1); }
-    @keyframes slideDown { from { opacity: 0; transform: translateY(-14px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  .bonus-banner{
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+    padding:22px;
+    display:flex;
+    gap:18px;
+    align-items:center;
+    background:linear-gradient(135deg, rgba(255,186,90,0.06), rgba(255,150,60,0.02));
+    border:1px solid rgba(255,200,110,0.06);
+    box-shadow:0 10px 40px rgba(255,170,60,0.06), inset 0 1px 0 rgba(255,255,255,0.02);
+    backdrop-filter: blur(10px) saturate(140%);
+  }
 
-    .bonus-banner {
-      background: rgba(255, 255, 255, 0.07);
-      backdrop-filter: blur(18px) saturate(180%);
-      -webkit-backdrop-filter: blur(18px) saturate(180%);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 20px 22px;
-      display: flex;
-      align-items: center;
-      gap: 18px;
-      position: relative;
-      box-shadow: 0 0 32px rgba(255,185,80,0.25);
-    }
+  /* top glow stripe */
+  .bonus-banner::before{
+    content:"";
+    position:absolute;left:0;top:0;height:6px;width:100%;
+    background:linear-gradient(90deg,#ffd27a,#ffb84d,#ffd27a);
+    opacity:.95;
+    filter:drop-shadow(0 4px 12px rgba(255,160,60,0.18));
+    transform-origin:left center;
+    animation:glowPulse 3s infinite ease-in-out;
+  }
+  @keyframes glowPulse{0%{opacity:.7}50%{opacity:1}100%{opacity:.7}}
 
-    .bonus-banner::before {
-      content: "";
-      position: absolute;
-      top: -3px; left: 0;
-      width: 100%; height: 4px;
-      border-radius: 16px 16px 0 0;
-      background: linear-gradient(90deg, #ffdd99, #ffb84d, #ffdd99);
-      animation: glow 3.5s infinite alternate;
-    }
+  /* soft floating particles */
+  .banner-particle{
+    position:absolute;width:8px;height:8px;border-radius:50%;
+    background:rgba(255,220,120,0.12);filter:blur(.6px);
+    animation:floatParticle 7s linear infinite;
+    pointer-events:none;
+  }
+  @keyframes floatParticle{
+    0%{transform:translateY(0) scale(.8);opacity:.9}
+    50%{transform:translateY(-18px) scale(1.1);opacity:.6}
+    100%{transform:translateY(0) scale(.8);opacity:.9}
+  }
 
-    @keyframes glow { from { opacity: .6; } to { opacity: 1; } }
+  /* sweeping light */
+  .bonus-banner::after{
+    content:"";
+    position:absolute;left:-160px;top:-40px;width:160px;height:200%;
+    background:linear-gradient(120deg,transparent, rgba(255,255,255,0.12), transparent);
+    transform:rotate(-12deg);
+    animation:lightSweep 3.6s linear infinite;
+    mix-blend-mode:screen;
+  }
+  @keyframes lightSweep{0%{left:-180px}100%{left:140%}}
 
-    .bonus-icon {
-      width: 62px; height: 62px;
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(255,184,107,0.25), rgba(255,184,107,0.10));
-      display: flex; align-items: center; justify-content: center;
-      box-shadow: 0 6px 18px rgba(255,180,90,0.35);
-    }
+  .bonus-icon{
+    width:68px;height:68px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(180deg,rgba(255,200,120,0.18),rgba(255,150,40,0.08));
+    box-shadow:0 10px 30px rgba(255,160,70,0.08);
+    transform:translateZ(0);animation:iconFloat 3s ease-in-out infinite;
+  }
+  @keyframes iconFloat{0%{transform:translateY(0)}50%{transform:translateY(-6px)}100%{transform:translateY(0)}}
 
-    .bonus-icon svg { width: 36px; height: 36px; }
+  .bonus-title{font-size:20px;font-weight:800;color:#fff;letter-spacing:.2px}
+  .bonus-title span{color:#fff7e6;background:linear-gradient(90deg,#ffcc7a,#ffdca6);padding:2px 6px;border-radius:6px;font-weight:900}
+  .bonus-sub{font-size:13px;color:rgba(255,255,255,0.85)}
 
-    .bonus-content { flex: 1; }
-    .bonus-title { font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 3px; }
-    .bonus-title span { color: #ffcc7a; font-weight: 900; }
-    .bonus-sub { font-size: 13px; color: rgba(255,255,255,0.82); }
+  .bonus-btn-area{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .bonus-btn{
+    padding:10px 16px;border-radius:12px;font-weight:800;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#ffda8c,#ffa94d);
+    color:#000;box-shadow:0 8px 26px rgba(255,160,70,0.12);transition:transform .18s ease;
+  }
+  .bonus-btn:hover{transform:translateY(-4px);filter:brightness(1.03)}
 
-    .bonus-btn-area { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .bonus-btn {
-      background: linear-gradient(45deg, #ffb661, #ffdf8f);
-      color: #000;
-      padding: 10px 18px;
-      border-radius: 12px;
-      font-size: 13px;
-      font-weight: 700;
-      text-decoration: none;
-      box-shadow: 0 6px 18px rgba(255,180,80,0.35);
-      transition: 0.25s ease;
-      cursor: pointer;
-    }
-    .bonus-btn:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 10px 25px rgba(255,200,100,0.55); }
+  /* ---------- Dashboard / Cards (original style preserved) ---------- */
+  .dashboard{background:#0f1220;border-radius:18px;padding:24px;width:100%;max-width:980px;box-shadow:0 30px 60px rgba(0,0,0,0.6)}
+  .button-group{display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin-bottom:22px}
+  .btn{padding:10px 18px;border-radius:12px;background:linear-gradient(45deg,#ff9900,#ffdd55);color:#000;font-weight:700;min-width:110px;box-shadow:0 8px 20px rgba(255,150,30,0.08)}
+  .btn:hover{transform:translateY(-4px)}
+  h1{text-align:center;margin-bottom:20px;font-size:28px;background:linear-gradient(90deg,#9ef6ff,#7bd1ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
-    /* ------------------- DASHBOARD ------------------- */
-    .dashboard {
-      background: #1b1b2a;
-      border-radius: 20px;
-      padding: 25px;
-      width: 100%;
-      max-width: 900px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.6);
-    }
+  .card-container{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;margin-bottom:16px}
+  .card{background:linear-gradient(145deg,#12121a,#1a1a2a);padding:16px;border-radius:12px;text-align:center;position:relative;border:1px solid rgba(255,255,255,0.02)}
+  .card::before{content:"";height:4px;width:100%;position:absolute;top:0;left:0;border-radius:12px 12px 0 0;background:linear-gradient(90deg,#ff6a00,#ffd500)}
+a {
+  text-decoration: none !important;
+}
 
-    .button-group {
-      display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 25px;
-    }
-    .btn {
-      padding: 10px 18px;
-      font-size: 13px;
-      font-weight: 700;
-      border: none;
-      border-radius: 12px;
-      background: linear-gradient(45deg, #ff9900, #ffdd55);
-      color: #000;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      transition: 0.25s ease;
-      box-shadow: 0 5px 15px rgba(255,165,0,0.35);
-      min-width: 110px;
-    }
-    .btn:hover {
-      transform: translateY(-3px) scale(1.05);
-      background: linear-gradient(45deg, #ffb84d, #fff0a8);
-      box-shadow: 0 8px 20px rgba(255,200,50,0.55);
-    }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 25px;
-      font-size: 28px;
-      background: linear-gradient(90deg, #00fff0, #00aaff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+  .card-title{font-size:13px;color:#cfcfcf}.card-value{font-size:22px;font-weight:800;color:#fff}
+  .update-info{text-align:center;margin-top:10px;color:#9aa0b0;font-size:12px}
 
-    .card-container {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 18px;
-      margin-bottom: 15px;
-    }
-    .card {
-      background: linear-gradient(145deg, #26263a, #1c1c2b);
-      padding: 18px;
-      border-radius: 13px;
-      text-align: center;
-      border: 1px solid #313144;
-      position: relative;
-    }
-    .card::before {
-      content:"";
-      height: 4px;
-      width: 100%;
-      background: linear-gradient(90deg, red, orange, yellow);
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-radius: 13px 13px 0 0;
-    }
-    .card-title { font-size: 13px; color: #bdbdbd; letter-spacing: 1px; margin-bottom: 6px; }
-    .card-value { font-size: 23px; font-weight: bold; color: #ffffff; }
-    .update-info { text-align: center; margin-top: 10px; color: #888; font-size: 12px; font-style: italic; }
+  /* ---------- Reviews modal (unchanged look) ---------- */
+  .reviews-modal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:340px;max-height:64vh;background:linear-gradient(180deg,#0f1113,#0b0c0f);border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.04);display:none;flex-direction:column;z-index:999;overflow:hidden}
+  .reviews-modal.active{display:flex}
+  .close-reviews{position:absolute;top:10px;right:12px;background:transparent;border:0;color:#fff;font-size:22px;cursor:pointer}
+  .reviews-scroll{display:flex;flex-direction:column;gap:12px;overflow:hidden;padding-top:6px}
+  .review-item{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);padding:8px;border-radius:10px}
+  .review-avatar{width:44px;height:44px;border-radius:50%;background-size:cover;background-position:center;flex-shrink:0}
+  .review-content{display:flex;flex-direction:column}
+  .review-name{font-weight:800;color:#ffdca6}.review-text{font-size:13px;color:#e6eef5}
 
-    /* ------------------- REVIEWS MODAL ------------------- */
-    .reviews-modal {
-      position: fixed;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 320px;
-      max-height: 60vh;
-      background: rgba(30,30,40,0.95);
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,0.1);
-      box-shadow: 0 0 20px rgba(255,185,80,0.35);
-      padding: 20px;
-      display: none;
-      flex-direction: column;
-      z-index: 999;
-      overflow: hidden;
-    }
-    .reviews-modal.active { display: flex; }
-    .close-reviews {
-      position: absolute; top: 10px; right: 12px;
-      background: transparent; border: none; font-size: 22px; color: #fff; cursor: pointer;
-    }
-    .reviews-scroll { display: flex; flex-direction: column; gap: 12px; overflow: hidden; position: relative; }
-    .review-item { display: flex; gap: 12px; align-items: flex-start; }
-    .review-avatar { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
-    .review-content { display: flex; flex-direction: column; }
-    .review-name { font-weight: 700; font-size: 14px; color: #ffcc7a; }
-    .review-text { font-size: 13px; color: #fff; }
+  .review-chat-btn{margin-top:6px;padding:6px 10px;border-radius:8px;border:none;background:#25D366;color:#001;font-weight:700;cursor:pointer}
 
-    @media(max-width:600px){
-      .bonus-banner { flex-direction: column; text-align: center; }
-      .bonus-btn-area { justify-content: center; }
-      .dashboard { padding: 20px; }
-      h1 { font-size: 22px; }
+  /* ---------- User Chat (mini popup but 'normal' size) ---------- */
+  .review-chat-popup{position:fixed;right:20px;bottom:120px;width:380px;max-height:520px;background:#071018;border-radius:12px;border:1px solid rgba(255,255,255,0.04);box-shadow:0 20px 60px rgba(0,0,0,.6);display:flex;flex-direction:column;overflow:hidden;z-index:100000}
+  .rc-header{display:flex;align-items:center;gap:12px;padding:12px;background:linear-gradient(90deg,#075e54,#128C7E);color:#fff}
+  .rc-header img{width:40px;height:40px;border-radius:50%;object-fit:cover}
+  .rc-body{flex:1;padding:12px;overflow:auto;background:linear-gradient(180deg,#061017,#071217);display:flex;flex-direction:column;gap:10px}
+  .rc-input{display:flex;gap:8px;padding:10px;background:#05121a}
+  .rc-input input{flex:1;padding:10px;border-radius:8px;border:0;background:#0b1720;color:#fff;outline:none}
+  .rc-input .rc-file{display:none}
+  .rc-send{background:#25D366;border:none;color:#001;padding:8px 12px;border-radius:8px;cursor:pointer;font-weight:800}
+
+  .bubble{padding:8px 12px;border-radius:14px;max-width:78%;font-size:14px}
+  .bubble.me{align-self:flex-end;background:#DCF8C6;color:#002; border-radius:14px 6px 14px 14px}
+  .bubble.other{align-self:flex-start;background:#e9f3f6;color:#0b2a2a;display:flex;align-items:center;gap:8px;border-radius:6px 14px 14px 14px}
+  .bubble img.msg-img{max-width:220px;border-radius:10px;display:block}
+  .bubble .small-dp{width:34px;height:34px;border-radius:50%;object-fit:cover}
+  /* FUTURISTIC HOLOGRAM BANNER */
+.banner-wrapper {
+  width: 100%;
+  max-width: 900px;
+  margin-bottom: 25px;
+}
+
+.holo-banner {
+  position: relative;
+  padding: 22px;
+  border-radius: 18px;
+  border: 1px solid rgba(0,255,255,0.15);
+  background: radial-gradient(circle at 20% 20%, rgba(0,180,255,0.25), rgba(0,0,15,0.8));
+  box-shadow: 0 0 25px rgba(0,255,255,0.25);
+  overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: holoFloat 5s ease-in-out infinite;
+}
+
+@keyframes holoFloat {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0); }
+}
+
+.holo-left {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.holo-icon {
+  padding: 12px;
+  border-radius: 50%;
+  background: rgba(0,255,255,0.12);
+  box-shadow: 0 0 15px rgba(0,255,255,0.35);
+}
+
+.holo-title {
+  font-size: 19px;
+  font-weight: 800;
+}
+.holo-title span {
+  color: #00eaff;
+  text-shadow: 0 0 8px #00eaff;
+}
+
+.holo-sub {
+  color: #c9faff;
+  font-size: 13px;
+}
+
+.holo-right {
+  display: flex;
+  gap: 10px;
+}
+
+.holo-btn {
+  background: linear-gradient(90deg, #00eaff, #0088ff);
+  padding: 9px 16px;
+  color: #000;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  box-shadow: 0 0 12px rgba(0,200,255,0.5);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.holo-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 18px rgba(0,255,255,0.7);
+}
+
+/* holo waveform animation */
+.holo-glow {
+  position: absolute;
+  top: 0;
+  left: -180px;
+  width: 140px;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0,255,255,0.4), transparent);
+  animation: holoMove 3.5s linear infinite;
+}
+
+@keyframes holoMove {
+  from { transform: translateX(0); }
+  to { transform: translateX(420px); }
+}
+
+@media (max-width: 650px){
+  .holo-banner {
+    flex-direction: column;
+    text-align: center;
+    gap: 18px;
+  }
+  .holo-right {
+    justify-content: center;
+    width: 100%;
+  }
+}
+
+.rc-pick {
+    background: #128C7E;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+}
+
+.rc-pick:hover {
+    background: #0f6f61;
+    transform: translateY(-2px);
+}
+
+.rc-pick:active {
+    transform: scale(0.95);
+}
+
+/* Image input hidden */
+.rc-file {
+    display: none;
+}
+#supportImgBtn {
+    background:#128C7E;
+    color:#fff;
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:15px;
+    transition:0.2s;
+}
+
+#supportImgBtn:hover {
+    background:#0f6f61;
+    transform:translateY(-2px);
+}
+
+#supportImgBtn:active {
+    transform:scale(0.95);
+}
+.year-badge {
+  width: 68px;
+  height: 68px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  font-weight: 900;
+  color: #00eaff;
+  background: rgba(0,255,255,0.12);
+  box-shadow: 0 0 18px rgba(0,255,255,0.4),
+              inset 0 0 12px rgba(0,255,255,0.25);
+  text-shadow: 0 0 10px #00eaff;
+  animation: yearFloat 3s ease-in-out infinite,
+             yearPulse 2.5s infinite;
+}
+
+/* Floating animation */
+@keyframes yearFloat {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+/* Glow pulse effect */
+@keyframes yearPulse {
+  0% { box-shadow: 0 0 16px rgba(0,255,255,0.35); }
+  50% { box-shadow: 0 0 26px rgba(0,255,255,0.7); }
+  100% { box-shadow: 0 0 16px rgba(0,255,255,0.35); }
+}
+.year2025-icon {
+  width: 80px;
+  height: 80px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+}
+
+.year2025-icon .ring {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 4px solid transparent;
+  border-top-color: #00eaff;
+  border-right-color: #009dff;
+  border-left-color: #00ffc8;
+  animation: spinRing 3s linear infinite;
+  box-shadow: 0 0 20px #00eaff, 0 0 40px #009dff inset;
+}
+
+@keyframes spinRing {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.text-2025 {
+  position: absolute;
+  font-size: 20px;
+  font-weight: 900;
+  color: #00eaff;
+  text-shadow: 0 0 10px #00eaff, 0 0 20px #00c4ff;
+}
+
+/* Particle sparks */
+.spark {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #00eaff;
+  border-radius: 50%;
+  box-shadow: 0 0 10px #00eaff;
+  opacity: 0;
+  animation: sparkFly 2s infinite;
+}
+
+.s1 { top: -5px; left: 35px; animation-delay: 0s; }
+.s2 { bottom: -5px; right: 30px; animation-delay: 0.4s; }
+.s3 { left: -5px; top: 30px; animation-delay: 0.8s; }
+
+@keyframes sparkFly {
+  0% { transform: scale(0.4); opacity: 0; }
+  50% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(0.4); opacity: 0; }
+}
+
+  /* ---------- Support (single toggle, no icon inside window) ---------- */
+  #supportFloatingBtn{position:fixed;bottom:25px;right:20px;z-index:99999}
+  #supportToggle{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#128C7E,#21c28b);display:flex;align-items:center;justify-content:center;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+  .support-window{position:fixed;bottom:95px;right:20px;width:360px;max-height:480px;border-radius:12px;overflow:hidden;display:none;z-index:99999;background:linear-gradient(180deg,#071018,#041019);border:1px solid rgba(255,255,255,0.03);box-shadow:0 12px 40px rgba(0,0,0,0.6)}
+  .support-header{padding:12px;color:#fff;background:linear-gradient(90deg,#0b7a63,#128C7E);display:flex;align-items:center;gap:10px}
+  .support-body{padding:12px;height:320px;overflow:auto}
+  .support-input{display:flex;padding:10px;background:#02121a;gap:8px}
+  .support-input input{flex:1;padding:8px;border-radius:8px;border:0;background:#07202a;color:#fff;outline:none}
+  .support-input button{background:#128C7E;padding:8px 12px;border-radius:8px;border:0;color:#fff;cursor:pointer}
+
+  @media(max-width:700px){
+    .bonus-banner{padding:16px;border-radius:12px}
+    .review-chat-popup{right:10px;bottom:90px;width:92%;max-height:60vh}
+    .support-window{right:10px;bottom:90px;width:92%;max-height:60vh}
+    .dashboard{padding:18px}
+  }
+/* Footer container */
+.year-footer {
+  position: relative;
+  width: 95%;
+  max-width: 960px;
+  margin: 50px auto 0 auto;
+  padding: 28px;
+  border-radius: 20px;
+  background: rgba(0,20,40,0.45);
+  border: 1px solid rgba(0,255,255,0.2);
+  backdrop-filter: blur(8px);
+
+  box-shadow:
+    0 0 18px rgba(0,255,255,0.25),
+    inset 0 0 20px rgba(0,255,255,0.15);
+
+  overflow: hidden;
+  text-align: center;
+}
+
+
+/* Soft Firework Canvas BG */
+#fireCanvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.35;
+}
+
+
+/* Rotating crystal */
+.crystal {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #00faff, #b8ffff);
+  opacity: 0.15;
+  border-radius: 15px;
+  transform: rotate(0deg);
+  animation: spinCrystal 20s linear infinite;
+}
+
+@keyframes spinCrystal {
+  100% { transform: rotate(360deg); }
+}
+
+
+/* Neon hologram ring */
+.holo-ring {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  border: 2px solid rgba(0,255,255,0.4);
+  box-shadow: 0 0 22px rgba(0,255,255,0.4);
+  animation: holoSpin 7s linear infinite;
+  opacity: 0.28;
+}
+
+@keyframes holoSpin {
+  100% { transform: translateX(-50%) rotate(360deg); }
+}
+
+
+/* Title */
+.yf-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #b8ffff;
+  text-shadow: 0 0 12px #00eaff;
+  animation: pulseTitle 3.2s infinite ease-in-out;
+}
+
+@keyframes pulseTitle {
+  0%,100% { opacity: 1; text-shadow: 0 0 12px #00faff; }
+  50% { opacity: 0.75; text-shadow: 0 0 22px #0099cc; }
+}
+
+/* Sub text */
+.yf-sub {
+  font-size: 15px;
+  color: #dff;
+  opacity: 0.8;
+}
+
+/* Main bonus text */
+.yf-big {
+  font-size: 20px;
+  color: white;
+  font-weight: 700;
+}
+
+.amount {
+  color: #ffe17c;
+  text-shadow: 0 0 8px #ffdd88;
+}
+
+.bonus {
+  color: #00eaff;
+  text-shadow: 0 0 12px #00faff;
+}
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 14px;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+/* Single button style — PROPER SIZE */
+.button-group .btn {
+    width: 42%;
+    min-width: 135px;
+    padding: 12px 0;
+    text-align: center;
+
+    background: linear-gradient(135deg, #ffb340, #ff8e20);
+    color: #000;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 15px;
+    text-decoration: none;
+
+    box-shadow: 0 6px 16px rgba(255,140,0,0.25);
+    transition: 0.2s;
+}
+
+/* Hover effect */
+.button-group .btn:hover {
+    transform: translateY(-4px);
+    filter: brightness(1.08);
+}
+
+/* Mobile perfect layout */
+@media (max-width: 600px) {
+    .button-group .btn {
+        width: 46%;
+        min-width: 120px;
+        padding: 12px 0;
+        font-size: 14px;
     }
-  </style>
+}
+
+/* Ultra small phones */
+@media (max-width: 360px) {
+    .button-group .btn {
+        width: 100%;
+    }
+}
+
+</style>
 </head>
 
 <body>
 
-<!-- ⭐ BONUS BANNER -->
-<div class="bonus-banner-wrapper">
-  <div class="bonus-banner">
-    <div class="bonus-icon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#ffdd99" stroke-width="1.8">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.77 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/>
-      </svg>
-    </div>
+<!-- PART 1/4 CONTENT CONTINUES BELOW -->
+<div class="banner-wrapper">
+  <div class="holo-banner">
 
-    <div class="bonus-content">
-      <div class="bonus-title">
-        You have received <span>$5,000 Bonus</span>
+    <div class="holo-left">
+
+      <!-- NEW 2025 BADGE -->
+  <div class="year2025-icon">
+    <div class="ring"></div>
+    <div class="text-2025">2025</div>
+    <div class="spark s1"></div>
+    <div class="spark s2"></div>
+    <div class="spark s3"></div>
+</div>
+
+      <div>
+        <div class="holo-title">🎁 Year Ending Bonus <span>$10,000</span></div>
+        <div class="holo-sub">
+          Maintain $299 balance to claim.<br>
+          Expires in: <b id="bonusTimer">Loading…</b>
+        </div>
       </div>
 
-      <div class="bonus-sub">
-        Maintain a $300 balance to unlock your reward.  
-        <br>
-        <b>Offer expires in: <span id="bonusTimer">Loading...</span></b>
-      </div>
     </div>
 
-    <div class="bonus-btn-area">
-      <a href="add-balance-3.html" class="bonus-btn">Deposit Now</a>
-      <button class="bonus-btn" id="seeReviewsBtn">See Reviews</button>
+    <div class="holo-right">
+      <a href="add-balance-3.html" class="holo-btn">Deposit</a>
+      <button id="seeReviewsBtn" class="holo-btn">Reviews</button>
     </div>
+
+    <div class="holo-glow"></div>
+
   </div>
 </div>
 
+
+<div class="dashboard" role="main" aria-label="Dashboard overview">
+  <div class="button-group">
+    <a href="add-balance-3.html" class="btn">Add Balance</a>
+    <a href="payout-2.html" class="btn">Payout</a>
+    <a href="discover.html" class="btn">Discover</a>
+    <a href="spinwin.html" class="btn">Spin & Win</a>
+    <a href="tid3.html" class="btn">Transactions</a>
+    <a href="mining.html" class="btn">Mining</a>
+    <a href="markets.html" class="btn">Markets</a>
+    <a href="events.html" class="btn">Events</a>
+  </div>
+
+  <h1>Overview</h1>
+
+  <div class="card-container">
+    <div class="card"><div class="card-title">Balance</div><div class="card-value" id="balance">$00</div></div>
+    <div class="card"><div class="card-title">Total Invest</div><div class="card-value" id="invest">$00</div></div>
+    <div class="card"><div class="card-title">Profit</div><div class="card-value" id="profit">$00</div></div>
+    <div class="card"><div class="card-title">Withdrawals</div><div class="card-value" id="withdraw">$00</div></div>
+  </div>
+
+  <div class="update-info"></div>
+</div>
+
+<!-- Reviews modal -->
+<div class="reviews-modal" id="reviewsModal" role="dialog" aria-modal="true" aria-hidden="true">
+  <button class="close-reviews" id="closeReviews" aria-label="Close reviews">×</button>
+  <div class="reviews-scroll" id="reviewsScroll"></div>
+</div>
+
+<!-- Support floating -->
+<div id="supportFloatingBtn">
+  <div id="supportToggle" title="Open Support Chat">💬</div>
+</div>
+
+<!-- Support window -->
+<div class="support-window" id="supportWindow" aria-hidden="true">
+  <div class="support-header">
+    <div style="font-weight:700">Support Chat</div>
+    <div style="margin-left:auto;font-size:13px;color:rgba(255,255,255,0.85)">Admin replies from panel</div>
+  </div>
+
+  <div class="support-body" id="supportMessages"></div>
+
+  <div class="support-input">
+        <input id="supportInput" placeholder="Type message to support...">
+
+        <!-- NEW IMAGE BUTTON -->
+        <button id="supportImgBtn" 
+            style="
+                background:#ff9800;
+                border:0;
+                padding:8px 12px;
+                border-radius:8px;
+                color:#000;
+                font-weight:700;
+                cursor:pointer;
+            ">
+            📷
+        </button>
+
+        <!-- HIDDEN PICKER -->
+        <input type="file" id="supportImgPicker" accept="image/*" style="display:none;">
+
+        <button id="supportSend"
+            style="
+                background:#128C7E;
+                border:0;
+                padding:8px 12px;
+                border-radius:8px;
+                color:#fff;
+                font-weight:700;
+                cursor:pointer;
+            ">
+            Send
+        </button>
+  </div>
+</div>
+
+
+
+<!-- PART 2/4 -->
+<!-- scripts (firebase v8) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
 <script>
-/* -------------------------------
-   5 DAYS COUNTDOWN WITH LOCALSTORAGE
-----------------------------------*/
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyB0j3fTtE1HYoshQb5FtAJBB5BI9wt3ykg",
+  authDomain: "lova-d503f.firebaseapp.com",
+  databaseURL: "https://lova-d503f-default-rtdb.firebaseio.com",
+  projectId: "lova-d503f",
+  storageBucket: "lova-d503f.appspot.com",
+  messagingSenderId: "50167847192",
+  appId: "1:50167847192:web:648c7a49574e908786266d"
+};
+firebase.initializeApp(firebaseConfig);
+const dbRT = firebase.database();
 
-// 5 days in milliseconds
-const FIVE_DAYS = 5 * 24 * 60 * 60 * 1000;
-
-// Load saved end time
-let endTime = localStorage.getItem("bonusEndTime");
-
-// If no time saved → create new 5-day timer
-if (!endTime) {
-  endTime = Date.now() + FIVE_DAYS;
-  localStorage.setItem("bonusEndTime", endTime);
+/* Local user (test setup if none) */
+let localUserId = localStorage.getItem('user_id');
+let localUserName = localStorage.getItem('user_name') || 'You';
+let localUserAvatar = localStorage.getItem('user_avatar') || 'https://i.pravatar.cc/150?img=3';
+if (!localUserId) {
+  // create a test user id (only for local testing)
+  localUserId = 'u_' + Math.floor(Math.random()*900000 + 100000);
+  localStorage.setItem('user_id', localUserId);
+  localStorage.setItem('user_name', localUserName);
+  localStorage.setItem('user_avatar', localUserAvatar);
 }
 
-// Convert to number
-endTime = parseInt(endTime, 10);
+/* Utility: keys */
+function getSupportChatID() {
+  return `support_${localUserId}`;
+}
+function getReviewChatID(partnerName) {
+  // normalize partner name (avoid slashes/spaces)
+  const safeName = (partnerName || 'partner').replace(/\s+/g, '_').replace(/[^\w\-]/g,'');
+  return `review_${localUserId}_${safeName}`;
+}
 
-function updateBonusTimer() {
-  const now = Date.now();
-  let remaining = endTime - now;
+/* Conversation storage helpers */
+function loadConversation(name){
+  const key = `chat_conv_${name}`;
+  const raw = localStorage.getItem(key);
+  return raw ? JSON.parse(raw) : [];
+}
+function saveConversation(name, messages){
+  const key = `chat_conv_${name}`;
+  localStorage.setItem(key, JSON.stringify(messages));
+}
 
-  // If time expired
-  if (remaining <= 0) {
-    document.getElementById("bonusTimer").innerText = "Expired";
+/* append message helper for support window */
+function appendSupportIncoming(m){
+  const sbody = document.getElementById('supportMessages');
+  if(!sbody) return;
+  const row = document.createElement('div');
+  row.style.marginBottom = '10px';
+  const wrapper = document.createElement('div');
+  wrapper.style.display = 'flex';
+  wrapper.style.alignItems = 'flex-start';
+  wrapper.style.gap = '8px';
+  const dp = document.createElement('img');
+  dp.src = m.avatar || 'https://i.pravatar.cc/150?img=5';
+  dp.style.width = '34px';
+  dp.style.height = '34px';
+  dp.style.borderRadius = '50%';
+  wrapper.appendChild(dp);
+  const bubble = document.createElement('div');
+  bubble.style.background = '#e9f3f6';
+  bubble.style.color = '#0b2a2a';
+  bubble.style.padding = '8px 10px';
+  bubble.style.borderRadius = '8px';
+  bubble.textContent = m.text || '';
+  wrapper.appendChild(bubble);
+ if(m.img){
+    const im = document.createElement('img');
+    im.src = m.img;
+    im.style.maxWidth = '180px';
+    im.style.borderRadius = '8px';
+    im.style.marginTop = '6px';
+    bubble.appendChild(im);
+}
+
+  row.appendChild(wrapper);
+  sbody.appendChild(row);
+  sbody.scrollTop = sbody.scrollHeight;
+}
+
+/* send user support message */
+document.getElementById('supportToggle').addEventListener('click', ()=>{
+  const win = document.getElementById('supportWindow');
+  const show = win.style.display === 'block';
+  win.style.display = show ? 'none' : 'block';
+  win.setAttribute('aria-hidden', show ? 'true' : 'false');
+
+  if(!show){
+    // populate saved conv
+    const conv = loadConversation('support') || [];
+    const sbody = document.getElementById('supportMessages');
+    sbody.innerHTML = '';
+    conv.forEach(m=>{
+      const row = document.createElement('div');
+      row.style.marginBottom = '10px';
+      const bubble = document.createElement('div');
+      bubble.style.background = m.from === 'user' ? '#0b6f59' : '#e9f3f6';
+      bubble.style.color = m.from === 'user' ? '#fff' : '#0b2a2a';
+      bubble.style.padding = '8px 10px';
+      bubble.style.borderRadius = '8px';
+      bubble.style.display = 'inline-block';
+      bubble.textContent = m.text || '';
+      row.appendChild(bubble);
+      sbody.appendChild(row);
+    });
+    sbody.scrollTop = sbody.scrollHeight;
+  }
+});
+
+document.getElementById('supportSend').addEventListener('click', sendSupportMessage);
+document.getElementById('supportInput').addEventListener('keypress', e=>{ if(e.key==='Enter') sendSupportMessage(); });
+
+function sendSupportMessage(){
+  const text = document.getElementById('supportInput').value.trim();
+  if(!text) return;
+  // append locally
+  const sbody = document.getElementById('supportMessages');
+  const row = document.createElement('div');
+  row.style.marginBottom = '10px';
+  const bubble = document.createElement('div');
+  bubble.style.background = '#0b6f59';
+  bubble.style.color = '#fff';
+  bubble.style.padding = '8px 10px';
+  bubble.style.borderRadius = '8px';
+  bubble.style.display = 'inline-block';
+  bubble.textContent = text;
+  row.appendChild(bubble);
+  sbody.appendChild(row);
+  sbody.scrollTop = sbody.scrollHeight;
+  document.getElementById('supportInput').value = '';
+
+  // save conv locally
+  const conv = loadConversation('support') || [];
+  conv.push({ from: 'user', text, img:'', ts: Date.now() });
+  saveConversation('support', conv);
+
+  // push to backend with unique chat id
+  const chatID = getSupportChatID();
+  const msgId = Date.now().toString();
+  const payload = {
+    id: msgId,
+    from: 'user',
+    userId: localUserId,
+    userName: localUserName,
+    avatar: localUserAvatar,
+    type: 'support',
+    text,
+    img: '',
+    timestamp: Date.now()
+  };
+  dbRT.ref(`chats/${chatID}/${msgId}`).set(payload).catch(console.error);
+}
+
+/* live load support messages for this user (listen only to their support chat) */
+const supportRef = dbRT.ref('chats/' + getSupportChatID());
+supportRef.on('value', snap=>{
+  const msgs = snap.val() || {};
+  const box = document.getElementById('supportMessages');
+  box.innerHTML = '';
+
+  Object.values(msgs).forEach(m=>{
+    const isAdmin = (m.from === 'admin');
+
+    const row = document.createElement('div');
+    row.style.marginBottom = '10px';
+
+    const bubble = document.createElement('div');
+    bubble.style.background = isAdmin ? '#128C7E' : '#0b6f59';
+    bubble.style.color = '#fff';
+    bubble.style.padding = '8px 10px';
+    bubble.style.borderRadius = '8px';
+    bubble.style.display = 'inline-block';
+
+    // TEXT
+    if(m.text){
+      bubble.appendChild(document.createTextNode(m.text));
+    }
+
+    // IMAGE SUPPORT (🔥 MAIN FIX)
+    if(m.img){
+      const im = document.createElement('img');
+      im.src = m.img;
+      im.style.maxWidth = "200px";
+      im.style.borderRadius = "8px";
+      im.style.display = "block";
+      im.style.marginTop = m.text ? "8px" : "0";
+      bubble.appendChild(im);
+    }
+
+    row.appendChild(bubble);
+    box.appendChild(row);
+  });
+
+  box.scrollTop = box.scrollHeight;
+});
+/* UNIVERSAL — Convert File → Base64 */
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+/* UNIVERSAL — Send text or image to Firebase */
+async function sendChatMessage(path, senderType, text, imageBase64, extra = {}) {
+  const msgId = Date.now().toString();
+  const payload = {
+    id: msgId,
+    from: senderType,
+    text: text || "",
+    img: imageBase64 || "",
+    avatar: extra.avatar || localUserAvatar,
+    userId: extra.userId || localUserId,
+    userName: extra.userName || localUserName,
+    type: extra.type || "chat",
+    timestamp: Date.now(),
+    ...extra
+  };
+
+  return dbRT.ref(`${path}/${msgId}`).set(payload);
+}
+
+/* UNIVERSAL — Append bubble in UI */
+function appendBubble(container, msg, avatar) {
+  const wrap = document.createElement("div");
+  wrap.style.marginBottom = "10px";
+
+  const bubble = document.createElement("div");
+  bubble.style.padding = "8px 10px";
+  bubble.style.borderRadius = "10px";
+  bubble.style.maxWidth = "80%";
+
+  if (msg.from === "user" || msg.from === "me") {
+    bubble.style.background = "#DCF8C6";
+    bubble.style.color = "#000";
+    bubble.style.marginLeft = "auto";
+  } else {
+    bubble.style.background = "#e9f3f6";
+    bubble.style.color = "#000";
+    bubble.style.marginRight = "auto";
+
+    // Avatar for incoming
+    const dp = document.createElement("img");
+    dp.src = avatar;
+    dp.style.width = "30px";
+    dp.style.height = "30px";
+    dp.style.borderRadius = "50%";
+    dp.style.marginRight = "6px";
+    dp.style.verticalAlign = "top";
+    wrap.appendChild(dp);
+  }
+
+  if (msg.text) {
+    bubble.textContent = msg.text;
+  }
+
+  if (msg.img) {
+    const im = document.createElement("img");
+    im.src = msg.img;
+    im.style.maxWidth = "180px";
+    im.style.borderRadius = "8px";
+    im.style.display = "block";
+    im.style.marginTop = msg.text ? "6px" : "0";
+    bubble.appendChild(im);
+  }
+
+  wrap.appendChild(bubble);
+  container.appendChild(wrap);
+  container.scrollTop = container.scrollHeight;
+}
+/* UNIVERSAL — Image pick + send logic */
+document.addEventListener("click", async function (e) {
+
+    // open file picker
+    if (e.target.classList.contains("uniImgBtn")) {
+        const picker = e.target.parentElement.querySelector(".uniImgPicker");
+        picker.click();
+    }
+});
+
+/* When user selects image */
+document.addEventListener("change", async function (e) {
+    if (!e.target.classList.contains("uniImgPicker")) return;
+
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const base64 = await toBase64(file);
+
+    // detect chat wrapper
+    const wrapper = e.target.closest(".review-chat-popup, .support-window, .anyChatWrapper");
+
+    if (!wrapper) return;
+
+    const body = wrapper.querySelector(".rc-body, #supportMessages");
+    const input = wrapper.querySelector(".rc-text, #supportInput");
+
+    // figure out chat type
+    let chatID = "";
+    let partnerName = "";
+    let chatType = "";
+
+    if (wrapper.classList.contains("review-chat-popup")) {
+        partnerName = wrapper.querySelector(".rc-header div").innerText.trim();
+        chatID = getReviewChatID(partnerName);
+        chatType = "review";
+    } 
+    else if (wrapper.id === "supportWindow") {
+        chatID = getSupportChatID();
+        chatType = "support";
+    }
+
+    // append bubble in UI
+    appendBubble(body, { from: "me", text: "", img: base64 }, localUserAvatar);
+
+    // send to Firebase
+    await sendChatMessage(
+        "chats/" + chatID,
+        "user",
+        "",
+        base64,
+        { type: chatType, partner: partnerName }
+    );
+
+    e.target.value = "";
+});
+
+</script>
+<!-- PART 3/4 -->
+<script>
+/* -------------------- REVIEWS / MINI-CHAT LOGIC (FIXED) -------------------- */
+
+/* active mini chat popups keyed by partnerName */
+const activeMiniChats = {};
+
+/* sample reviews for UI demo */
+const sampleReviews = Array.from({length:24},(_,i)=>({
+  name:`User${100+Math.floor(Math.random()*900)}`,
+  avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
+  text:`I received $${1000+Math.floor(Math.random()*9000)} — very happy!`
+}));
+
+const seeReviewsBtn = document.getElementById("seeReviewsBtn");
+const reviewsModal = document.getElementById("reviewsModal");
+const reviewsScroll = document.getElementById("reviewsScroll");
+const closeReviews = document.getElementById("closeReviews");
+
+seeReviewsBtn.addEventListener("click", ()=>{
+
+  reviewsScroll.innerHTML = "";
+
+  const container = document.createElement("div");
+  container.className = "reviews-inner";
+
+  // Original behavior: random 36 users × 2 = infinite scroll look
+  const all = [...sampleReviews, ...sampleReviews];
+
+  all.forEach(r=>{
+    const item = document.createElement("div");
+    item.className = "review-item";
+    item.innerHTML = `
+      <div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
+      <div class="review-content">
+        <div class="review-name">${r.name}</div>
+        <div class="review-text">${r.text}</div>
+        <div style="margin-top:8px">
+            <button class="review-chat-btn" data-name="${r.name}" data-avatar="${r.avatar}">Chat</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(item);
+  });
+
+  reviewsScroll.appendChild(container);
+  reviewsModal.classList.add("active");
+
+  // Attach chat button clicks
+  reviewsModal.querySelectorAll(".review-chat-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      openReviewChatMini(btn.dataset.name, btn.dataset.avatar);
+    });
+  });
+
+  // ⭐ ORIGINAL AUTO-SCROLL ANIMATION FIX ⭐
+  let y = 0;
+  const maxScroll = container.scrollHeight / 2;
+
+  function loop(){
+      y += 0.45;
+      if(y >= maxScroll) y = 0;
+      container.style.transform = `translateY(-${y}px)`;
+      requestAnimationFrame(loop);
+  }
+
+  requestAnimationFrame(loop);
+
+});
+
+closeReviews.addEventListener("click", ()=>{
+  reviewsModal.classList.remove("active");
+  reviewsModal.setAttribute("aria-hidden","true");
+});
+
+/* append message bubble helper for mini-chats */
+function appendMsgToBody(bodyEl, msg, partnerAvatar){
+  if(msg.from === 'me' || msg.from === 'user'){
+    const b = document.createElement("div");
+    b.className = "bubble me";
+    if(msg.text) b.appendChild(document.createTextNode(msg.text));
+    if(msg.img){
+      const im = document.createElement("img");
+      im.className = "msg-img";
+      im.src = msg.img;
+      im.alt = "image";
+      im.style.marginTop = msg.text ? "8px": "0";
+      b.appendChild(im);
+    }
+    bodyEl.appendChild(b);
+  } else {
+    const bwrap = document.createElement("div");
+    bwrap.className = "bubble other";
+    const dp = document.createElement("img");
+    dp.className = "small-dp";
+    dp.src = partnerAvatar;
+    dp.alt = "dp";
+    dp.style.marginRight = '8px';
+    if(msg.img){
+      const cont = document.createElement("div");
+      cont.style.display = 'flex';
+      cont.style.flexDirection = 'column';
+      const t = document.createElement("div");
+      if(msg.text) t.appendChild(document.createTextNode(msg.text));
+      const im = document.createElement("img");
+      im.className = "msg-img";
+      im.src = msg.img;
+      im.alt = "image";
+      im.style.marginTop = msg.text ? '8px' : '0';
+      cont.appendChild(t);
+      cont.appendChild(im);
+      bwrap.appendChild(dp);
+      bwrap.appendChild(cont);
+    } else {
+      bwrap.appendChild(dp);
+  const container = document.createElement("div");
+container.style.display = "flex";
+container.style.flexDirection = "column";
+
+if(msg.text){
+    const t = document.createElement("div");
+    t.textContent = msg.text;
+    container.appendChild(t);
+}
+
+if(msg.img){
+    const im = document.createElement("img");
+    im.src = msg.img;
+    im.className = "msg-img";
+    im.style.maxWidth = "220px";
+    im.style.marginTop = msg.text ? "6px" : "0";
+    container.appendChild(im);
+}
+
+bwrap.appendChild(dp);
+bwrap.appendChild(container);
+
+    }
+    bodyEl.appendChild(bwrap);
+  }
+}
+
+/* read file helper */
+function readFileAsDataURL(file){
+  return new Promise((res, rej) => {
+    const fr = new FileReader();
+    fr.onload = () => res(fr.result);
+    fr.onerror = e=> rej(e);
+    fr.readAsDataURL(file);
+  });
+}
+
+/* open mini chat (DO NOT CHANGE function signature - kept as original) */
+function openReviewChatMini(name, avatar){
+  // if already open, show & focus
+  if(activeMiniChats[name]){
+    const el = activeMiniChats[name];
+    el.style.display = "flex";
+    el.querySelector(".rc-body").scrollTop = el.querySelector(".rc-body").scrollHeight;
     return;
   }
 
-  // Time calculations
-  const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-  remaining %= 1000 * 60 * 60 * 24;
+  // create popup
+  const popup = document.createElement("div");
+  popup.className = "review-chat-popup";
+  popup.innerHTML = `
+    <div class="rc-header">
+      <img src="${avatar}" alt="${name}">
+      <div style="font-weight:800">${name}</div>
+      <div style="margin-left:auto;cursor:pointer;opacity:.9" class="rc-close" title="Close">✕</div>
+    </div>
+    <div class="rc-body" data-name="${name}"></div>
+<div class="rc-input">
+    <button class="rc-pick uniImgBtn">📷</button>
+    <input class="rc-text" placeholder="Message ${name}..." />
+    <input type="file" accept="image/*" class="rc-file uniImgPicker" style="display:none" />
+    <button class="rc-send">Send</button>
+</div>
 
-  const hours = Math.floor(remaining / (1000 * 60 * 60));
-  remaining %= 1000 * 60 * 60;
 
-  const minutes = Math.floor(remaining / (1000 * 60));
-  const seconds = Math.floor((remaining % (1000 * 60)) / 1000);
+  `;
+  document.body.appendChild(popup);
+  activeMiniChats[name] = popup;
 
-  // Display
-  document.getElementById("bonusTimer").innerText =
-    `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  const body = popup.querySelector(".rc-body");
+  const input = popup.querySelector(".rc-text");
+  const fileInput = popup.querySelector(".rc-file");
+  const sendBtn = popup.querySelector(".rc-send");
+  const closeBtn = popup.querySelector(".rc-close");
+
+  // load local history
+  const history = loadConversation(name) || [];
+  history.forEach(msg => appendMsgToBody(body, msg, avatar));
+  body.scrollTop = body.scrollHeight;
+
+  // event handlers
+  closeBtn.addEventListener('click', ()=> popup.remove() );
+
+  sendBtn.addEventListener("click", async ()=>{
+    const text = input.value.trim();
+    const files = fileInput.files;
+    if(!text && (!files || files.length===0)) return;
+
+    const msg = { from: 'me', text: text || null, img: null, ts: Date.now() };
+
+    if(files && files.length){
+      const file = files[0];
+      msg.img = await readFileAsDataURL(file);
+    }
+
+    // append locally
+    appendMsgToBody(body, msg, avatar);
+    body.scrollTop = body.scrollHeight;
+    input.value = "";
+    fileInput.value = "";
+
+    // save locally
+    const conv = loadConversation(name) || [];
+    conv.push({ from: 'me', text: msg.text || '', img: msg.img || '', ts: msg.ts });
+    saveConversation(name, conv);
+
+    // push to backend using unique review chat id
+    const chatID = getReviewChatID(name);
+    const msgId = Date.now().toString();
+    const payload = {
+      id: msgId,
+      from: 'user',
+      userId: localUserId,
+      userName: localUserName,
+      avatar: localUserAvatar,
+      type: 'review',
+      partner: name,
+      text: msg.text || '',
+      img: msg.img || '',
+      timestamp: Date.now()
+    };
+    dbRT.ref(`chats/${chatID}/${msgId}`).set(payload).catch(console.error);
+  });
+
+  input.addEventListener("keypress", e=>{ if(e.key === "Enter") sendBtn.click(); });
+
+  popup.style.display = "flex";
 }
 
-// Update every second
-setInterval(updateBonusTimer, 1000);
-updateBonusTimer();
+/* delegate click for review buttons (works even if elements are recreated) */
+document.addEventListener('click', function(e){
+  const el = e.target;
+  if(el && el.classList && el.classList.contains('review-chat-btn')){
+    const name = el.dataset.name;
+    const avatar = el.dataset.avatar;
+    openReviewChatMini(name, avatar);
+  }
+});
+
+/* Listen for admin replies on all review chats for this user:
+   We'll listen under path "chats" and filter keys that start with "review_<localUserId>_"
+*/
+function startReviewListeners() {
+
+  const chatsRef = dbRT.ref("chats");
+
+  chatsRef.on("child_added", snap => {
+    const key = snap.key;
+
+    // only review chats belonging to this user
+    if (!key.startsWith(`review_${localUserId}_`)) return;
+
+    const parts = key.split("_");
+    const partner = parts.slice(2).join("_"); // exact partner name
+
+    // Now listen to messages INSIDE this review chat
+    const msgRef = dbRT.ref("chats/" + key);
+
+    msgRef.on("child_added", msgSnap => {
+      const m = msgSnap.val();
+      if (!m) return;
+
+      // Only show admin messages
+      if (m.from !== "admin") return;
+
+      // If popup open → show live
+      if (activeMiniChats[partner]) {
+        const body = activeMiniChats[partner].querySelector(".rc-body");
+        appendMsgToBody(body, { 
+          from: "other",
+          text: m.text || "",
+          img: m.img || ""
+        }, m.avatar || "");
+        body.scrollTop = body.scrollHeight;
+      }
+
+      // Save locally
+      const conv = loadConversation(partner) || [];
+      conv.push({
+        from: "other",
+        text: m.text || "",
+        img: m.img || "",
+        ts: m.timestamp || Date.now()
+      });
+      saveConversation(partner, conv);
+    });
+  });
+
+}
+
+
+/* initialize review listeners */
+/* --------------------- FIXED REVIEW CHAT LISTENER (V8 Firebase) --------------------- */
+
+function startReviewListeners() {
+    const myPrefix = `review_${localUserId}_`;
+
+    const chatsRef = dbRT.ref("chats");
+
+    // watch every chat change
+    chatsRef.on("child_added", (snap) => {
+        const key = snap.key;
+
+        if (!key.startsWith(myPrefix)) return;
+
+        // partner name extract
+        const partner = key.replace(myPrefix, "");
+
+        const msgRef = dbRT.ref("chats/" + key);
+
+        // listen for every message
+        msgRef.on("child_added", (msgSnap) => {
+            const m = msgSnap.val();
+            if (!m) return;
+
+            // only admin messages
+            if (m.from !== "admin") return;
+
+            const avatar = m.avatar || "https://i.pravatar.cc/150?img=10";
+
+            // show if popup open
+            if (activeMiniChats[partner]) {
+                const body = activeMiniChats[partner].querySelector(".rc-body");
+
+                appendMsgToBody(body, {
+                    from: "other",
+                    text: m.text || "",
+                    img: m.img || ""
+                }, avatar);
+
+                body.scrollTop = body.scrollHeight;
+            }
+
+            // save locally
+            const conv = loadConversation(partner) || [];
+            conv.push({
+                from: "other",
+                text: m.text || "",
+                img: m.img || "",
+                ts: m.timestamp || Date.now()
+            });
+            saveConversation(partner, conv);
+        });
+    });
+}
+
+// run listener
+startReviewListeners();
+
 </script>
 
+(function(){
 
-  <!-- DASHBOARD -->
-  <div class="dashboard">
-    <div class="button-group">
-      <a href="add-balance-3.html" class="btn">Add Balance</a>
-      <a href="payout-2.html" class="btn">Payout</a>
-      <a href="discover.html" class="btn">Discover</a>
-      <a href="spinwin.html" class="btn">Spin & Win</a>
-      <a href="tid3.html" class="btn">Transactions</a>
-      <a href="mining.html" class="btn">Mining</a>
-      <a href="markets.html" class="btn">Markets</a>
-      <a href="events.html" class="btn">Events</a>
-    </div>
+    // wait until page fully loads
+    document.addEventListener("click", function(e){
+        const btn = e.target;
 
-    <h1>Overview</h1>
+        // catch all future review-chat popups
+        if(btn.classList.contains("rc-pick")){
+            const fileInput = btn.parentElement.querySelector(".rc-file");
+            if(fileInput) fileInput.click();
+        }
+    });
 
-    <div class="card-container">
-      <div class="card">
-        <div class="card-title">Balance</div>
-        <div class="card-value" id="balance">$00</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Total Invest</div>
-        <div class="card-value" id="invest">$00</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Profit</div>
-        <div class="card-value" id="profit">$00</div>
-      </div>
-      <div class="card">
-        <div class="card-title">Withdrawals</div>
-        <div class="card-value" id="withdraw">$00</div>
-      </div>
-    </div>
+    document.addEventListener("change", async function(e){
+        const inp = e.target;
 
-    <div class="update-info">Updated from Supabase.</div>
-  </div>
+        // only handle review chat file inputs
+        if(!inp.classList.contains("rc-file")) return;
 
-  <!-- REVIEWS MODAL -->
-  <div class="reviews-modal" id="reviewsModal">
-    <button class="close-reviews" id="closeReviews">×</button>
-    <div class="reviews-scroll" id="reviewsScroll"></div>
-  </div>
+        const popup = inp.closest(".review-chat-popup");
+        const body = popup.querySelector(".rc-body");
+        const input = popup.querySelector(".rc-text");
 
-  <!-- SUPABASE -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
-    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
-    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        // partner name
+        const partner = body.dataset.name;
+        const avatar = popup.querySelector(".rc-header img").src;
 
-    async function fetchAndRender() {
-      const userId = localStorage.getItem("user_id");
-      if(!userId) return location.href="login.html";
-      const { data } = await supabaseClient.from("users").select("balance,total_invest,profit,withdrawals").eq("id", userId).single();
-      document.getElementById("balance").textContent = "$" + Number(data.balance||0).toFixed(2);
-      document.getElementById("invest").textContent = "$" + Number(data.total_invest||0).toFixed(2);
-      document.getElementById("profit").textContent = "$" + Number(data.profit||0).toFixed(2);
-      document.getElementById("withdraw").textContent = "$" + Number(data.withdrawals||0).toFixed(2);
-    }
-    fetchAndRender();
-    setInterval(fetchAndRender, 15000);
+        // get local user
+        const localUserId = localStorage.getItem("user_id");
+        const localUserName = localStorage.getItem("user_name");
+        const localUserAvatar = localStorage.getItem("user_avatar");
 
-    // ---------------- REVIEWS ----------------
-    const sampleReviews = Array.from({length:50}, (_,i)=>({
-      name:`User${Math.floor(Math.random()*999+1)}`,
-      avatar:`https://i.pravatar.cc/150?img=${Math.floor(Math.random()*70+1)}`,
-      text:`Yeah! I received $${(Math.floor(Math.random()*9000+1000))}. Thank you so much!`
-    }));
-    const seeReviewsBtn = document.getElementById("seeReviewsBtn");
-    const reviewsModal = document.getElementById("reviewsModal");
-    const reviewsScroll = document.getElementById("reviewsScroll");
-    const closeReviews = document.getElementById("closeReviews");
+        const file = inp.files[0];
+        if(!file) return;
 
-    seeReviewsBtn.onclick = ()=>{
-      reviewsScroll.innerHTML="";
-      const inner = document.createElement("div"); inner.className="reviews-inner";
-      const allReviews = [...sampleReviews, ...sampleReviews];
-      allReviews.forEach(r=>{
-        const div = document.createElement("div"); div.className="review-item";
-        div.innerHTML=`<div class="review-avatar" style="background-image:url('${r.avatar}')"></div>
-          <div class="review-content">
-            <div class="review-name">${r.name}</div>
-            <div class="review-text">${r.text}</div>
-          </div>`;
-        inner.appendChild(div);
-      });
-      reviewsScroll.appendChild(inner);
-      reviewsModal.classList.add("active");
+        // convert → base64
+        const fr = new FileReader();
+        fr.onload = function(ev){
+            const base64 = ev.target.result;
 
-      let start=0; const scrollHeight=inner.scrollHeight/2;
-      function animateScroll(){ start+=0.5; if(start>=scrollHeight) start=0; inner.style.transform=`translateY(-${start}px)`; requestAnimationFrame(animateScroll);}
-      animateScroll();
+            // local UI append
+            const bubble = document.createElement("div");
+            bubble.className = "bubble me";
+            bubble.innerHTML = `<img src="${base64}" class="msg-img">`;
+            body.appendChild(bubble);
+            body.scrollTop = body.scrollHeight;
+
+            // save locally
+            let conv = JSON.parse(localStorage.getItem("chat_conv_"+partner) || "[]");
+            conv.push({
+                from: "me",
+                text: "",
+                img: base64,
+                ts: Date.now()
+            });
+            localStorage.setItem("chat_conv_"+partner, JSON.stringify(conv));
+
+            // send to firebase
+            const chatID = `review_${localUserId}_${partner.replace(/\s+/g,'_')}`;
+            const msgId = Date.now().toString();
+
+            firebase.database().ref(`chats/${chatID}/${msgId}`).set({
+                id: msgId,
+                from: "user",
+                userId: localUserId,
+                userName: localUserName,
+                avatar: localUserAvatar,
+                type: "review",
+                partner: partner,
+                text: "",
+                img: base64,
+                timestamp: Date.now()
+            });
+
+            inp.value = "";
+        };
+
+        fr.readAsDataURL(file);
+    });
+
+})();
+</script>
+<script>
+// --- Support Image Send ---
+
+document.getElementById("supportImgBtn").addEventListener("click", () => {
+    document.getElementById("supportImgPicker").click();
+});
+
+document.getElementById("supportImgPicker").addEventListener("change", function () {
+    const file = this.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+        const base64 = e.target.result;
+
+        const chatID = getSupportChatID();  
+        const msgId = Date.now().toString();
+
+        // Firebase push
+        dbRT.ref("chats/" + chatID + "/" + msgId).set({
+            from: "user",
+            text: "",
+            img: base64,
+            avatar: localUserAvatar,
+            timestamp: Date.now()
+        });
+
+        // UI bubble
+        const box = document.getElementById("supportMessages");
+        const row = document.createElement("div");
+        row.style.marginBottom = "10px";
+
+        const bubble = document.createElement("div");
+        bubble.style.background = "#0b6f59";
+        bubble.style.color = "#fff";
+        bubble.style.padding = "8px";
+        bubble.style.borderRadius = "8px";
+        bubble.style.display = "inline-block";
+
+        bubble.innerHTML = `<img src="${base64}" style="max-width:180px;border-radius:8px;">`;
+
+        row.appendChild(bubble);
+        box.appendChild(row);
+        box.scrollTop = box.scrollHeight;
+
+        // save local history
+        const conv = loadConversation("support") || [];
+        conv.push({ from: "user", text: "", img: base64, ts: Date.now() });
+        saveConversation("support", conv);
     };
-    closeReviews.onclick=()=>reviewsModal.classList.remove("active");
-  </script>
+
+    reader.readAsDataURL(file);
+    this.value = "";
+});
+</script>
+<script>
+// AUTO SORT — NO EDITS REQUIRED ANYWHERE
+
+(function() {
+
+    const orig_on_value = firebase.database.Reference.prototype.on;
+
+    firebase.database.Reference.prototype.on = function(event, callback, cancel) {
+
+        if (event !== "value" && event !== "child_added") {
+            return orig_on_value.call(this, event, callback, cancel);
+        }
+
+        return orig_on_value.call(this, event, function(snap) {
+            try {
+                const data = snap.val();
+
+                if (typeof data === "object" && data !== null) {
+                    const sorted = sortMessages(data);
+                    sorted._isSorted = true;  
+                    return callback({ 
+                        ...snap, 
+                        val: () => sorted 
+                    });
+                }
+
+            } catch (e) {}
+
+            return callback(snap);
+        }, cancel);
+    };
+
+})();
+</script>
+<div class="year-footer" id="yearFooter">
+    <canvas id="fireCanvas"></canvas>
+    <div class="crystal"></div>
+
+    <div class="holo-ring"></div>
+
+    <h2 class="yf-title">✨ Year Ending Celebration 2025 ✨</h2>
+
+    <p class="yf-sub">
+        Enjoy exclusive bonuses, Spin & Win rewards & electrifying year-end surprises!
+    </p>
+
+    <p class="yf-big">
+        Maintain only <span class="amount">$299</span> in your wallet  
+        and unlock <span class="bonus">$10,000</span> instantly!
+    </p>
+</div>
+<script>
+const canvas = document.getElementById("fireCanvas");
+const ctx = canvas.getContext("2d");
+
+canvas.width = canvas.offsetWidth;
+canvas.height = canvas.offsetHeight;
+
+let particles = [];
+
+function spawn() {
+  let p = {
+    x: Math.random() * canvas.width,
+    y: canvas.height + 5,
+    size: Math.random() * 2 + 1,
+    speed: Math.random() * 1 + 0.4,
+    color: `rgba(0,255,255,${Math.random()*0.7})`,
+  };
+  particles.push(p);
+}
+
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  particles.forEach((p, i) => {
+    p.y -= p.speed;
+    p.size *= 0.97;
+
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
+    ctx.fill();
+
+    if (p.size < 0.3) particles.splice(i, 1);
+  });
+
+  if (Math.random() < 0.4) spawn();
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+</script>
+<!-- SUPABASE LIBRARY -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+/* ==============================
+   UNIVERSAL SUPABASE CONFIG
+   (Works on ANY Page)
+============================== */
+
+const SUPABASE_URL = "https://jjtcrqfnmegptgxoktuk.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqdGNycWZubWVncHRneG9rdHVrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQxODU0MzAsImV4cCI6MjA3OTc2MTQzMH0.1_0y90-TdyhpyU_M3MXLGD3YbibUfV_1GK7EOkmrFDQ";
+
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+/* ==============================
+   UNIVERSAL FUNCTION
+   Get User Data by user_id
+============================== */
+
+async function getUserData() {
+  const userId = localStorage.getItem("user_id");
+
+  if (!userId) {
+    console.warn("User not logged in → redirecting");
+    window.location.href = "login.html";
+    return null;
+  }
+
+  // 👇 Yahan apni table ka naam + column names sahi rakho
+  const { data, error } = await db
+    .from("users") 
+    .select("balance, total_invest, profit, withdrawals")
+    .eq("id", userId)
+    .single();
+
+  if (error) {
+    console.error("Supabase Error:", error);
+    return null;
+  }
+
+  return data;
+}
+
+/* ==============================
+   UNIVERSAL RENDER HELPER
+============================== */
+
+function setValue(id, val) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.textContent = "$" + Number(val || 0).toFixed(2);
+  }
+}
+
+/* ==============================
+   UNIVERSAL AUTO-RENDER
+============================== */
+
+async function loadUserStats() {
+  const user = await getUserData();
+  if (!user) return;
+
+  // 👇 IDs same rakho har page me (balance, invest, profit, withdraw)
+  setValue("balance", user.balance);
+  setValue("invest", user.total_invest);
+  setValue("profit", user.profit);
+  setValue("withdraw", user.withdrawals);
+}
+
+// Auto-call
+loadUserStats();
+
+// Auto-update every 15 seconds
+setInterval(loadUserStats, 15000);
+</script>
+
 </body>
 </html>
