@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Dashboard</title>
+<title>Dashboard (User) - Fixed</title>
 <style>
   /* ---------- Reset & Base ---------- */
   *{box-sizing:border-box;margin:0;padding:0}
@@ -558,7 +558,6 @@ a {
 
 <body>
 
-<!-- PART 1/4 CONTENT CONTINUES BELOW -->
 <div class="banner-wrapper">
   <div class="holo-banner">
 
@@ -673,6 +672,9 @@ a {
   </div>
 </div>
 
+
+
+<!-- scripts (firebase v8) -->
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
@@ -1010,7 +1012,6 @@ document.addEventListener("change", async function (e) {
 });
 
 </script>
-
 <script>
 /* -------------------- REVIEWS / MINI-CHAT LOGIC (FIXED) -------------------- */
 
@@ -1455,6 +1456,7 @@ startReviewListeners();
     });
 
 })();
+</script>
 
 <script>
 // --- Support Image Send ---
@@ -1512,8 +1514,9 @@ document.getElementById("supportImgPicker").addEventListener("change", function 
     this.value = "";
 });
 </script>
+
 <script>
-// AUTO SORT — NO EDITS REQUIRED ANYWHERE
+// AUTO SORT— NO EDITS REQUIRED ANYWHERE
 
 (function() {
 
