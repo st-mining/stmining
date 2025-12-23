@@ -1900,4 +1900,127 @@ setInterval(loadUserStats, 15000);
 
 
 </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Account Suspension Notice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999999;
+  }
+
+  .alert-card {
+    background: #b30000;
+    color: #fff;
+    max-width: 900px;
+    width: 95%;
+    padding: 30px;
+    border-radius: 14px;
+    box-shadow: 0 0 40px rgba(255,0,0,0.6);
+    animation: zoomIn 0.4s ease;
+  }
+
+  .alert-card h1 {
+    text-align: center;
+    font-size: 28px;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+  }
+
+  .alert-card p {
+    font-size: 16px;
+    line-height: 1.7;
+    margin-bottom: 15px;
+  }
+
+  .highlight {
+    background: rgba(0,0,0,0.3);
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: bold;
+  }
+
+  .deadline {
+    text-align: center;
+    font-size: 20px;
+    margin-top: 20px;
+    color: #ffd700;
+    font-weight: bold;
+  }
+
+  .warning {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 17px;
+    color: #fff;
+  }
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.85);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="overlay">
+  <div class="alert-card">
+    <h1>⚠ Account Temporarily Suspended</h1>
+
+    <p class="highlight">
+      Your account is temporarily suspended due to continuous violations of our platform policy.
+      Immediate action is required.
+    </p>
+
+    <p>
+      You missed the initial participation period. However, the <strong>New Year Bonus event</strong>
+      is still active for a limited time.
+    </p>
+
+    <p>
+      Participation in platform announcements is mandatory for account earning and growth.
+      Failure to participate is considered a serious policy violation.
+    </p>
+
+    <p>
+      We are announcing a <strong>huge bonus opportunity</strong> that allows you to
+      restore your account status and unlock exclusive rewards worth up to
+      <strong>$20,000</strong>.
+    </p>
+
+    <p class="warning">
+      If you do not participate before the final deadline, your account will be
+      <strong>permanently suspended</strong> with no further notice.
+    </p>
+
+    <div class="deadline">
+      Bonus & Recovery Deadline: 18th January
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+
 </html>
