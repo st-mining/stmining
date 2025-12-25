@@ -554,6 +554,434 @@ a {
 }
 
 </style>
+<style>
+    .year-footer {
+        position: relative;
+        text-align: center;
+        padding: 50px 20px;
+    }
+
+    .crystal {
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 100px;
+        background: linear-gradient(45deg, #ff0099, #66ccff);
+        border-radius: 50%;
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+    }
+
+    .holo-ring {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 150px;
+        height: 150px;
+        border: 5px solid rgba(255, 255, 255, 0.7);
+        border-radius: 50%;
+        animation: ringAnim 2s linear infinite;
+    }
+
+    @keyframes ringAnim {
+        0% {
+            transform: translateX(-50%) rotate(0deg);
+        }
+
+        100% {
+            transform: translateX(-50%) rotate(360deg);
+        }
+    }
+
+    .yf-title {
+        font-size: 36px;
+        margin-top: 20px;
+        color: #ffcc00;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.6);
+    }
+
+    .yf-sub {
+        font-size: 18px;
+        margin-top: 15px;
+        color: #c1c1c1;
+    }
+
+    .yf-big {
+        font-size: 24px;
+        margin-top: 30px;
+        color: #00ffcc;
+        font-weight: bold;
+    }
+
+    .yf-big span {
+        color: #ff0099;
+    }
+
+    #fireCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+
+    @media (max-width: 768px) {
+        .yf-title {
+            font-size: 28px;
+        }
+
+        .yf-sub {
+            font-size: 16px;
+        }
+
+        .yf-big {
+            font-size: 20px;
+        }
+    }
+    /* =====================
+   ROOT COLORS (HOT)
+===================== */
+:root {
+  --bg: #0b0b0b;
+  --card: #181818;
+  --card-hover: #222;
+  --accent: #ff6600;
+  --text: #fff;
+  --muted: #888;
+  --border: #333;
+  --highlight: #ff8c00;
+  --highlight-soft: rgba(255, 140, 0, 0.4);
+}
+
+/* =====================
+   RESET + GLOBAL STYLES
+===================== */
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top, #0a0a0a, #050505 60%);
+  color: var(--text);
+  font-family: 'Segoe UI', Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* =====================
+   HEADER STYLES
+===================== */
+.topbar {
+  background: #111;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--accent);
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* =====================
+   VIDEO GRID (CATEGORY PAGE)
+===================== */
+.video-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+  margin-bottom: 25px;
+}
+
+@media (min-width: 600px) and (max-width: 1023px) {
+  .video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .video-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* =====================
+   VIDEO CARD (HOT)
+===================== */
+.video-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.video-card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 14px var(--highlight-soft);
+}
+
+.video-card .thumb {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  background: black;
+  overflow: hidden;
+}
+
+.video-card .thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.video-card:hover .thumb img {
+  transform: scale(1.08);
+}
+
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  font-size: 48px;
+  color: white;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.video-card:hover .play {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+.title {
+  font-size: 14px;
+  padding: 8px 12px;
+  color: #eee;
+  text-align: center;
+}
+
+.video-card:hover .title {
+  color: var(--accent);
+}
+
+/* =====================
+   FOOTER
+===================== */
+footer {
+  background: #0b0b0b;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  text-align: center;
+  padding: 12px;
+  font-size: 12px;
+  margin-top: auto;
+}
+
+/* =====================
+   SCROLLBAR FIX
+===================== */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--highlight) var(--bg);
+}
+
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--highlight);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+/* New Banner Layout */
+.new-banner {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+  background: linear-gradient(45deg, #ff5722, #ff9800);
+}
+
+.new-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: radial-gradient(circle at top left, #ff6e40, #ff9100);
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  position: relative;
+  overflow: hidden;
+  animation: slideInFromBottom 1s ease-out;
+}
+
+.new-left {
+  flex: 1;
+  padding-right: 20px;
+}
+
+.new-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: white;
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.new-title span {
+  color: #ffee58;
+}
+
+.new-sub {
+  font-size: 1.3rem;
+  font-weight: 600;
+  opacity: 0.8;
+  color: white;
+  margin-top: 10px;
+  animation: fadeIn 2s ease-in-out;
+}
+
+.new-right {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.new-btn {
+  background-color: #2196f3;
+  color: white;
+  padding: 12px 30px;
+  font-size: 1rem;
+  border-radius: 30px;
+  border: none;
+  margin-top: 20px;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.new-btn:hover {
+  background-color: #0d47a1;
+  transform: scale(1.1);
+}
+
+.new-btn:active {
+  transform: scale(1);
+}
+
+/* Glowing Effect */
+.new-glow {
+  position: absolute;
+  top: 10%;
+  right: 5%;
+  width: 250px;
+  height: 250px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  animation: glowEffect 2s infinite ease-in-out;
+}
+
+/* Keyframe Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes glowEffect {
+  0% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.4;
+  }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .new-banner {
+    padding: 10px;
+  }
+
+  .new-card {
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+
+  .new-title {
+    font-size: 1.8rem;
+    text-align: center;
+  }
+
+  .new-sub {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .new-btn {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+  }
+
+  .new-glow {
+    width: 180px;
+    height: 180px;
+  }
+}
+
+</style>
 </head>
 
 <body>
@@ -563,33 +991,30 @@ a {
 
     <div class="holo-left">
 
-      <!-- NEW 2025 BADGE -->
-  <div class="year2025-icon">
-    <div class="ring"></div>
-    <div class="text-2025">2025</div>
-    <div class="spark s1"></div>
-    <div class="spark s2"></div>
-    <div class="spark s3"></div>
+      
 </div>
 
-      <div>
-        <div class="holo-title">🎁 Year Ending Bonus <span>$10,000</span></div>
-        <div class="holo-sub">
-          Maintain $299 balance to claim.<br>
-          Expires in: <b id="bonusTimer">Loading…</b>
-        </div>
+<div class="new-banner">
+  <div class="new-card">
+    <div class="new-left">
+      <div class="new-title">
+        🎁 ✨ Happy New Year Bonus 2026! <span>$15,000</span>
       </div>
-
+      <div class="new-sub">
+        Maintain $259 balance to claim.<br>
+        <b id="bonusTimer">Loading...</b>
+      </div>
     </div>
 
-    <div class="holo-right">
-      <a href="add-balance-3.html" class="holo-btn">Deposit</a>
-      <button id="seeReviewsBtn" class="holo-btn">Reviews</button>
+    <div class="new-right">
+      <a href="add-balance-3.html" class="new-btn">Deposit</a>
     </div>
 
-    <div class="holo-glow"></div>
-
+    <div class="new-glow"></div>
   </div>
+</div>
+
+
 </div>
 
 
@@ -1500,70 +1925,56 @@ document.getElementById("supportImgPicker").addEventListener("change", function 
 
 })();
 </script>
-<div class="year-footer" id="yearFooter">
-    <canvas id="fireCanvas"></canvas>
-    <div class="crystal"></div>
-
-    <div class="holo-ring"></div>
-
-    <h2 class="yf-title">✨ Year Ending Celebration 2025 ✨</h2>
-
-    <p class="yf-sub">
-        Enjoy exclusive bonuses, Spin & Win rewards & electrifying year-end surprises!
-    </p>
-
-    <p class="yf-big">
-        Maintain only <span class="amount">$299</span> in your wallet  
-        and unlock <span class="bonus">$10,000</span> instantly!
-    </p>
-</div>
 
 <script>
-const canvas = document.getElementById("fireCanvas");
-const ctx = canvas.getContext("2d");
+    const canvas = document.getElementById("fireCanvas");
+    const ctx = canvas.getContext("2d");
 
-canvas.width = canvas.offsetWidth;
-canvas.height = canvas.offsetHeight;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-let particles = [];
+    let particles = [];
 
-function spawn() {
-  let p = {
-    x: Math.random() * canvas.width,
-    y: canvas.height + 5,
-    size: Math.random() * 2 + 1,
-    speed: Math.random() * 1 + 0.4,
-    color: `rgba(0,255,255,${Math.random()*0.7})`,
-  };
-  particles.push(p);
-}
+    function spawn() {
+        let p = {
+            x: Math.random() * canvas.width,
+            y: canvas.height + 5,
+            size: Math.random() * 2 + 1,
+            speed: Math.random() * 1 + 0.4,
+            color: `rgba(0,255,255,${Math.random() * 0.7})`,
+        };
+        particles.push(p);
+    }
 
-function animate() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  particles.forEach((p, i) => {
-    p.y -= p.speed;
-    p.size *= 0.97;
+        particles.forEach((p, i) => {
+            p.y -= p.speed;
+            p.size *= 0.97;
 
-    ctx.fillStyle = p.color;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI*2);
-    ctx.fill();
+            ctx.fillStyle = p.color;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fill();
 
-    if (p.size < 0.3) particles.splice(i, 1);
-  });
+            if (p.size < 0.3) particles.splice(i, 1);
+        });
 
-  if (Math.random() < 0.4) spawn();
+        if (Math.random() < 0.4) spawn();
 
-  requestAnimationFrame(animate);
-}
+        requestAnimationFrame(animate);
+    }
 
-animate();
+    animate();
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", () => {
 
   const TEN_DAYS = 10 * 24 * 60 * 60 * 1000;
+
+  const START_DATE = new Date('2026-01-06T00:00:00');  // January 6th, 2026
+  const EXPIRE_DATE = new Date('2026-01-22T00:00:00');  // January 22nd, 2026
 
   let endTime = localStorage.getItem("bonus_10day_end");
 
@@ -1580,23 +1991,39 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!el) return;  // element not loaded yet
 
     const now = Date.now();
-    let remaining = endTime - now;
+    
+    if (now < START_DATE.getTime()) {
+      // Show "Starting in" countdown
+      let remaining = START_DATE.getTime() - now;
+      
+      const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+      remaining %= 86400000;
 
-    if (remaining <= 0) {
+      const hours = Math.floor(remaining / (1000 * 60 * 60));
+      remaining %= 3600000;
+
+      const minutes = Math.floor(remaining / (1000 * 60));
+      const seconds = Math.floor((remaining % 60000) / 1000);
+
+      el.textContent = `Starting in ${days}d ${hours}h ${minutes}m ${seconds}s`;
+    } else if (now < EXPIRE_DATE.getTime()) {
+      // Show "Expires in" countdown
+      let remaining = endTime - now;
+
+      const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
+      remaining %= 86400000;
+
+      const hours = Math.floor(remaining / (1000 * 60 * 60));
+      remaining %= 3600000;
+
+      const minutes = Math.floor(remaining / (1000 * 60));
+      const seconds = Math.floor((remaining % 60000) / 1000);
+
+      el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    } else {
+      // After expiry, show expired message
       el.textContent = "Expired";
-      return;
     }
-
-    const days = Math.floor(remaining / (1000 * 60 * 60 * 24));
-    remaining %= 86400000;
-
-    const hours = Math.floor(remaining / (1000 * 60 * 60));
-    remaining %= 3600000;
-
-    const minutes = Math.floor(remaining / (1000 * 60));
-    const seconds = Math.floor((remaining % 60000) / 1000);
-
-    el.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
   }
 
   updateBonusTimer();
@@ -1604,6 +2031,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 </script>
+
 
 <!-- SUPABASE LIBRARY -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1814,213 +2242,9 @@ setInterval(loadUserStats, 15000);
 }
 </style>
 
-<script>
-(function(){
-  const KEY="promo_activated_until";
-  const DURATION=12*60*60*1000;
 
-  document.addEventListener("DOMContentLoaded",init);
-
-  function init(){
-    const exp=localStorage.getItem(KEY);
-    if(exp && Date.now()<exp){
-      showTimer();
-    }else{
-      localStorage.removeItem(KEY);
-      showPopup();
-    }
-  }
-
-  function showPopup(){
-    if(document.querySelector(".promo-overlay")) return;
-
-    const o=document.createElement("div");
-    o.className="promo-overlay";
-    o.innerHTML=`
-      <div class="promo-card" id="promoCard">
-        <div class="promo-close" id="promoClose">✕</div>
-        <div class="promo-header">LIMITED CONCESSION</div>
-        <div class="promo-title">Not Activated Yet</div>
-        <div class="promo-amount">$150</div>
-        <div class="promo-desc">
-          Activate now to unlock reduced bonus requirements.<br>
-          <b>Valid for 12 hours after activation.</b>
-        </div>
-        <button class="promo-btn" id="promoActivate">Activate Now</button>
-      </div>`;
-    document.body.appendChild(o);
-
-    document.getElementById("promoClose").onclick=()=>o.remove();
-    document.getElementById("promoActivate").onclick=()=>activate(o);
-  }
-
-  function activate(overlay){
-    const card=document.getElementById("promoCard");
-    card.innerHTML=`<div class="promo-loader"></div>`;
-
-    setTimeout(()=>{
-      card.innerHTML=`
-        <div class="promo-title">Activated</div>
-        <div class="promo-amount">$150</div>
-        <div class="promo-desc">Concession successfully applied</div>`;
-    },1200);
-
-    setTimeout(()=>{
-      localStorage.setItem(KEY,Date.now()+DURATION);
-      overlay.remove();
-      showTimer();
-    },2600);
-  }
-
-  function showTimer(){
-    if(document.querySelector(".promo-timer")) return;
-
-    const t=document.createElement("div");
-    t.className="promo-timer";
-    document.body.appendChild(t);
-
-    function update(){
-      const diff=localStorage.getItem(KEY)-Date.now();
-      if(diff<=0){
-        t.innerHTML="EXPIRED";
-        t.style.borderColor="#ef4444";
-        t.style.color="#ef4444";
-        return;
-      }
-      const h=Math.floor(diff/3600000);
-      const m=Math.floor(diff%3600000/60000);
-      t.innerHTML=`VALID<br>${h}h ${m}m`;
-    }
-    update();
-    setInterval(update,60000);
-  }
-})();
-</script>
 <!-- =============================== -->
 
 
 </body>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Account Suspension Notice</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-  body {
-    margin: 0;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-
-  .overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.85);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 999999;
-  }
-
-  .alert-card {
-    background: #b30000;
-    color: #fff;
-    max-width: 900px;
-    width: 95%;
-    padding: 30px;
-    border-radius: 14px;
-    box-shadow: 0 0 40px rgba(255,0,0,0.6);
-    animation: zoomIn 0.4s ease;
-  }
-
-  .alert-card h1 {
-    text-align: center;
-    font-size: 28px;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-  }
-
-  .alert-card p {
-    font-size: 16px;
-    line-height: 1.7;
-    margin-bottom: 15px;
-  }
-
-  .highlight {
-    background: rgba(0,0,0,0.3);
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: bold;
-  }
-
-  .deadline {
-    text-align: center;
-    font-size: 20px;
-    margin-top: 20px;
-    color: #ffd700;
-    font-weight: bold;
-  }
-
-  .warning {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 17px;
-    color: #fff;
-  }
-
-  @keyframes zoomIn {
-    from {
-      transform: scale(0.85);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-</style>
-</head>
-
-<body>
-
-<div class="overlay">
-  <div class="alert-card">
-    <h1>⚠ Account Temporarily Suspended</h1>
-
-    <p class="highlight">
-      Your account is temporarily suspended due to continuous violations of our platform policy.
-      Immediate action is required.
-    </p>
-
-    <p>
-      You missed the initial participation period. However, the <strong>New Year Bonus event</strong>
-      is still active for a limited time.
-    </p>
-
-    <p>
-      Participation in platform announcements is mandatory for account earning and growth.
-      Failure to participate is considered a serious policy violation.
-    </p>
-
-    <p>
-      We are announcing a <strong>huge bonus opportunity</strong> that allows you to
-      restore your account status and unlock exclusive rewards worth up to
-      <strong>$20,000</strong>.
-    </p>
-
-    <p class="warning">
-      If you do not participate before the final deadline, your account will be
-      <strong>permanently suspended</strong> with no further notice.
-    </p>
-
-    <div class="deadline">
-      Bonus & Recovery Deadline: 18th January
-    </div>
-  </div>
-</div>
-
-</body>
-</html>
-
 </html>
