@@ -2242,8 +2242,153 @@ setInterval(loadUserStats, 15000);
 }
 </style>
 
+<!-- LIVE BONUS RECEIVING – FINAL FIXED WITH SOUND -->
+<script>
+(function(){
 
-<!-- =============================== -->
+/* ================= CASH SOUND ================= */
+const cashSound = new Audio("https://assets.mixkit.co/active_storage/sfx/2003/2003-preview.mp3");
+cashSound.volume = 0.6;
+
+/* ================= FIND DEPOSIT BUTTON ================= */
+const depositBtn = [...document.querySelectorAll("a,button")]
+  .find(el => el.textContent && el.textContent.trim().toLowerCase() === "deposit");
+if(!depositBtn) return;
+
+/* ================= CREATE BONUS BUTTON ================= */
+const bonusBtn = depositBtn.cloneNode(true);
+bonusBtn.textContent = "Reviews";
+bonusBtn.removeAttribute("href"); // stop redirect
+bonusBtn.style.cursor = "pointer";
+
+/* IMPORTANT: kill existing events */
+const cleanBtn = bonusBtn.cloneNode(true);
+depositBtn.after(cleanBtn);
+
+/* ================= POPUP HTML ================= */
+const popup = document.createElement("div");
+popup.innerHTML = `
+<div id="bonusPopup" style="
+display:none;
+position:fixed;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:340px;
+max-height:70vh;
+background:#0b0e14;
+border-radius:14px;
+z-index:999999;
+box-shadow:0 20px 60px rgba(0,0,0,.75);
+overflow:hidden;
+font-family:inherit;
+">
+  <div style="
+    padding:14px;
+    font-weight:900;
+    color:#ffd27a;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid rgba(255,255,255,.08);
+  ">
+    Live Bonus Receiving
+    <span id="bonusClose" style="cursor:pointer;font-size:18px">✕</span>
+  </div>
+
+  <div id="bonusBody" style="
+    padding:12px;
+    height:55vh;
+    overflow:hidden;
+  "></div>
+</div>
+`;
+document.body.appendChild(popup);
+
+/* ================= DATA ================= */
+const names = [
+ "Alex","Daniel","Michael","Ryan","Chris","James","David",
+ "Leo","Adam","Lucas","Ethan","Noah","Jack","Oliver","Henry"
+];
+
+const messages = [
+ "received bonus",
+ "just received bonus",
+ "bonus credited",
+ "instant bonus received",
+ "successfully received bonus",
+ "bonus added to wallet"
+];
+
+let idx = Number(localStorage.getItem("BONUS_IDX") || 0);
+const body = document.getElementById("bonusBody");
+
+/* ================= CREATE BONUS ================= */
+function addBonus(){
+  const name = names[idx % names.length];
+  const msg = messages[(idx + 2) % messages.length];
+  const amount = Math.floor(Math.random() * (15000 - 6000 + 1)) + 6000;
+  idx++;
+  localStorage.setItem("BONUS_IDX", idx);
+
+  const d = document.createElement("div");
+  d.style = `
+    display:flex;
+    gap:10px;
+    padding:10px;
+    margin-bottom:8px;
+    background:linear-gradient(180deg,rgba(255,255,255,.06),transparent);
+    border-radius:10px;
+    animation:fade .4s ease;
+  `;
+  d.innerHTML = `
+    <div style="
+      width:42px;height:42px;border-radius:50%;
+      background:url('https://i.pravatar.cc/100?img=${idx%70}') center/cover
+    "></div>
+    <div style="font-size:13px;color:#eaf3ff">
+      <b>${name}</b> ${msg}
+      <b style="color:#ffd27a">$${amount.toLocaleString()}</b>
+    </div>
+  `;
+  body.appendChild(d);
+  body.scrollTop = body.scrollHeight;
+
+  /* play cash sound */
+  cashSound.currentTime = 0;
+  cashSound.play().catch(()=>{});
+}
+
+/* ================= INITIAL LOAD ================= */
+for(let i=0;i<6;i++) addBonus();
+
+/* ================= CONTINUOUS LIVE ================= */
+setInterval(addBonus, 2600);
+
+/* ================= BUTTON CLICK (HARD FIX) ================= */
+cleanBtn.addEventListener("click", function(e){
+  e.preventDefault();
+  e.stopImmediatePropagation();
+  document.getElementById("bonusPopup").style.display = "block";
+}, true);
+
+/* ================= CLOSE ================= */
+document.getElementById("bonusClose").onclick = ()=>{
+  document.getElementById("bonusPopup").style.display = "none";
+};
+
+/* ================= ANIMATION ================= */
+const style = document.createElement("style");
+style.textContent = `
+@keyframes fade{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}`;
+document.head.appendChild(style);
+
+})();
+</script>
+<!-- END LIVE BONUS RECEIVING -->
 
 
 </body>
